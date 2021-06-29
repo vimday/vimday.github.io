@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title></title>
+  
+  
+  <link href="http://example.com/atom.xml" rel="self"/>
+  
+  <link href="http://example.com/"/>
+  <updated>2021-06-29T15:06:05.491Z</updated>
+  <id>http://example.com/</id>
+  
+  <author>
+    <name>John Doe</name>
+    
+  </author>
+  
+  <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>从零开始搭建个人博客</title>
+    <link href="http://example.com/2021/06/29/hello-world/"/>
+    <id>http://example.com/2021/06/29/hello-world/</id>
+    <published>2021-06-29T15:06:05.491Z</published>
+    <updated>2021-06-29T15:06:05.491Z</updated>
+    
+    <content type="html"><![CDATA[<p>我们使用 <a class="link"   href="https://hexo.io/" >Hexo<i class="fas fa-external-link-alt"></i></a> 下的 <a class="link"   href="https://xpoet.cn/" >keep<i class="fas fa-external-link-alt"></i></a> 主题 + github pages 从零搭建一个个人博客。<br>同时配置自定义域名解析，并使用 github 的 actions 进行持续集成。</p><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><p>我本来是没有考虑持续集成这个功能的，因此走了不少弯路，同时网上大部分教程多少有些瑕疵，此文章着重记录下遇到的坑。</p><h3 id="主要步骤"><a href="#主要步骤" class="headerlink" title="主要步骤"></a>主要步骤</h3><p>参考这个<a class="link"   href="https://juejin.cn/post/6943895271751286821" >教程<i class="fas fa-external-link-alt"></i></a> 进行项目初始化并配置CI。<br>注意 项目工程下的keep主题也是一个git仓库，我们如果自定义了一些主题配置的话，当我们push时并不会生效，需要把keep主题下的.git文件夹删了或者自己fork一份keep，并使用自己fork的代码。</p><h3 id="主要的坑"><a href="#主要的坑" class="headerlink" title="主要的坑"></a>主要的坑</h3><p>按照上述步骤做完可能发现自己的主页无法显示图片甚至什么都显示不了，那是因为我们需要先主动部署一次 并把代码推送到 公共仓库的 gh-pages 分支，这样这个分支才会有网站需要的静态文件。</p><p>还有 解析自定义域名的时候需要多加几条A记录 并且一定要使用CNAME解析到自己的username.github.io主页，</p>]]></content>
+    
+    
+      
+      
+    <summary type="html">&lt;p&gt;我们使用 &lt;a class=&quot;link&quot;   href=&quot;https://hexo.io/&quot; &gt;Hexo&lt;i class=&quot;fas fa-external-link-alt&quot;&gt;&lt;/i&gt;&lt;/a&gt; 下的 &lt;a class=&quot;link&quot;   href=&quot;https://xpoet</summary>
+      
+    
+    
+    
+    <category term="折腾教程" scheme="http://example.com/categories/%E6%8A%98%E8%85%BE%E6%95%99%E7%A8%8B/"/>
+    
+    
+    <category term="个人博客" scheme="http://example.com/tags/%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/"/>
+    
+  </entry>
+  
+</feed>
