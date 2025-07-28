@@ -1,1 +1,17 @@
- 
+<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" fill="white"/>
+  
+  <!-- Ethereum logo - Upper pyramid -->
+  <path d="M16 6 L22 10 L22 18 L16 22 L10 18 L10 10 Z" fill="#FFD700"/> <!-- Yellow -->
+  <path d="M16 6 L22 10 L16 14 L10 10 Z" fill="#FFA500"/> <!-- Orange -->
+  <path d="M16 14 L22 18 L16 22 L10 18 Z" fill="#00FF00"/> <!-- Green -->
+  
+  <!-- Ethereum logo - Lower pyramid -->
+  <path d="M16 22 L22 26 L22 34 L16 38 L10 34 L10 26 Z" fill="#87CEEB"/> <!-- Light Blue -->
+  <path d="M16 22 L22 26 L16 30 L10 26 Z" fill="#800080"/> <!-- Purple -->
+  <path d="M16 30 L22 34 L16 38 L10 34 Z" fill="#4B0082"/> <!-- Indigo -->
+  
+  <!-- Center gap -->
+  <rect x="15" y="21" width="2" height="2" fill="white"/>
+</svg> 
