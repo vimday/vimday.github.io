@@ -1,15 +1,12 @@
-<!--
-  Copyright 2025 vimday
-  SPDX-License-Identifier: Apache-2.0
--->
+<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
 <html lang="zh-Hans">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Neo 的个人工作台：AI Agent、系统编程和终端工具。">
+  <meta name="description" content="关注市场、数据和工具。每条笔记都说明发生了什么、去哪里核实，以及什么情况会让判断失效。">
   <meta name="theme-color" content="#0b110f">
-  <title>AlphaWink — Neo 的工作台</title>
+  <title>AlphaWink — Alpha 机会</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../workbench.css">
   <link rel="alternate" hreflang="en" href="../">
@@ -17,53 +14,40 @@
 <body>
   <a class="skip" href="#main">跳到正文</a>
   <header class="bar wrap">
-    <a class="brand" href="./"><span aria-hidden="true">&gt;_</span> alphawink</a>
+    <a class="brand" href="../zh/"><span aria-hidden="true">&gt;_</span> alphawink</a>
     <nav aria-label="网站导航">
-      <a href="#projects">项目</a>
-      <a href="../" lang="en" hreflang="en">EN</a>
+      <a href="../zh/" aria-current="page">Alpha 机会</a>
+      <a href="../zh/products/">产品</a>
+      <a href="../zh/about/">关于我</a>
+      <a class="lang" href="../" lang="en" hreflang="en">EN</a>
     </nav>
   </header>
   <main class="wrap" id="main">
     <section class="hero" aria-labelledby="title">
       <div>
-        <p class="kicker"><span aria-hidden="true">●</span> NEO / @VIMDAY</p>
-        <h1 id="title">开个终端，<br>动手写<span>。</span></h1>
-        <p class="intro">我在做 AI Agent 和终端工具。这里放的是我日常使用的代码和配置。</p>
-        <div class="links">
-          <a class="primary" href="#projects">看项目 <span aria-hidden="true">↓</span></a>
-          <a href="https://github.com/vimday">GitHub <span aria-hidden="true">↗</span></a>
-        </div>
+        <p class="kicker"><span aria-hidden="true">●</span> 机会笔记</p>
+        <h1 id="title">寻找值得验证的机会<span>。</span></h1>
+        <p class="intro">关注市场、数据和工具。每条笔记都说明发生了什么、去哪里核实，以及什么情况会让判断失效。</p>
+        <div class="links"><a class="primary" href="#feed">看最新笔记 <span aria-hidden="true">↓</span></a></div>
       </div>
-      <div class="terminal">
-        <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span>neo@alphawink:~</span></div>
+      <aside class="terminal">
+        <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span> alphawink / field notes</div>
         <div class="terminal-body">
-          <p class="prompt"><span>$</span> cat ~/workbench.txt</p>
-          <dl>
-            <div><dt>编辑器</dt><dd>Neovim</dd></div>
-            <div><dt>系统</dt><dd>Linux</dd></div>
-            <div><dt>语言</dt><dd>Rust / Go / Python</dd></div>
-            <div><dt>在研究</dt><dd>AI Agent / MCP</dd></div>
-          </dl>
-          <p class="prompt" aria-hidden="true"><span>$</span> <span class="cursor"></span></p>
+          <p class="prompt"><span>$</span> cat ~/checklist.txt</p>
+          <h2 class="format-title">我们关注什么</h2>
+          <ol class="checklist"><li>发生了什么变化？</li><li>证据在哪里？</li><li>什么会推翻这个判断？</li></ol>
         </div>
-      </div>
+      </aside>
     </section>
-    <section class="projects" id="projects" aria-labelledby="projects-title">
-      <p class="kicker"><span aria-hidden="true">//</span> ~/src</p>
-      <h2 id="projects-title">项目</h2>
-      <div class="grid">
-        <a class="project" href="https://github.com/vimday/crow-code">
-          <span class="tag">01 / RUST</span>
-          <h3>crow-code <span aria-hidden="true">↗</span></h3>
-          <p>一个终端里的编程 Agent，在应用代码变更前先在沙箱里验证。</p>
-        </a>
-        <a class="project" href="https://github.com/vimday/dotfiles">
-          <span class="tag">02 / CONFIG</span>
-          <h3>dotfiles <span aria-hidden="true">↗</span></h3>
-          <p>我日常用的配置文件，用 yadm 管理。</p>
-        </a>
+    <section class="projects" id="feed" aria-labelledby="feed-title">
+      <p class="kicker"><span aria-hidden="true">//</span> ALPHA</p>
+      <h2 id="feed-title">最新笔记</h2>
+      <div id="notes" data-feed="../opportunities.json" class="notes">
+        <p class="empty">还没有发布笔记。第一批内容会在这里更新。</p>
       </div>
+      <p class="share">发现了值得关注的线索？欢迎发来源和你看到的变化。 <a href="mailto:ms0x7f@gmail.com?subject=AlphaWink%20lead">分享线索 <span aria-hidden="true">↗</span></a></p>
     </section>
+    <script src="../feed.js" defer></script>
   </main>
   <footer class="wrap footer">
     <span><span aria-hidden="true">~/</span> AlphaWink</span>

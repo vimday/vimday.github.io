@@ -1,15 +1,12 @@
-<!--
-  Copyright 2025 vimday
-  SPDX-License-Identifier: Apache-2.0
--->
+<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Neo's workbench for AI agents, systems code, and terminal tools.">
+  <meta name="description" content="Research notes on markets, data, and tools. Each note explains what changed, where to verify it, and what could invalidate it.">
   <meta name="theme-color" content="#0b110f">
-  <title>AlphaWink — Neo's workbench</title>
+  <title>AlphaWink — Alpha</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="./workbench.css">
   <link rel="alternate" hreflang="zh-Hans" href="./zh/">
@@ -19,51 +16,38 @@
   <header class="bar wrap">
     <a class="brand" href="./"><span aria-hidden="true">&gt;_</span> alphawink</a>
     <nav aria-label="Site navigation">
-      <a href="#projects">projects</a>
-      <a href="./zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+      <a href="./" aria-current="page">Alpha</a>
+      <a href="./products/">Products</a>
+      <a href="./about/">About me</a>
+      <a class="lang" href="./zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
     </nav>
   </header>
   <main class="wrap" id="main">
     <section class="hero" aria-labelledby="title">
       <div>
-        <p class="kicker"><span aria-hidden="true">●</span> NEO / @VIMDAY</p>
-        <h1 id="title">It's time<br>to build<span>.</span></h1>
-        <p class="intro">I build AI agents and tools for the terminal. This is where I keep the code and configs behind my daily setup.</p>
-        <div class="links">
-          <a class="primary" href="#projects">Browse projects <span aria-hidden="true">↓</span></a>
-          <a href="https://github.com/vimday">GitHub <span aria-hidden="true">↗</span></a>
-        </div>
+        <p class="kicker"><span aria-hidden="true">●</span> OPPORTUNITY NOTES</p>
+        <h1 id="title">Find the signal<span>.</span></h1>
+        <p class="intro">Research notes on markets, data, and tools. Each note explains what changed, where to verify it, and what could invalidate it.</p>
+        <div class="links"><a class="primary" href="#feed">Read the feed <span aria-hidden="true">↓</span></a></div>
       </div>
-      <div class="terminal">
-        <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span>neo@alphawink:~</span></div>
+      <aside class="terminal">
+        <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span> alphawink / field notes</div>
         <div class="terminal-body">
-          <p class="prompt"><span>$</span> cat ~/workbench.txt</p>
-          <dl>
-            <div><dt>editor</dt><dd>Neovim</dd></div>
-            <div><dt>system</dt><dd>Linux</dd></div>
-            <div><dt>languages</dt><dd>Rust / Go / Python</dd></div>
-            <div><dt>exploring</dt><dd>AI agents / MCP</dd></div>
-          </dl>
-          <p class="prompt" aria-hidden="true"><span>$</span> <span class="cursor"></span></p>
+          <p class="prompt"><span>$</span> cat ~/checklist.txt</p>
+          <h2 class="format-title">What we look for</h2>
+          <ol class="checklist"><li>What changed?</li><li>Where's the evidence?</li><li>What could break the thesis?</li></ol>
         </div>
-      </div>
+      </aside>
     </section>
-    <section class="projects" id="projects" aria-labelledby="projects-title">
-      <p class="kicker"><span aria-hidden="true">//</span> ~/src</p>
-      <h2 id="projects-title">Selected projects</h2>
-      <div class="grid">
-        <a class="project" href="https://github.com/vimday/crow-code">
-          <span class="tag">01 / RUST</span>
-          <h3>crow-code <span aria-hidden="true">↗</span></h3>
-          <p>A terminal coding agent that verifies proposed changes in a sandbox before applying them.</p>
-        </a>
-        <a class="project" href="https://github.com/vimday/dotfiles">
-          <span class="tag">02 / CONFIG</span>
-          <h3>dotfiles <span aria-hidden="true">↗</span></h3>
-          <p>The config behind my daily setup, tracked with yadm.</p>
-        </a>
+    <section class="projects" id="feed" aria-labelledby="feed-title">
+      <p class="kicker"><span aria-hidden="true">//</span> ALPHA</p>
+      <h2 id="feed-title">Latest notes</h2>
+      <div id="notes" data-feed="./opportunities.json" class="notes">
+        <p class="empty">No notes published yet. The first entries will appear here.</p>
       </div>
+      <p class="share">Have a lead? Send the source and what caught your eye. <a href="mailto:ms0x7f@gmail.com?subject=AlphaWink%20lead">Send a lead <span aria-hidden="true">↗</span></a></p>
     </section>
+    <script src="./feed.js" defer></script>
   </main>
   <footer class="wrap footer">
     <span><span aria-hidden="true">~/</span> AlphaWink</span>
