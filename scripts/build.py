@@ -19,7 +19,7 @@ COPY = {
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "alpha": {
-            "title": "Find the signal.",
+            "title": ("Find the", "signal."),
             "intro": "Research notes on markets, robotics data, and the tools used to investigate them.",
             "browse": "Explore the notes",
             "method": "Before calling it an opportunity",
@@ -35,6 +35,7 @@ COPY = {
             "risk": "What to watch",
             "share": "Found something worth investigating?",
             "send": "Share a lead",
+            "latest": "Latest note",
         },
         "products": {
             "title": "Tools for market research",
@@ -76,7 +77,7 @@ COPY = {
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "alpha": {
-            "title": "寻找值得验证的机会。",
+            "title": ("寻找值得", "验证的机会。"),
             "intro": "记录市场、机器人数据和研究工具里的发现，附上核实线索和判断可能失效的条件。",
             "browse": "查看研究笔记",
             "method": "判断机会前，先问三件事",
@@ -92,6 +93,7 @@ COPY = {
             "risk": "需要留意",
             "share": "有值得研究的线索？",
             "send": "分享线索",
+            "latest": "最新笔记",
         },
         "products": {
             "title": "市场研究工具",
@@ -113,8 +115,8 @@ COPY = {
             "title": "机器人数据与 AI 基础设施",
             "intro": "我做具身智能数据平台和 AI 基础设施，把多模态机器人数据处理成可校验、可复用的数据集。",
             "github": "GitHub 主页",
-            "engine": "具身智能数据处理图流程引擎",
-            "engine_intro": "我从零搭建了这套引擎，用图表达数据处理步骤和依赖关系，让流程可以组合并复用到不同数据集。",
+            "engine": "具身智能图流程引擎",
+            "engine_intro": "我从零搭建了这套引擎，用图表达机器人数据处理步骤和依赖关系，让流程可以组合并复用到不同数据集。",
             "steps": ("多模态机器人数据", "图流程编排", "处理后的数据集"),
             "platform": "数据平台",
             "platform_intro": "多模态数据处理、标注、质量校验和数据集版本化交付。",
@@ -182,20 +184,33 @@ def alpha(locale, root, notes, copy):
         f'        <button type="button" data-filter="{key}" aria-pressed="{str(key == "all").lower()}">{label}</button>'
         for key, label in copy["filters"].items()
     )
-    title = copy["title"]
+    title_start, title_end = copy["title"]
+    featured = ""
+    if notes:
+        latest = notes[0]
+        title = escape(latest[locale]["title"])
+        featured = f"""
+        <a class="featured-note" href="#{latest["id"]}" data-show-note>
+          <span class="featured-label">{copy["latest"]}</span>
+          <strong>{title}</strong>
+          <span class="featured-arrow" aria-hidden="true">↘</span>
+        </a>"""
     empty_attr = " hidden" if notes else ""
     return f"""
     <section class="hero" aria-labelledby="title">
       <div class="hero-copy">
-        <p class="kicker"><span class="signal" aria-hidden="true"></span> ALPHAWINK / RESEARCH</p>
-        <h1 id="title">{title[:-1]}<span class="accent">{title[-1]}</span></h1>
+        <p class="kicker">ALPHAWINK / RESEARCH</p>
+        <h1 id="title">{title_start} <span>{title_end}</span></h1>
         <p class="intro">{copy["intro"]}</p>
         <a class="primary" href="#feed">{copy["browse"]} <span aria-hidden="true">↓</span></a>
       </div>
-      <aside class="method">
-        <h2>{copy["method"]}</h2>
-        <ol>{questions}</ol>
-      </aside>
+      <div class="hero-feature">
+        <div class="signal-cover" aria-hidden="true">
+          <div class="signal-grid"></div>
+          <div class="signal-sweep"></div>
+          <div class="signal-target"><span></span></div>
+        </div>{featured}
+      </div>
     </section>
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
@@ -207,6 +222,10 @@ def alpha(locale, root, notes, copy):
       <div id="notes" class="grid">{render_notes(notes, locale, copy)}
       </div>
       <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
+    </section>
+    <section class="method" aria-labelledby="method-title">
+      <h2 id="method-title">{copy["method"]}</h2>
+      <ol>{questions}</ol>
     </section>
     <aside class="share">
       <p>{copy["share"]}</p>
@@ -303,10 +322,10 @@ def render(locale, page, notes):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#0d1411">
+  <meta name="theme-color" content="#f5f4ec">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="{root}workbench.css">
+  <link rel="stylesheet" href="{root}assets/site.css">
   <link rel="alternate" hreflang="{other_lang}" href="{other}">
 </head>
 <body>
