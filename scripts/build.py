@@ -57,13 +57,13 @@ COPY = {
             "title": "Robotics data and AI infrastructure",
             "intro": "I build data platforms for embodied AI, including the workflows that turn multimodal robot data into datasets that teams can validate and reuse.",
             "github": "GitHub profile",
-            "engine": "Workflow graph engine",
-            "engine_intro": "I built an engine from scratch to orchestrate embodied AI data processing. A graph makes the processing steps and their dependencies explicit, so a workflow can be reused across datasets.",
-            "steps": ("Multimodal robot data", "Workflow graph", "Processed datasets"),
-            "platform": "Data platforms",
-            "platform_intro": "Multimodal data processing, annotation, quality checks, and versioned dataset delivery.",
-            "infra": "AI infrastructure",
-            "infra_intro": "Distributed services and workflow orchestration for data processing and delivery.",
+            "work": "Engineering work",
+            "work_areas": (
+                ("Data platforms", "Pipelines for processing, annotating, validating, and versioning multimodal robot datasets."),
+                ("AI infrastructure", "Distributed services that run data workflows and deliver datasets."),
+                ("Workflow graph engine", "I built an engine from scratch to run robot data processing steps with explicit dependencies."),
+                ("Advertising platform", "Go backend development for an advertising platform, from before I used coding agents in my daily work."),
+            ),
             "tools": "Daily tools",
             "stack": (
                 ("Coding agents", "Codex · Claude Code · MCP"),
@@ -115,13 +115,13 @@ COPY = {
             "title": "机器人数据与 AI 基础设施",
             "intro": "我做具身智能数据平台和 AI 基础设施，把多模态机器人数据处理成可校验、可复用的数据集。",
             "github": "GitHub 主页",
-            "engine": "具身智能图流程引擎",
-            "engine_intro": "我从零搭建了这套引擎，用图表达机器人数据处理步骤和依赖关系，让流程可以组合并复用到不同数据集。",
-            "steps": ("多模态机器人数据", "图流程编排", "处理后的数据集"),
-            "platform": "数据平台",
-            "platform_intro": "多模态数据处理、标注、质量校验和数据集版本化交付。",
-            "infra": "AI 基础设施",
-            "infra_intro": "为数据处理和交付构建分布式服务与工作流编排能力。",
+            "work": "工程经历",
+            "work_areas": (
+                ("数据平台", "构建多模态机器人数据流水线，覆盖处理、标注、质量校验和版本管理。"),
+                ("AI 基础设施", "为数据流程的执行和数据集交付构建分布式服务。"),
+                ("图流程引擎", "从零开发机器人数据处理引擎，用图表达处理步骤及依赖关系。"),
+                ("广告平台", "早期手写代码时，参与过广告平台的 Go 后端开发。"),
+            ),
             "tools": "日常工具",
             "stack": (
                 ("编程 Agent", "Codex · Claude Code · MCP"),
@@ -199,16 +199,13 @@ def alpha(locale, root, notes, copy):
     return f"""
     <section class="hero" aria-labelledby="title">
       <div class="hero-copy">
-        <p class="kicker">ALPHAWINK / RESEARCH</p>
         <h1 id="title">{title_start} <span>{title_end}</span></h1>
         <p class="intro">{copy["intro"]}</p>
         <a class="primary" href="#feed">{copy["browse"]} <span aria-hidden="true">↓</span></a>
       </div>
       <div class="hero-feature">
-        <div class="signal-cover" aria-hidden="true">
-          <div class="signal-grid"></div>
-          <div class="signal-sweep"></div>
-          <div class="signal-target"><span></span></div>
+        <div class="cover">
+          <img src="{root}assets/refraction.webp" alt="" width="1440" height="960" fetchpriority="high">
         </div>{featured}
       </div>
     </section>
@@ -267,26 +264,18 @@ def products(copy):
 
 def about(copy):
     github = f'<a class="text-link" href="{GITHUB}">{copy["github"]} <span aria-hidden="true">↗</span></a>'
-    steps = "".join(f"<li>{step}</li>" for step in copy["steps"])
+    areas = "\n".join(
+        f"      <article><h3>{title}</h3><p>{description}</p></article>"
+        for title, description in copy["work_areas"]
+    )
     stack = "".join(f"<div><dt>{area}</dt><dd>{tools}</dd></div>" for area, tools in copy["stack"])
     return page_intro(copy["title"], copy["intro"], "@VIMDAY", github) + f"""
-    <section class="engine" aria-labelledby="engine-title">
-      <div>
-        <h2 id="engine-title">{copy["engine"]}</h2>
-        <p>{copy["engine_intro"]}</p>
+    <section class="section work-section" aria-labelledby="work-title">
+      <h2 id="work-title">{copy["work"]}</h2>
+      <div class="grid work-grid">
+{areas}
       </div>
-      <ol class="graph">{steps}</ol>
     </section>
-    <div class="grid about-grid">
-      <section>
-        <h2>{copy["platform"]}</h2>
-        <p>{copy["platform_intro"]}</p>
-      </section>
-      <section>
-        <h2>{copy["infra"]}</h2>
-        <p>{copy["infra_intro"]}</p>
-      </section>
-    </div>
     <section class="section tool-section" aria-labelledby="tools-title">
       <h2 id="tools-title">{copy["tools"]}</h2>
       <dl class="tool-grid">{stack}</dl>
@@ -322,7 +311,7 @@ def render(locale, page, notes):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#f5f4ec">
+  <meta name="theme-color" content="#f8f7f2">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}assets/site.css">
