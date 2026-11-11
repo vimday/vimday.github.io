@@ -1,262 +1,73 @@
 <!--
- Copyright 2025 vimday
- 
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- 
-     https://www.apache.org/licenses/LICENSE-2.0
- 
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+  Copyright 2025 vimday
+  SPDX-License-Identifier: Apache-2.0
 -->
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>bitwink.xyz</title>
-    <link rel="icon" type="image/svg+xml" href="ethereum-eth-logo-diamond.svg" />
-    <link rel="shortcut icon" href="ethereum-eth-logo-diamond.svg" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/terminal.css@0.7.4/dist/terminal.min.css"
-    />
-    <style>
-      .language-switch {
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        z-index: 1000;
-      }
-      .language-switch button {
-        background: var(--primary-color);
-        color: var(--primary-bg);
-        border: none;
-        padding: 8px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-family: var(--font-stack);
-        font-size: 14px;
-      }
-      .language-switch button:hover {
-        background: var(--primary-hover);
-      }
-      [data-lang] {
-        display: none;
-      }
-      [data-lang="en"] {
-        display: block;
-      }
-    </style>
-  </head>
-  <body>
-    <div class="language-switch">
-      <button onclick="toggleLanguage()" id="langBtn">中文</button>
-    </div>
-
-    <div class="container">
-      <h1 data-lang="en">bitwink.xyz</h1>
-      <h1 data-lang="zh">bitwink.xyz</h1>
-
-      <p data-lang="en">
-        A digital playground for. Exploring the intersections of cybersecurity,
-        decentralized systems, and onchain finance.
-        <br />
-        Crypto Never Dies, Web3 Is Coming...
-        <br />
-        We owe the past, and the future.
-        <br />
-        It's time to be a Techno-Optimist.
-        <br />
-        It's time to build.
-      </p>
-
-      <p data-lang="zh">
-        一个数字游乐场。探索网络安全、去中心化系统和链上金融的交汇点。
-        <br />
-        加密永不消亡, Web3 正在到来...
-        <br />
-        我们既负过去，也负未来。
-        <br />
-        是时候成为技术乐观主义者了
-        <br />
-        是时候开始build了
-      </p>
-
-      <hr />
-
-      <h2 data-lang="en">Alpha Projects</h2>
-      <h2 data-lang="zh">Alpha 项目</h2>
-
-      <div class="terminal-card">
-        <header data-lang="en">
-          edgeX: High-Performance Trading Infrastructure and Modules
-        </header>
-        <header data-lang="zh">edgeX: 高性能模块化金融系统</header>
-        <div data-lang="en">
-          Experience decentralized derivatives trading anytime, anywhere.
-          Financial Settlement Chain - edgeX is an Ethereum Layer-2 blockchain
-          designed to deliver a high-performance on-chain trading infrastructure
-          and a unified interface for DeFi.
-          <a href="https://pro.edgex.exchange/referral/X" target="_blank"
-            >Signup</a
-          >
-        </div>
-        <div data-lang="zh">
-          随时随地体验去中心化衍生品交易。 金融结算链 - edgeX 是一个以太坊
-          Layer-2 区块链， 旨在提供高性能链上交易基础设施和统一的 DeFi 接口。
-          <a href="https://pro.edgex.exchange/referral/X" target="_blank"
-            >注册</a
-          >
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Neo's workbench for AI agents, systems code, and terminal tools.">
+  <meta name="theme-color" content="#0b110f">
+  <title>AlphaWink — Neo's workbench</title>
+  <link rel="icon" href="./favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="./workbench.css">
+  <link rel="alternate" hreflang="zh-Hans" href="./zh/">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="bar wrap">
+    <a class="brand" href="./"><span aria-hidden="true">&gt;_</span> alphawink</a>
+    <nav aria-label="Site navigation">
+      <a href="#projects">projects</a>
+      <a href="./zh/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+    </nav>
+  </header>
+  <main class="wrap" id="main">
+    <section class="hero" aria-labelledby="title">
+      <div>
+        <p class="kicker"><span aria-hidden="true">●</span> NEO / @VIMDAY</p>
+        <h1 id="title">It's time<br>to build<span>.</span></h1>
+        <p class="intro">I build AI agents and tools for the terminal. This is where I keep the code and configs behind my daily setup.</p>
+        <div class="links">
+          <a class="primary" href="#projects">Browse projects <span aria-hidden="true">↓</span></a>
+          <a href="https://github.com/vimday">GitHub <span aria-hidden="true">↗</span></a>
         </div>
       </div>
-
-      <div class="terminal-card">
-        <header data-lang="en">Backpack Exchange</header>
-        <header data-lang="zh">Backpack Exchange</header>
-        <div data-lang="en">
-          Backpack Exchange is a fully regulated global cryptocurrency exchange
-          building an innovative, easy-to-use and compliant trading platform.
-          <a href="https://backpack.exchange/join/e" target="_blank">Signup</a>
-        </div>
-        <div data-lang="zh">
-          Backpack Exchange 是一个完全受监管的全球加密货币交易所，
-          正在构建一个创新、易用且合规的交易平台。
-          <a href="https://backpack.exchange/join/e" target="_blank">注册</a>
+      <div class="terminal">
+        <div class="terminal-bar"><span class="lights" aria-hidden="true"><i></i><i></i><i></i></span><span>neo@alphawink:~</span></div>
+        <div class="terminal-body">
+          <p class="prompt"><span>$</span> cat ~/workbench.txt</p>
+          <dl>
+            <div><dt>editor</dt><dd>Neovim</dd></div>
+            <div><dt>system</dt><dd>Linux</dd></div>
+            <div><dt>languages</dt><dd>Rust / Go / Python</dd></div>
+            <div><dt>exploring</dt><dd>AI agents / MCP</dd></div>
+          </dl>
+          <p class="prompt" aria-hidden="true"><span>$</span> <span class="cursor"></span></p>
         </div>
       </div>
-
-      <div class="terminal-card">
-        <header data-lang="en">ParaDex</header>
-        <header data-lang="zh">ParaDex</header>
-        <div data-lang="en">
-          Scaling finance on-chain demands liquidity, performance, and privacy
-          as foundational primitives. Paradex unifies all three. The SuperDEX
-          era is here. Powered by $DIME.
-          <a href="https://app.paradex.trade/r/BTCUSD" target="_blank"
-            >Signup</a
-          >
-        </div>
-        <div data-lang="zh">
-          链上金融扩展需要流动性、性能和隐私作为基础原语。 Paradex
-          将三者统一。超级 DEX 时代已经到来。由 $DIME 驱动。
-          <a href="https://app.paradex.trade/r/BTCUSD" target="_blank">注册</a>
-        </div>
+    </section>
+    <section class="projects" id="projects" aria-labelledby="projects-title">
+      <p class="kicker"><span aria-hidden="true">//</span> ~/src</p>
+      <h2 id="projects-title">Selected projects</h2>
+      <div class="grid">
+        <a class="project" href="https://github.com/vimday/crow-code">
+          <span class="tag">01 / RUST</span>
+          <h3>crow-code <span aria-hidden="true">↗</span></h3>
+          <p>A terminal coding agent that verifies proposed changes in a sandbox before applying them.</p>
+        </a>
+        <a class="project" href="https://github.com/vimday/dotfiles">
+          <span class="tag">02 / CONFIG</span>
+          <h3>dotfiles <span aria-hidden="true">↗</span></h3>
+          <p>The config behind my daily setup, tracked with yadm.</p>
+        </a>
       </div>
-
-      <div class="terminal-card">
-        <header data-lang="en">Variational</header>
-        <header data-lang="zh">Variational</header>
-        <div data-lang="en">
-          Our first app is Omni, the most rewarding place to trade perps. Omni
-          lets users trade hundreds of markets with zero fees, all while earning
-          loss refunds, spread discounts, platform credit, and more from normal
-          trading activity.
-          <a href="https://omni.variational.io?ref=OMNI4UDIZMVQ" target="_blank"
-            >Signup</a
-          >
-        </div>
-        <div data-lang="zh">
-          我们的第一个应用是Omni，最值得交易的永续合约平台。Omni让用户零手续费交易数百个市场，同时从正常交易活动中获得损失退款、点差折扣、平台积分等更多奖励。
-          <a href="https://omni.variational.io?ref=OMNI4UDIZMVQ" target="_blank"
-            >注册</a
-          >
-        </div>
-      </div>
-      <br />
-      <hr />
-      <h2>Connect</h2>
-
-      <p>
-        <a href="https://github.com/vimday">GitHub</a> |
-        <a href="https://farcaster.xyz/webtc.eth">Farcaster</a> |
-        <a href="https://x.com/WeBTC_ETH">X</a>
-      </p>
-    </div>
-
-    <script>
-      let currentLang = "en";
-
-      function toggleLanguage() {
-        currentLang = currentLang === "en" ? "zh" : "en";
-
-        // Update button text
-        document.getElementById("langBtn").textContent =
-          currentLang === "en" ? "中文" : "English";
-
-        // Update page language attribute
-        document.documentElement.lang = currentLang;
-
-        // Show/hide content for corresponding language
-        const elements = document.querySelectorAll("[data-lang]");
-        elements.forEach((element) => {
-          const elementLang = element.getAttribute("data-lang");
-          if (elementLang === currentLang) {
-            element.style.display = "block";
-          } else if (elementLang) {
-            element.style.display = "none";
-          }
-        });
-
-        // Show English content when Chinese version doesn't exist
-        if (currentLang === "zh") {
-          const englishElements = document.querySelectorAll('[data-lang="en"]');
-          englishElements.forEach((element) => {
-            // Check if there's a corresponding Chinese version
-            const siblings = Array.from(element.parentNode.children);
-            const hasChineseVersion = siblings.some(
-              (sibling) =>
-                sibling !== element &&
-                sibling.getAttribute("data-lang") === "zh"
-            );
-
-            // If no Chinese version exists, show English version
-            if (!hasChineseVersion) {
-              element.style.display = "block";
-            }
-          });
-        }
-
-        // Handle content without alternative language configuration
-        const allElements = document.querySelectorAll(
-          "h1, h2, h3, p, div, ul, li, header"
-        );
-        allElements.forEach((element) => {
-          // If element doesn't have data-lang attribute, it means only one language version exists
-          if (!element.hasAttribute("data-lang")) {
-            // Always display elements without language tags
-            element.style.display = "block";
-          }
-        });
-
-        // Save language preference to local storage
-        localStorage.setItem("preferredLanguage", currentLang);
-      }
-
-      // Initialize language display when page loads
-      window.addEventListener("load", function () {
-        // First ensure all elements without data-lang are displayed
-        const allElements = document.querySelectorAll(
-          "h1, h2, h3, p, div, ul, li, header"
-        );
-        allElements.forEach((element) => {
-          if (!element.hasAttribute("data-lang")) {
-            // Always display elements without language tags
-            element.style.display = "block";
-          }
-        });
-
-        // Then restore language preference
-        const savedLang = localStorage.getItem("preferredLanguage");
-        if (savedLang && savedLang !== "en") {
-          toggleLanguage();
-        }
-      });
-    </script>
-  </body>
+    </section>
+  </main>
+  <footer class="wrap footer">
+    <span><span aria-hidden="true">~/</span> AlphaWink</span>
+    <a href="mailto:ms0x7f@gmail.com">Email <span aria-hidden="true">↗</span></a>
+  </footer>
+</body>
 </html>
