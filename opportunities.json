@@ -1,1 +1,34 @@
-[]
+[
+  {
+    "id": "funding-windows",
+    "date": "2026-11-12",
+    "category": "markets",
+    "source": "https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding",
+    "en": {
+      "title": "Compare funding on the same clock",
+      "summary": "Start a cross-venue funding study with settlement timestamps and a common holding window. A quoted rate may use a different time basis than the payment itself. Reconstruct cash flows over the same window before ranking spreads, then include fees and slippage.",
+      "risk": "An apparent spread can disappear when settlement times differ or the available size cannot be filled at the assumed price."
+    },
+    "zh": {
+      "title": "比较资金费率，先对齐结算窗口",
+      "summary": "做跨市场资金费率研究时，先确认结算时点和持有窗口。报价采用的时间口径可能和实际支付周期不同。用同一窗口重算现金流，再计入手续费和滑点，看差异还在不在。",
+      "risk": "结算时点不同，或实际成交量和价格达不到假设时，表面的费率差可能消失。"
+    }
+  },
+  {
+    "id": "episode-quality-checks",
+    "date": "2026-11-12",
+    "category": "data",
+    "source": "https://huggingface.co/docs/lerobot/lerobot-dataset-v3",
+    "en": {
+      "title": "Validate robot data at episode boundaries",
+      "summary": "Use an episode as the unit for your first dataset quality check. On a small sample, resolve video, state, and action ranges through the metadata. Inspect timestamps and alignment before paying the cost of a full dataset pass.",
+      "risk": "A sample can miss corruption that only appears across files, cameras, or recording sessions. Expand coverage once the checks pass."
+    },
+    "zh": {
+      "title": "从 episode 边界开始检查机器人数据",
+      "summary": "先抽一小批 episode 做质检。通过元数据定位每段视频、状态和动作的范围，检查时间戳和对齐情况，再决定如何做全量扫描。",
+      "risk": "小样本可能漏掉只在跨文件、跨相机或跨采集批次时出现的问题。初步检查通过后，再扩大覆盖范围。"
+    }
+  }
+]

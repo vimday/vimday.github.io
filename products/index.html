@@ -4,9 +4,9 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="AlephTX and Oasis Agent are projects we’re building. This page introduces what each is for and will carry public access links when they’re ready.">
-  <meta name="theme-color" content="#0b110f">
-  <title>AlphaWink — Products</title>
+  <meta name="description" content="AlephTX replays market data to test execution assumptions. Oasis Agent traces decisions back to the evidence and risk checks behind them.">
+  <meta name="theme-color" content="#0d1411">
+  <title>AlphaWink · Products</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="../workbench.css">
   <link rel="alternate" hreflang="zh-Hans" href="../zh/products/">
@@ -14,38 +14,42 @@
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="bar wrap">
-    <a class="brand" href="../"><span aria-hidden="true">&gt;_</span> alphawink</a>
+    <a class="brand" href="../"><span aria-hidden="true">&gt;_</span> AlphaWink</a>
     <nav aria-label="Site navigation">
       <a href="../">Alpha</a>
       <a href="../products/" aria-current="page">Products</a>
-      <a href="../about/">About me</a>
+      <a href="../about/">About</a>
       <a class="lang" href="../zh/products/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
     </nav>
   </header>
   <main class="wrap" id="main">
     <section class="page-intro" aria-labelledby="title">
-      <p class="kicker"><span aria-hidden="true">//</span> ~/products</p>
-      <h1 id="title">Two projects in development.</h1>
-      <p class="intro">AlephTX and Oasis Agent are projects we’re building. This page introduces what each is for and will carry public access links when they’re ready.</p>
+      <p class="kicker">ALPHAWINK / PRODUCTS</p>
+      <h1 id="title">Tools for market research</h1>
+      <p class="intro">AlephTX replays market data to test execution assumptions. Oasis Agent traces decisions back to the evidence and risk checks behind them.</p>
+      
     </section>
     <div class="grid product-grid">
-        <article class="project">
-          <p class="tag">PERPETUAL FUTURES</p>
-          <h2>AlephTX</h2>
-          <p>Execution and relative-value research for perpetual futures. Replay recorded market data to test how a strategy behaves after fees, funding, and slippage.</p>
-          <span class="status">In development</span>
-        </article>
-        <article class="project">
-          <p class="tag">RESEARCH & RISK</p>
-          <h2>Oasis Agent</h2>
-          <p>A market research agent that keeps the evidence behind each decision. Replay the reasoning and evaluate risk limits before execution.</p>
-          <span class="status">In development</span>
-        </article>
+      <article class="product-card">
+        <p class="kicker">Perpetual futures</p>
+        <h2>AlephTX</h2>
+        <p>Study relative value across markets. Replay recorded data and check whether an idea holds up after fees, funding, and slippage.</p>
+        <ul class="features"><li>Market data replay</li><li>Execution and cost modeling</li><li>Relative-value research</li></ul>
+        <div class="product-action"><a class="text-link" href="https://github.com/AlephTX/aleph-tx">View source on GitHub <span aria-hidden="true">↗</span></a></div>
+      </article>
+
+      <article class="product-card">
+        <p class="kicker">Research and risk</p>
+        <h2>Oasis Agent</h2>
+        <p>Keep a record of what the agent observed, how it reached a decision, and which limits apply before execution.</p>
+        <ul class="features"><li>Evidence records</li><li>Decision replay</li><li>Risk checks</li></ul>
+        <div class="product-action"><span class="status">In development</span></div>
+      </article>
     </div>
   </main>
   <footer class="wrap footer">
-    <span><span aria-hidden="true">~/</span> AlphaWink</span>
-    <a href="mailto:ms0x7f@gmail.com">Email <span aria-hidden="true">↗</span></a>
+    <span>AlphaWink</span>
+    <a href="mailto:hi@alphawink.com">hi@alphawink.com</a>
   </footer>
 </body>
 </html>
