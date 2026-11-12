@@ -17,7 +17,7 @@ PROJECTS = (("aleph", "aleph-tx", "AlephTX"), ("oasis", "oasis-agent", "Oasis Ag
 REPLAY_OFFSETS_MS = (0, 240, 480)
 ASSETS = {
     path: f"{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}"
-    for path in ("assets/site.css", "feed.js")
+    for path in ("assets/site.css", "feed.js", "favicon.svg")
 }
 
 COPY = {
@@ -352,6 +352,7 @@ def render(locale, page, notes):
     lang = "zh-Hans" if locale == "zh" else "en"
     route = ("zh/" if locale == "zh" else "") + ROUTES[page]
     root = "../" * route.count("/") or "./"
+    mark = root + ASSETS["favicon.svg"]
     here = root + ("zh/" if locale == "zh" else "")
     other_lang, other_label = ("en", "EN") if locale == "zh" else ("zh-Hans", "中文")
     other = root + ("zh/" if locale == "en" else "") + ROUTES[page]
@@ -381,14 +382,17 @@ def render(locale, page, notes):
   <meta name="description" content="{description}">
   <meta name="theme-color" content="#f6f3ea">
   <title>AlphaWink · {name}</title>
-  <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="{mark}" type="image/svg+xml">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
   <link rel="alternate" hreflang="{other_lang}" href="{other}">
 </head>
 <body>
   <a class="skip" href="#main">{copy["skip"]}</a>
   <header class="bar wrap">
-    <a class="brand" href="{here}">AlphaWink</a>
+    <a class="brand" href="{here}">
+      <img class="brand-mark" src="{mark}" alt="" width="30" height="30">
+      AlphaWink
+    </a>
     <nav aria-label="{copy["nav_label"]}">
 {nav}
       <a class="lang" href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
