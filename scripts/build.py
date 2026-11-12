@@ -26,12 +26,18 @@ COPY = {
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "alpha": {
-            "title": ("Replay the", "market."),
-            "edition": "Independent market research",
-            "intro": "AlphaWink studies market opportunities through recorded data, simulated execution, and decisions you can trace back to the evidence.",
-            "browse": "Try the replay",
-            "read": "Read the notes",
-            "walkthrough": "Follow the evidence",
+            "title": "Independent market research",
+            "intro": "We study market opportunities with recorded data and simulated trades.",
+            "projects": "Research projects",
+            "feed": "Research notes",
+            "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
+            "empty": "No notes in this category yet.",
+            "source": "Original source",
+            "risk": "What to watch",
+        },
+        "products": {
+            "title": "From market data to decisions",
+            "intro": "AlephTX models how an idea might execute. Oasis Agent records how decisions were made and checks the limits for execution.",
             "example": "Illustrative replay",
             "timeline": "Replay timeline",
             "play": "Play",
@@ -48,23 +54,8 @@ COPY = {
                     (("Exposure / limit", "1.50 / 2.00"), ("Loss limit", "Within limit"), ("Authorization", "Review required")),
                 ),
             },
-            "view_project": "View project",
-            "projects": "Research projects",
-            "feed": "Research notes",
-            "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
-            "empty": "No notes in this category yet.",
-            "source": "Original source",
-            "risk": "What to watch",
-            "share": "Found something worth investigating?",
-            "send": "Share a lead",
-            "latest": "Latest note",
-        },
-        "products": {
-            "title": "From market data to decisions",
-            "intro": "AlephTX models how an idea might execute. Oasis Agent records how decisions were made and checks the limits for execution.",
             "aleph": (
                 "Perpetual futures",
-                "Replay both legs of a perpetual futures strategy against recorded market data.",
                 "AlephTX combines recorded order-book depth, funding, and independent reference prices to study relative value across venues.",
                 (
                     ("Build the dataset", "Align market depth, funding events, and reference prices."),
@@ -74,7 +65,6 @@ COPY = {
             ),
             "oasis": (
                 "Evidence and risk",
-                "Trace a strategy decision back to the observations and risk checks behind it.",
                 "Oasis Agent records the inputs behind a strategy decision so researchers can replay it and examine the execution limits separately.",
                 (
                     ("Keep the evidence", "Preserve the original observation, its source, and the state it came from."),
@@ -110,12 +100,18 @@ COPY = {
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "alpha": {
-            "title": ("回放市场，", "检验假设。"),
-            "edition": "独立市场研究",
-            "intro": "AlphaWink 用市场记录和成交模拟研究机会，并保留决策依据，让每个判断都能回到原始证据。",
-            "browse": "体验示例回放",
-            "read": "阅读研究笔记",
-            "walkthrough": "从盘口到判断",
+            "title": "独立市场研究",
+            "intro": "从盘口、成交与风险出发，研究市场机会。",
+            "projects": "研究项目",
+            "feed": "研究笔记",
+            "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
+            "empty": "这个分类还没有笔记。",
+            "source": "原始来源",
+            "risk": "需要留意",
+        },
+        "products": {
+            "title": "从市场数据到决策",
+            "intro": "AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。",
             "example": "示例回放",
             "timeline": "回放时间轴",
             "play": "播放",
@@ -132,23 +128,8 @@ COPY = {
                     (("敞口 / 上限", "1.50 / 2.00"), ("亏损检查", "限额内"), ("执行授权", "待审核")),
                 ),
             },
-            "view_project": "查看项目",
-            "projects": "研究项目",
-            "feed": "研究笔记",
-            "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
-            "empty": "这个分类还没有笔记。",
-            "source": "原始来源",
-            "risk": "需要留意",
-            "share": "有值得研究的线索？",
-            "send": "分享线索",
-            "latest": "最新笔记",
-        },
-        "products": {
-            "title": "从市场数据到决策",
-            "intro": "AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。",
             "aleph": (
                 "永续合约",
-                "用历史盘口回放永续合约策略的两条腿。",
                 "AlephTX 用记录下来的盘口深度、资金费率和独立参考价，研究不同市场之间的相对价值。",
                 (
                     ("整理行情", "对齐盘口深度、资金费率结算事件和参考价格。"),
@@ -158,7 +139,6 @@ COPY = {
             ),
             "oasis": (
                 "证据与风控",
-                "把策略判断追溯到当时的观察和风险检查。",
                 "Oasis Agent 保存策略判断的输入，让研究者能回放决策，并独立检查执行的风险边界。",
                 (
                     ("保留证据", "记录原始观察、数据来源和观察对应的状态。"),
@@ -225,11 +205,9 @@ def render_notes(notes, locale, copy):
         note = {key: escape(value) for key, value in entry[locale].items()}
         cards.append(f"""
       <article class="note-card" id="{slug}" data-category="{category}">
-        <div class="note-title">
-          <div class="note-meta"><span>{filters[category]}</span><time datetime="{day}">{day}</time></div>
-          <h3>{note["title"]}</h3>
-        </div>
+        <div class="note-meta"><time datetime="{day}">{day}</time><span>{filters[category]}</span></div>
         <div class="note-content">
+          <h3>{note["title"]}</h3>
           <p>{note["summary"]}</p>
           <p class="risk"><strong>{copy["risk"]}</strong> {note["risk"]}</p>
           <a class="text-link" href="{source}">{copy["source"]} <span aria-hidden="true">↗</span></a>
@@ -238,45 +216,23 @@ def render_notes(notes, locale, copy):
     return "".join(cards)
 
 
-def project_previews(here, copy):
-    previews = []
-    for key, slug, name in PROJECTS:
-        label, summary, _, _ = copy[key]
-        previews.append(f"""
-      <a class="project-preview" href="{here}products/#{slug}" aria-labelledby="preview-{slug}">
-        <p class="kicker">{label}</p>
-        <h3 id="preview-{slug}">{name}</h3>
-        <p class="preview-summary">{summary}</p>
-        <span class="preview-arrow" aria-hidden="true">↗</span>
-      </a>""")
-    return "".join(previews)
-
-
-def research_walkthrough(here, copy, products_copy):
-    tabs = []
-    panels = []
+def product_replay(copy, workflow, examples):
     ticks = "".join(f"<span>{offset} ms</span>" for offset in REPLAY_OFFSETS_MS)
-    for key, slug, name in PROJECTS:
-        *_, workflow = products_copy[key]
-        tabs.append(
-            f'<button type="button" id="tab-{slug}" role="tab" aria-controls="walkthrough-{slug}" '
-            f'aria-selected="false" tabindex="-1">{name}</button>'
-        )
-        frames = []
-        for (title, detail), offset, values in zip(workflow, REPLAY_OFFSETS_MS, copy["replay"][key], strict=True):
-            metrics = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in values)
-            frames.append(f"""
+    frames = []
+    for (title, detail), offset, values in zip(workflow, REPLAY_OFFSETS_MS, examples, strict=True):
+        metrics = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in values)
+        frames.append(f"""
           <div class="replay-frame" data-frame>
             <div class="frame-copy">
               <p class="frame-time">00:00.{offset:03d}</p>
-              <h4>{title}</h4>
+              <h3>{title}</h3>
               <p>{detail}</p>
             </div>
             <dl class="frame-metrics">{metrics}</dl>
           </div>""")
-        panels.append(f"""
-        <section class="walkthrough-panel" id="walkthrough-{slug}" aria-labelledby="heading-{slug}">
-          <h3 class="fallback-heading" id="heading-{slug}">{name}</h3>
+    return f"""
+        <details class="replay" name="project-replay" data-replay>
+          <summary>{copy["example"]}</summary>
           <div class="replay-frames">{"".join(frames)}
           </div>
           <div class="replay-controls" data-replay-controls hidden>
@@ -288,63 +244,22 @@ def research_walkthrough(here, copy, products_copy):
               <div class="replay-ticks" aria-hidden="true">{ticks}</div>
             </div>
           </div>
-          <a class="walkthrough-link" href="{here}products/#{slug}">{copy["view_project"]} <span aria-hidden="true">↗</span></a>
-        </section>""")
-    return f"""
-    <section class="section replay-section" id="research-walkthrough" aria-labelledby="workbench-title">
-      <div class="section-header">
-        <h2 id="workbench-title">{copy["walkthrough"]}</h2>
-        <p class="kicker">{copy["example"]}</p>
-      </div>
-      <div class="workbench" data-workbench>
-        <div class="workbench-tabs" role="tablist" aria-labelledby="workbench-title" hidden>{"".join(tabs)}</div>
-        <div class="workbench-body">{"".join(panels)}
-        </div>
-      </div>
-    </section>"""
+        </details>"""
 
 
-def alpha(locale, root, here, notes, copy, products_copy):
+def alpha(locale, root, here, notes, copy):
     categories = {entry["category"] for entry in notes}
     filters = "\n".join(
         f'        <button type="button" data-filter="{key}" aria-pressed="{str(key == "all").lower()}">{label}</button>'
         for key, label in copy["filters"].items()
         if key == "all" or key in categories
     )
-    title_start, title_end = copy["title"]
-    featured = ""
-    if notes:
-        latest = notes[0]
-        title = escape(latest[locale]["title"])
-        featured = f"""
-        <a class="featured-note" href="#{latest["id"]}" data-show-note>
-          <span class="kicker">{copy["latest"]}</span><span class="featured-title">{title}</span>
-          <span class="featured-arrow" aria-hidden="true">↓</span>
-        </a>"""
+    projects = "".join(
+        f'<a class="text-link" href="{here}products/#{slug}">{name} <span aria-hidden="true">↗</span></a>'
+        for _, slug, name in PROJECTS
+    )
     empty_attr = " hidden" if notes else ""
-    return f"""
-    <section class="hero" aria-labelledby="title">
-      <div class="hero-copy">
-        <p class="kicker">{copy["edition"]}</p>
-        <h1 id="title">{title_start} <span>{title_end}</span></h1>
-        <p class="intro">{copy["intro"]}</p>
-        <div class="hero-actions">
-          <a class="primary" href="#research-walkthrough">{copy["browse"]} <span aria-hidden="true">↓</span></a>
-          <a class="text-link" href="#feed">{copy["read"]}</a>
-        </div>
-      </div>
-      <div class="hero-media">
-        <img src="{root}assets/garnet-disk.webp" srcset="{root}assets/garnet-disk-720.webp 720w, {root}assets/garnet-disk.webp 1440w"
-          sizes="(max-width: 46rem) calc(100vw - 2.5rem), (max-width: 85rem) 46vw, 40rem"
-          width="1440" height="960" fetchpriority="high" alt="">{featured}
-      </div>
-    </section>
-{research_walkthrough(here, copy, products_copy)}
-    <section class="section showcase" id="research-projects" aria-labelledby="projects-title">
-      <h2 id="projects-title">{copy["projects"]}</h2>
-      <div class="grid project-previews">{project_previews(here, products_copy)}
-      </div>
-    </section>
+    return page_intro(copy["title"], copy["intro"]) + f"""
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -356,14 +271,14 @@ def alpha(locale, root, here, notes, copy, products_copy):
       </div>
       <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
     </section>
-    <aside class="share">
-      <p>{copy["share"]}</p>
-      <a class="text-link" href="mailto:{CONTACT}?subject=AlphaWink%20lead">{copy["send"]} <span aria-hidden="true">↗</span></a>
-    </aside>
+    <section class="project-index" id="research-walkthrough" aria-labelledby="research-projects">
+      <h2 id="research-projects">{copy["projects"]}</h2>
+      <div>{projects}</div>
+    </section>
     <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
 
 
-def page_intro(title, intro, eyebrow, extra=""):
+def page_intro(title, intro, eyebrow="", extra=""):
     label = f'<p class="kicker">{eyebrow}</p>' if eyebrow else ""
     return f"""
     <section class="page-intro" aria-labelledby="title">
@@ -374,31 +289,33 @@ def page_intro(title, intro, eyebrow, extra=""):
     </section>"""
 
 
-def product_card(slug, name, label, _summary, description, steps, action):
-    workflow = "".join(
-        f"<div><dt>{step}</dt><dd>{detail}</dd></div>" for step, detail in steps
-    )
+def product_card(slug, name, label, description, replay, action):
     return f"""
-      <article class="product-card" id="{slug}">
-        <p class="kicker">{label}</p>
-        <h2>{name}</h2>
-        <p>{description}</p>
-        <dl class="product-workflow">{workflow}</dl>
-        <div class="product-action">{action}</div>
+      <article class="product" id="{slug}">
+        <div class="product-title">
+          <p class="kicker">{label}</p>
+          <h2>{name}</h2>
+        </div>
+        <div class="product-content">
+          <p>{description}</p>
+          <div class="product-action">{action}</div>{replay}
+        </div>
       </article>"""
 
 
-def products(copy):
+def products(root, copy):
     source = f'<a class="text-link" href="{ALEPH}">{copy["source"]} <span aria-hidden="true">↗</span></a>'
-    status = f'<span class="status">{copy["status"]}</span>'
+    status = copy["status"]
     actions = {"aleph": source, "oasis": status}
-    cards = "".join(
-        product_card(slug, name, *copy[key], actions[key])
-        for key, slug, name in PROJECTS
-    )
-    return page_intro(copy["title"], copy["intro"], "") + f"""
-    <div class="grid product-grid">{cards}
-    </div>"""
+    cards = []
+    for key, slug, name in PROJECTS:
+        label, description, workflow = copy[key]
+        replay = product_replay(copy, workflow, copy["replay"][key])
+        cards.append(product_card(slug, name, label, description, replay, actions[key]))
+    return page_intro(copy["title"], copy["intro"]) + f"""
+    <div class="product-list" id="research-walkthrough">{"".join(cards)}
+    </div>
+    <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
 
 
 def about(locale, notes, copy, notes_copy):
@@ -446,9 +363,9 @@ def render(locale, page, notes):
     section = copy[("alpha", "products", "about")[page]]
     if page == 0:
         market_notes = [note for note in notes if note["category"] != "data"]
-        body = alpha(locale, root, here, market_notes, section, copy["products"])
+        body = alpha(locale, root, here, market_notes, section)
     elif page == 1:
-        body = products(section)
+        body = products(root, section)
     else:
         engineering_notes = [note for note in notes if note["category"] == "data"]
         body = about(locale, engineering_notes, section, copy["alpha"])
@@ -460,7 +377,7 @@ def render(locale, page, notes):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#f5f2ec">
+  <meta name="theme-color" content="#faf9f6">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
@@ -469,7 +386,7 @@ def render(locale, page, notes):
 <body>
   <a class="skip" href="#main">{copy["skip"]}</a>
   <header class="bar wrap">
-    <a class="brand" href="{here}"><span aria-hidden="true"></span>AlphaWink</a>
+    <a class="brand" href="{here}">AlphaWink</a>
     <nav aria-label="{copy["nav_label"]}">
 {nav}
       <a class="lang" href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>

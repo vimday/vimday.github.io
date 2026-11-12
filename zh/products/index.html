@@ -5,16 +5,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。">
-  <meta name="theme-color" content="#f5f2ec">
+  <meta name="theme-color" content="#faf9f6">
   <title>AlphaWink · 产品</title>
   <link rel="icon" href="../../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../../assets/site.css?v=5d5630c1de">
+  <link rel="stylesheet" href="../../assets/site.css?v=08b7c29cbb">
   <link rel="alternate" hreflang="en" href="../../products/">
 </head>
 <body>
   <a class="skip" href="#main">跳到正文</a>
   <header class="bar wrap">
-    <a class="brand" href="../../zh/"><span aria-hidden="true"></span>AlphaWink</a>
+    <a class="brand" href="../../zh/">AlphaWink</a>
     <nav aria-label="网站导航">
       <a href="../../zh/">Alpha 机会</a>
       <a href="../../zh/products/" aria-current="page">产品</a>
@@ -29,22 +29,105 @@
       <p class="intro">AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。</p>
       
     </section>
-    <div class="grid product-grid">
-      <article class="product-card" id="aleph-tx">
-        <p class="kicker">永续合约</p>
-        <h2>AlephTX</h2>
-        <p>AlephTX 用记录下来的盘口深度、资金费率和独立参考价，研究不同市场之间的相对价值。</p>
-        <dl class="product-workflow"><div><dt>整理行情</dt><dd>对齐盘口深度、资金费率结算事件和参考价格。</dd></div><div><dt>回放执行</dt><dd>为策略的两条腿模拟订单延迟和部分成交。</dd></div><div><dt>拆解成本</dt><dd>查看模拟成交、手续费、滑点和资金费收支。</dd></div></dl>
-        <div class="product-action"><a class="text-link" href="https://github.com/AlephTX/aleph-tx">在 GitHub 查看源码 <span aria-hidden="true">↗</span></a></div>
+    <div class="product-list" id="research-walkthrough">
+      <article class="product" id="aleph-tx">
+        <div class="product-title">
+          <p class="kicker">永续合约</p>
+          <h2>AlephTX</h2>
+        </div>
+        <div class="product-content">
+          <p>AlephTX 用记录下来的盘口深度、资金费率和独立参考价，研究不同市场之间的相对价值。</p>
+          <div class="product-action"><a class="text-link" href="https://github.com/AlephTX/aleph-tx">在 GitHub 查看源码 <span aria-hidden="true">↗</span></a></div>
+        <details class="replay" name="project-replay" data-replay>
+          <summary>示例回放</summary>
+          <div class="replay-frames">
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.000</p>
+              <h3>整理行情</h3>
+              <p>对齐盘口深度、资金费率结算事件和参考价格。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>A 市场卖一价</dt><dd>100.04</dd></div><div><dt>B 市场买一价</dt><dd>100.07</dd></div><div><dt>可用数量</dt><dd>2.00</dd></div></dl>
+          </div>
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.240</p>
+              <h3>回放执行</h3>
+              <p>为策略的两条腿模拟订单延迟和部分成交。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>A 市场模拟买入价</dt><dd>100.05</dd></div><div><dt>B 市场模拟卖出价</dt><dd>100.06</dd></div><div><dt>双边成交量</dt><dd>1.50</dd></div></dl>
+          </div>
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.480</p>
+              <h3>拆解成本</h3>
+              <p>查看模拟成交、手续费、滑点和资金费收支。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>手续费 · 计价单位</dt><dd>0.06</dd></div><div><dt>滑点 · 计价单位</dt><dd>0.03</dd></div><div><dt>资金费 · 计价单位</dt><dd>0.00</dd></div></dl>
+          </div>
+          </div>
+          <div class="replay-controls" data-replay-controls hidden>
+            <button class="replay-play" type="button" data-play="播放" data-pause="暂停">
+              <span class="play-icon" aria-hidden="true"></span><span>播放</span>
+            </button>
+            <div class="replay-track">
+              <input type="range" min="0" max="2" step="1" value="0" aria-label="回放时间轴">
+              <div class="replay-ticks" aria-hidden="true"><span>0 ms</span><span>240 ms</span><span>480 ms</span></div>
+            </div>
+          </div>
+        </details>
+        </div>
       </article>
-      <article class="product-card" id="oasis-agent">
-        <p class="kicker">证据与风控</p>
-        <h2>Oasis Agent</h2>
-        <p>Oasis Agent 保存策略判断的输入，让研究者能回放决策，并独立检查执行的风险边界。</p>
-        <dl class="product-workflow"><div><dt>保留证据</dt><dd>记录原始观察、数据来源和观察对应的状态。</dd></div><div><dt>回放判断</dt><dd>在模拟环境中复查决策和记账过程。</dd></div><div><dt>检查边界</dt><dd>在执行前检查敞口、亏损上限和授权范围。</dd></div></dl>
-        <div class="product-action"><span class="status">开发中</span></div>
+      <article class="product" id="oasis-agent">
+        <div class="product-title">
+          <p class="kicker">证据与风控</p>
+          <h2>Oasis Agent</h2>
+        </div>
+        <div class="product-content">
+          <p>Oasis Agent 保存策略判断的输入，让研究者能回放决策，并独立检查执行的风险边界。</p>
+          <div class="product-action">开发中</div>
+        <details class="replay" name="project-replay" data-replay>
+          <summary>示例回放</summary>
+          <div class="replay-frames">
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.000</p>
+              <h3>保留证据</h3>
+              <p>记录原始观察、数据来源和观察对应的状态。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>来源</dt><dd>盘口</dd></div><div><dt>观察到的价差</dt><dd>0.03</dd></div><div><dt>记录</dt><dd>快照</dd></div></dl>
+          </div>
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.240</p>
+              <h3>回放判断</h3>
+              <p>在模拟环境中复查决策和记账过程。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>运行模式</dt><dd>模拟</dd></div><div><dt>委托数量</dt><dd>2.00</dd></div><div><dt>双边成交量</dt><dd>1.50</dd></div></dl>
+          </div>
+          <div class="replay-frame" data-frame>
+            <div class="frame-copy">
+              <p class="frame-time">00:00.480</p>
+              <h3>检查边界</h3>
+              <p>在执行前检查敞口、亏损上限和授权范围。</p>
+            </div>
+            <dl class="frame-metrics"><div><dt>敞口 / 上限</dt><dd>1.50 / 2.00</dd></div><div><dt>亏损检查</dt><dd>限额内</dd></div><div><dt>执行授权</dt><dd>待审核</dd></div></dl>
+          </div>
+          </div>
+          <div class="replay-controls" data-replay-controls hidden>
+            <button class="replay-play" type="button" data-play="播放" data-pause="暂停">
+              <span class="play-icon" aria-hidden="true"></span><span>播放</span>
+            </button>
+            <div class="replay-track">
+              <input type="range" min="0" max="2" step="1" value="0" aria-label="回放时间轴">
+              <div class="replay-ticks" aria-hidden="true"><span>0 ms</span><span>240 ms</span><span>480 ms</span></div>
+            </div>
+          </div>
+        </details>
+        </div>
       </article>
     </div>
+    <script src="../../feed.js?v=c2f956ae51" defer></script>
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>

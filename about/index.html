@@ -5,16 +5,16 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="I build data platforms for embodied AI, including the workflows that turn multimodal robot data into datasets that teams can validate and reuse.">
-  <meta name="theme-color" content="#f5f2ec">
+  <meta name="theme-color" content="#faf9f6">
   <title>AlphaWink · About</title>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="../assets/site.css?v=5d5630c1de">
+  <link rel="stylesheet" href="../assets/site.css?v=08b7c29cbb">
   <link rel="alternate" hreflang="zh-Hans" href="../zh/about/">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
   <header class="bar wrap">
-    <a class="brand" href="../"><span aria-hidden="true"></span>AlphaWink</a>
+    <a class="brand" href="../">AlphaWink</a>
     <nav aria-label="Site navigation">
       <a href="../">Alpha</a>
       <a href="../products/">Products</a>
@@ -46,11 +46,9 @@
       <h2 id="archive-title">Engineering notes</h2>
       <div class="archive-grid">
       <article class="note-card" id="episode-quality-checks" data-category="data">
-        <div class="note-title">
-          <div class="note-meta"><span>Robotics data</span><time datetime="2026-11-12">2026-11-12</time></div>
-          <h3>Validate robot data at episode boundaries</h3>
-        </div>
+        <div class="note-meta"><time datetime="2026-11-12">2026-11-12</time><span>Robotics data</span></div>
         <div class="note-content">
+          <h3>Validate robot data at episode boundaries</h3>
           <p>Use an episode as the unit for your first dataset quality check. On a small sample, resolve video, state, and action ranges through the metadata. Inspect timestamps and alignment before paying the cost of a full dataset pass.</p>
           <p class="risk"><strong>What to watch</strong> A sample can miss corruption that only appears across files, cameras, or recording sessions. Expand coverage once the checks pass.</p>
           <a class="text-link" href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3">Original source <span aria-hidden="true">↗</span></a>
