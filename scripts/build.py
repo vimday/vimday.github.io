@@ -24,6 +24,8 @@ COPY = {
             "intro": "AlphaWink studies market opportunities through recorded data, simulated execution, and decisions you can trace back to the evidence.",
             "browse": "Explore the projects",
             "read": "Read the notes",
+            "walkthrough": "Research walkthrough",
+            "view_project": "View project",
             "projects": "Research projects",
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
@@ -89,6 +91,8 @@ COPY = {
             "intro": "AlphaWink 用市场记录和成交模拟研究机会，并保留决策依据，让每个判断都能回到原始证据。",
             "browse": "探索研究项目",
             "read": "阅读研究笔记",
+            "walkthrough": "研究流程预览",
+            "view_project": "查看项目",
             "projects": "研究项目",
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
@@ -181,11 +185,15 @@ def render_notes(notes, locale, copy):
         note = {key: escape(value) for key, value in entry[locale].items()}
         cards.append(f"""
       <article class="note-card" id="{slug}" data-category="{category}">
-        <div class="note-meta"><span>{filters[category]}</span><time datetime="{day}">{day}</time></div>
-        <h3>{note["title"]}</h3>
-        <p>{note["summary"]}</p>
-        <p class="risk"><strong>{copy["risk"]}</strong> {note["risk"]}</p>
-        <a class="text-link" href="{source}">{copy["source"]} <span aria-hidden="true">↗</span></a>
+        <div class="note-title">
+          <div class="note-meta"><span>{filters[category]}</span><time datetime="{day}">{day}</time></div>
+          <h3>{note["title"]}</h3>
+        </div>
+        <div class="note-content">
+          <p>{note["summary"]}</p>
+          <p class="risk"><strong>{copy["risk"]}</strong> {note["risk"]}</p>
+          <a class="text-link" href="{source}">{copy["source"]} <span aria-hidden="true">↗</span></a>
+        </div>
       </article>""")
     return "".join(cards)
 
@@ -204,6 +212,43 @@ def project_previews(here, copy):
     return "".join(previews)
 
 
+def research_walkthrough(here, copy, products_copy):
+    tabs = []
+    panels = []
+    for key, slug, name in PROJECTS:
+        *_, workflow = products_copy[key]
+        tabs.append(
+            f'<button type="button" id="tab-{slug}" role="tab" aria-controls="walkthrough-{slug}" '
+            f'aria-selected="false" tabindex="-1">{name}</button>'
+        )
+        steps = []
+        for number, (title, detail) in enumerate(workflow, 1):
+            initial = " open" if number == 1 else ""
+            steps.append(f"""
+          <details class="trace-step" name="steps-{slug}"{initial}>
+            <summary>
+              <span class="trace-number" aria-hidden="true">{number:02d}</span>
+              <span>{title}</span>
+              <span class="trace-toggle" aria-hidden="true"></span>
+            </summary>
+            <p>{detail}</p>
+          </details>""")
+        panels.append(f"""
+        <section class="walkthrough-panel" id="walkthrough-{slug}" aria-labelledby="heading-{slug}">
+          <h3 id="heading-{slug}">{name}</h3>
+          <div class="trace">{"".join(steps)}
+          </div>
+          <a class="walkthrough-link" href="{here}products/#{slug}">{copy["view_project"]} <span aria-hidden="true">↗</span></a>
+        </section>""")
+    return f"""
+      <section class="workbench" aria-labelledby="workbench-title" data-workbench>
+        <h2 id="workbench-title">{copy["walkthrough"]}</h2>
+        <div class="workbench-tabs" role="tablist" aria-labelledby="workbench-title" hidden>{"".join(tabs)}</div>
+        <div class="workbench-body">{"".join(panels)}
+        </div>
+      </section>"""
+
+
 def alpha(locale, root, here, notes, copy, products_copy):
     categories = {entry["category"] for entry in notes}
     filters = "\n".join(
@@ -218,8 +263,8 @@ def alpha(locale, root, here, notes, copy, products_copy):
         title = escape(latest[locale]["title"])
         featured = f"""
         <a class="featured-note" href="#{latest["id"]}" data-show-note>
-          <span class="featured-label">{copy["latest"]}</span>
-          <strong>{title}</strong>
+          <img src="{root}assets/refraction.webp" width="1440" height="960" loading="lazy" decoding="async" alt="">
+          <span><small>{copy["latest"]}</small><strong>{title}</strong></span>
           <span class="featured-arrow" aria-hidden="true">↘</span>
         </a>"""
     empty_attr = " hidden" if notes else ""
@@ -233,11 +278,7 @@ def alpha(locale, root, here, notes, copy, products_copy):
           <a class="text-link" href="#feed">{copy["read"]}</a>
         </div>
       </div>
-      <div class="hero-feature">
-        <div class="cover">
-          <img src="{root}assets/market-pulse.webp" alt="" width="1440" height="960" fetchpriority="high">
-        </div>{featured}
-      </div>
+{research_walkthrough(here, copy, products_copy)}
     </section>
     <section class="section showcase" id="research-projects" aria-labelledby="projects-title">
       <h2 id="projects-title">{copy["projects"]}</h2>
@@ -250,8 +291,8 @@ def alpha(locale, root, here, notes, copy, products_copy):
         <div id="filters" class="filters" role="group" aria-label="{copy["feed"]}" hidden>
 {filters}
         </div>
-      </div>
-      <div id="notes" class="grid">{render_notes(notes, locale, copy)}
+      </div>{featured}
+      <div id="notes" class="note-index">{render_notes(notes, locale, copy)}
       </div>
       <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
     </section>
@@ -311,7 +352,7 @@ def about(locale, notes, copy, notes_copy):
         archive = f"""
     <section class="section archive-section" aria-labelledby="archive-title">
       <h2 id="archive-title">{copy["notes"]}</h2>
-      <div class="grid archive-grid">{render_notes(notes, locale, notes_copy)}
+      <div class="archive-grid">{render_notes(notes, locale, notes_copy)}
       </div>
     </section>"""
     return page_intro(copy["title"], copy["intro"], "@VIMDAY", github) + f"""
@@ -358,7 +399,7 @@ def render(locale, page, notes):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#10100f">
+  <meta name="theme-color" content="#f7f7fb">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}assets/site.css">
