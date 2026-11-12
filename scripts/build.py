@@ -17,7 +17,15 @@ PROJECTS = (("aleph", "aleph-tx", "AlephTX"), ("oasis", "oasis-agent", "Oasis Ag
 REPLAY_OFFSETS_MS = (0, 240, 480)
 ASSETS = {
     path: f"{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}"
-    for path in ("assets/site.css", "feed.js", "favicon.svg")
+    for path in (
+        "assets/site.css",
+        "feed.js",
+        "favicon.svg",
+        "favicon.ico",
+        "favicon-32x32.png",
+        "favicon-96x96.png",
+        "apple-touch-icon.png",
+    )
 }
 
 COPY = {
@@ -381,11 +389,11 @@ def render(locale, page, notes):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{description}">
   <meta name="theme-color" content="#f6f3ea">
-  <title>{name} \\ AlphaWink</title>
-  <link rel="icon" href="{root}favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon">
-  <link rel="icon" href="{root}favicon-32x32.png" sizes="32x32" type="image/png">
-  <link rel="icon" href="{root}favicon-96x96.png" sizes="96x96" type="image/png">
-  <link rel="apple-touch-icon" href="{root}apple-touch-icon.png" sizes="180x180">
+  <title>{name} / AlphaWink</title>
+  <link rel="icon" href="{root}{ASSETS["favicon.ico"]}" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" href="{root}{ASSETS["favicon-32x32.png"]}" sizes="32x32" type="image/png">
+  <link rel="icon" href="{root}{ASSETS["favicon-96x96.png"]}" sizes="96x96" type="image/png">
+  <link rel="apple-touch-icon" href="{root}{ASSETS["apple-touch-icon.png"]}" sizes="180x180">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
   <link rel="alternate" hreflang="{other_lang}" href="{other}">
 </head>
@@ -393,7 +401,7 @@ def render(locale, page, notes):
   <a class="skip" href="#main">{copy["skip"]}</a>
   <header class="bar wrap">
     <a class="brand" href="{here}" aria-label="AlphaWink">
-      <img class="brand-mark" src="{mark}" alt="" width="30" height="30">
+      <img class="brand-mark" src="{mark}" alt="" width="28" height="28">
       <span class="brand-name">AlphaWink</span>
     </a>
     <nav aria-label="{copy["nav_label"]}">

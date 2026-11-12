@@ -55,8 +55,8 @@ h2:lang(zh-Hans) { letter-spacing: 0; }
 .bar, .footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .2rem 1.5rem; }
 .bar { padding-block: .85rem; border-bottom: 1px solid var(--line); }
 .bar a { text-decoration: none; }
-.brand { display: inline-flex; align-items: center; gap: .48rem; min-height: 2.75rem; font: 400 1.7rem/1 var(--serif); letter-spacing: -.038em; }
-.brand-mark { display: block; flex: none; width: 1.875rem; height: 1.875rem; }
+.brand { display: inline-flex; align-items: center; gap: .55rem; min-height: 2.75rem; font: 400 1.7rem/1 var(--serif); letter-spacing: -.038em; }
+.brand-mark { display: block; flex: none; width: 1.75rem; height: 1.75rem; }
 .bar nav { display: flex; flex-wrap: wrap; align-items: center; gap: 0 clamp(.65rem, 2.8vw, 1.7rem); }
 .bar nav a { display: inline-flex; align-items: center; min-height: 2.75rem; color: var(--muted); font-size: .91rem; font-weight: 500; text-underline-offset: .42em; }
 .bar nav a:hover, .bar nav [aria-current] { color: var(--ink); text-decoration: underline var(--accent-rule); }
@@ -167,7 +167,7 @@ h2:lang(zh-Hans) { letter-spacing: 0; }
 }
 @media (max-width: 29rem) {
   .bar { gap: .2rem .8rem; padding-block: .55rem; }
-  .brand { gap: .35rem; font-size: 1.4rem; }
+  .brand { gap: .42rem; font-size: 1.4rem; }
   .bar nav { gap: 0 .65rem; }
   .bar nav a { padding-inline: .15rem; font-size: .86rem; }
   .tool-grid { grid-template-columns: minmax(0, 1fr); }
