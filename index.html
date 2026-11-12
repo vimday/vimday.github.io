@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Research notes on markets, robotics data, and the tools used to investigate them.">
+  <meta name="description" content="AlphaWink studies market opportunities through recorded data, simulated execution, and decisions you can trace back to the evidence.">
   <meta name="theme-color" content="#f8f7f2">
   <title>AlphaWink · Alpha</title>
   <link rel="icon" href="./favicon.svg" type="image/svg+xml">
@@ -25,19 +25,39 @@
   <main class="wrap" id="main">
     <section class="hero" aria-labelledby="title">
       <div class="hero-copy">
-        <h1 id="title">Find the <span>signal.</span></h1>
-        <p class="intro">Research notes on markets, robotics data, and the tools used to investigate them.</p>
-        <a class="primary" href="#feed">Explore the notes <span aria-hidden="true">↓</span></a>
+        <h1 id="title">Replay the <span>market.</span></h1>
+        <p class="intro">AlphaWink studies market opportunities through recorded data, simulated execution, and decisions you can trace back to the evidence.</p>
+        <div class="hero-actions">
+          <a class="primary" href="#research-projects">Explore the projects <span aria-hidden="true">↓</span></a>
+          <a class="text-link" href="#feed">Read the notes</a>
+        </div>
       </div>
       <div class="hero-feature">
         <div class="cover">
           <img src="./assets/refraction.webp" alt="" width="1440" height="960" fetchpriority="high">
         </div>
-        <a class="featured-note" href="#funding-windows" data-show-note>
+        <a class="featured-note" href="#executable-depth" data-show-note>
           <span class="featured-label">Latest note</span>
-          <strong>Compare funding on the same clock</strong>
+          <strong>Replay against the order book</strong>
           <span class="featured-arrow" aria-hidden="true">↘</span>
         </a>
+      </div>
+    </section>
+    <section class="section showcase" id="research-projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">Research projects</h2>
+      <div class="grid project-previews">
+      <a class="project-preview" href="./products/#aleph-tx" aria-labelledby="preview-aleph-tx">
+        <p class="kicker">Perpetual futures</p>
+        <h3 id="preview-aleph-tx">AlephTX</h3>
+        <p class="preview-summary">Replay both legs of a perpetual futures strategy against recorded market data.</p>
+        <span class="preview-arrow" aria-hidden="true">↗</span>
+      </a>
+      <a class="project-preview" href="./products/#oasis-agent" aria-labelledby="preview-oasis-agent">
+        <p class="kicker">Evidence and risk</p>
+        <h3 id="preview-oasis-agent">Oasis Agent</h3>
+        <p class="preview-summary">Trace a strategy decision back to the observations and risk checks behind it.</p>
+        <span class="preview-arrow" aria-hidden="true">↗</span>
+      </a>
       </div>
     </section>
     <section class="section" id="feed" aria-labelledby="feed-title">
@@ -45,32 +65,27 @@
         <h2 id="feed-title">Research notes</h2>
         <div id="filters" class="filters" role="group" aria-label="Research notes" hidden>
         <button type="button" data-filter="all" aria-pressed="true">All</button>
-        <button type="button" data-filter="markets" aria-pressed="false">Markets</button>
-        <button type="button" data-filter="data" aria-pressed="false">Robotics data</button>
-        <button type="button" data-filter="tools" aria-pressed="false">Tools</button>
+        <button type="button" data-filter="markets" aria-pressed="false">Market mechanics</button>
+        <button type="button" data-filter="tools" aria-pressed="false">Research methods</button>
         </div>
       </div>
       <div id="notes" class="grid">
+      <article class="note-card" id="executable-depth" data-category="tools">
+        <div class="note-meta"><span>Research methods</span><time datetime="2026-11-12">2026-11-12</time></div>
+        <h3>Replay against the order book</h3>
+        <p>A mid-price spread can suggest a hypothesis. To test execution, replay both legs against recorded depth and account for latency, partial fills, fees, and funding. Keep the two fill histories separate so the cost of each leg remains visible.</p>
+        <p class="risk"><strong>What to watch</strong> A replay models what displayed liquidity might fill. Live orders can miss that liquidity or fill at a different price.</p>
+        <a class="text-link" href="https://github.com/AlephTX/aleph-tx/blob/main/docs/PERP_RELATIVE_VALUE.md">Original source <span aria-hidden="true">↗</span></a>
+      </article>
       <article class="note-card" id="funding-windows" data-category="markets">
-        <div class="note-meta"><span>Markets</span><time datetime="2026-11-12">2026-11-12</time></div>
+        <div class="note-meta"><span>Market mechanics</span><time datetime="2026-11-12">2026-11-12</time></div>
         <h3>Compare funding on the same clock</h3>
         <p>Start a cross-venue funding study with settlement timestamps and a common holding window. A quoted rate may use a different time basis than the payment itself. Reconstruct cash flows over the same window before ranking spreads, then include fees and slippage.</p>
         <p class="risk"><strong>What to watch</strong> An apparent spread can disappear when settlement times differ or the available size cannot be filled at the assumed price.</p>
         <a class="text-link" href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/funding">Original source <span aria-hidden="true">↗</span></a>
       </article>
-      <article class="note-card" id="episode-quality-checks" data-category="data">
-        <div class="note-meta"><span>Robotics data</span><time datetime="2026-11-12">2026-11-12</time></div>
-        <h3>Validate robot data at episode boundaries</h3>
-        <p>Use an episode as the unit for your first dataset quality check. On a small sample, resolve video, state, and action ranges through the metadata. Inspect timestamps and alignment before paying the cost of a full dataset pass.</p>
-        <p class="risk"><strong>What to watch</strong> A sample can miss corruption that only appears across files, cameras, or recording sessions. Expand coverage once the checks pass.</p>
-        <a class="text-link" href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3">Original source <span aria-hidden="true">↗</span></a>
-      </article>
       </div>
       <p id="empty" class="empty" hidden>No notes in this category yet.</p>
-    </section>
-    <section class="method" aria-labelledby="method-title">
-      <h2 id="method-title">Before calling it an opportunity</h2>
-      <ol><li><strong>Observe</strong><span>What changed?</span></li><li><strong>Verify</strong><span>What can you reproduce?</span></li><li><strong>Revisit</strong><span>What would change your mind?</span></li></ol>
     </section>
     <aside class="share">
       <p>Found something worth investigating?</p>

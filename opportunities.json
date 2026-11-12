@@ -1,5 +1,21 @@
 [
   {
+    "id": "executable-depth",
+    "date": "2026-11-12",
+    "category": "tools",
+    "source": "https://github.com/AlephTX/aleph-tx/blob/main/docs/PERP_RELATIVE_VALUE.md",
+    "en": {
+      "title": "Replay against the order book",
+      "summary": "A mid-price spread can suggest a hypothesis. To test execution, replay both legs against recorded depth and account for latency, partial fills, fees, and funding. Keep the two fill histories separate so the cost of each leg remains visible.",
+      "risk": "A replay models what displayed liquidity might fill. Live orders can miss that liquidity or fill at a different price."
+    },
+    "zh": {
+      "title": "用盘口深度回放成交",
+      "summary": "中间价差可以用来提出假设。检验成交时，用记录下来的盘口回放两条腿，并计入延迟、部分成交、手续费和资金费。分别保留每条腿的成交记录，才能看到各自的执行成本。",
+      "risk": "回放假设可见挂单能够按模型成交。实盘可能错过这些挂单，也可能以不同价格成交。"
+    }
+  },
+  {
     "id": "funding-windows",
     "date": "2026-11-12",
     "category": "markets",

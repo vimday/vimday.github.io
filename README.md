@@ -8,7 +8,8 @@ Add notes to `opportunities.json`. Each entry has a stable `id` for links, a
 `date` (YYYY-MM-DD), a `category` (`markets`, `data`, or `tools`), an HTTPS
 `source`, and `en` and `zh` objects with `title`, `summary`, and `risk`.
 Notes appear newest first. Include a primary source and what would weaken the
-finding.
+finding. Market mechanics and research methods appear on Alpha. Notes tagged
+`data` appear under Engineering notes on About.
 
 Page copy lives in `scripts/build.py`. After updating the copy or notes, run
 `python3 scripts/build.py` and commit the generated HTML alongside its source.

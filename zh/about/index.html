@@ -42,6 +42,18 @@
       <h2 id="tools-title">日常工具</h2>
       <dl class="tool-grid"><div><dt>编程 Agent</dt><dd>Codex · Claude Code · MCP</dd></div><div><dt>终端环境</dt><dd>Herdr · Neovim · Linux · Git</dd></div><div><dt>系统开发</dt><dd>Go · Rust · Python · Kubernetes · Docker</dd></div></dl>
     </section>
+    <section class="section archive-section" aria-labelledby="archive-title">
+      <h2 id="archive-title">工程笔记</h2>
+      <div class="grid archive-grid">
+      <article class="note-card" id="episode-quality-checks" data-category="data">
+        <div class="note-meta"><span>机器人数据</span><time datetime="2026-11-12">2026-11-12</time></div>
+        <h3>从 episode 边界开始检查机器人数据</h3>
+        <p>先抽一小批 episode 做质检。通过元数据定位每段视频、状态和动作的范围，检查时间戳和对齐情况，再决定如何做全量扫描。</p>
+        <p class="risk"><strong>需要留意</strong> 小样本可能漏掉只在跨文件、跨相机或跨采集批次时出现的问题。初步检查通过后，再扩大覆盖范围。</p>
+        <a class="text-link" href="https://huggingface.co/docs/lerobot/lerobot-dataset-v3">原始来源 <span aria-hidden="true">↗</span></a>
+      </article>
+      </div>
+    </section>
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>

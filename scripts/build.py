@@ -12,6 +12,7 @@ CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
 ALEPH = "https://github.com/AlephTX/aleph-tx"
 ROUTES = ("", "products/", "about/")
+PROJECTS = (("aleph", "aleph-tx", "AlephTX"), ("oasis", "oasis-agent", "Oasis Agent"))
 
 COPY = {
     "en": {
@@ -19,17 +20,13 @@ COPY = {
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "alpha": {
-            "title": ("Find the", "signal."),
-            "intro": "Research notes on markets, robotics data, and the tools used to investigate them.",
-            "browse": "Explore the notes",
-            "method": "Before calling it an opportunity",
-            "questions": (
-                ("Observe", "What changed?"),
-                ("Verify", "What can you reproduce?"),
-                ("Revisit", "What would change your mind?"),
-            ),
+            "title": ("Replay the", "market."),
+            "intro": "AlphaWink studies market opportunities through recorded data, simulated execution, and decisions you can trace back to the evidence.",
+            "browse": "Explore the projects",
+            "read": "Read the notes",
+            "projects": "Research projects",
             "feed": "Research notes",
-            "filters": {"all": "All", "markets": "Markets", "data": "Robotics data", "tools": "Tools"},
+            "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
             "empty": "No notes in this category yet.",
             "source": "Original source",
             "risk": "What to watch",
@@ -38,17 +35,27 @@ COPY = {
             "latest": "Latest note",
         },
         "products": {
-            "title": "Tools for market research",
-            "intro": "AlephTX replays market data to test execution assumptions. Oasis Agent traces decisions back to the evidence and risk checks behind them.",
+            "title": "From market data to decisions",
+            "intro": "AlephTX models how an idea might execute. Oasis Agent records how decisions were made and checks the limits for execution.",
             "aleph": (
                 "Perpetual futures",
-                "Study relative value across markets. Replay recorded data and check whether an idea holds up after fees, funding, and slippage.",
-                ("Market data replay", "Execution and cost modeling", "Relative-value research"),
+                "Replay both legs of a perpetual futures strategy against recorded market data.",
+                "AlephTX combines recorded order-book depth, funding, and independent reference prices to study relative value across venues.",
+                (
+                    ("Build the dataset", "Align market depth, funding events, and reference prices."),
+                    ("Replay execution", "Model order latency and partial fills across both legs."),
+                    ("Read the costs", "Inspect simulated fills, fees, slippage, and settled funding."),
+                ),
             ),
             "oasis": (
-                "Research and risk",
-                "Keep a record of what the agent observed, how it reached a decision, and which limits apply before execution.",
-                ("Evidence records", "Decision replay", "Risk checks"),
+                "Evidence and risk",
+                "Trace a strategy decision back to the observations and risk checks behind it.",
+                "Oasis Agent records the inputs behind a strategy decision so researchers can replay it and examine the execution limits separately.",
+                (
+                    ("Keep the evidence", "Preserve the original observation, its source, and the state it came from."),
+                    ("Replay the decision", "Revisit the decision and its accounting in simulation."),
+                    ("Check the limits", "Evaluate exposure, loss limits, and authorization before execution."),
+                ),
             ),
             "source": "View source on GitHub",
             "status": "In development",
@@ -58,6 +65,7 @@ COPY = {
             "intro": "I build data platforms for embodied AI, including the workflows that turn multimodal robot data into datasets that teams can validate and reuse.",
             "github": "GitHub profile",
             "work": "Engineering work",
+            "notes": "Engineering notes",
             "work_areas": (
                 ("Data platforms", "Pipelines for processing, annotating, validating, and versioning multimodal robot datasets."),
                 ("AI infrastructure", "Distributed services that run data workflows and deliver datasets."),
@@ -77,17 +85,13 @@ COPY = {
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "alpha": {
-            "title": ("寻找值得", "验证的机会。"),
-            "intro": "记录市场、机器人数据和研究工具里的发现，附上核实线索和判断可能失效的条件。",
-            "browse": "查看研究笔记",
-            "method": "判断机会前，先问三件事",
-            "questions": (
-                ("观察", "发生了什么变化？"),
-                ("核实", "哪些证据可以复现？"),
-                ("复查", "什么会改变判断？"),
-            ),
+            "title": ("回放市场，", "检验假设。"),
+            "intro": "AlphaWink 用市场记录和成交模拟研究机会，并保留决策依据，让每个判断都能回到原始证据。",
+            "browse": "探索研究项目",
+            "read": "阅读研究笔记",
+            "projects": "研究项目",
             "feed": "研究笔记",
-            "filters": {"all": "全部", "markets": "市场", "data": "机器人数据", "tools": "工具"},
+            "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
             "empty": "这个分类还没有笔记。",
             "source": "原始来源",
             "risk": "需要留意",
@@ -96,17 +100,27 @@ COPY = {
             "latest": "最新笔记",
         },
         "products": {
-            "title": "市场研究工具",
-            "intro": "AlephTX 用市场数据回放检验执行假设。Oasis Agent 记录判断所依据的证据和风险检查。",
+            "title": "从市场数据到决策",
+            "intro": "AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。",
             "aleph": (
                 "永续合约",
-                "研究不同市场之间的相对价值。回放记录下来的行情，检查计入手续费、资金费率和滑点后，假设是否仍然成立。",
-                ("市场数据回放", "执行和成本建模", "相对价值研究"),
+                "用历史盘口回放永续合约策略的两条腿。",
+                "AlephTX 用记录下来的盘口深度、资金费率和独立参考价，研究不同市场之间的相对价值。",
+                (
+                    ("整理行情", "对齐盘口深度、资金费率结算事件和参考价格。"),
+                    ("回放执行", "为策略的两条腿模拟订单延迟和部分成交。"),
+                    ("拆解成本", "查看模拟成交、手续费、滑点和资金费收支。"),
+                ),
             ),
             "oasis": (
-                "研究与风控",
-                "记录 Agent 看到了什么、如何得出判断，以及执行前要满足哪些风险约束。",
-                ("证据记录", "决策回放", "风险检查"),
+                "证据与风控",
+                "把策略判断追溯到当时的观察和风险检查。",
+                "Oasis Agent 保存策略判断的输入，让研究者能回放决策，并独立检查执行的风险边界。",
+                (
+                    ("保留证据", "记录原始观察、数据来源和观察对应的状态。"),
+                    ("回放判断", "在模拟环境中复查决策和记账过程。"),
+                    ("检查边界", "在执行前检查敞口、亏损上限和授权范围。"),
+                ),
             ),
             "source": "在 GitHub 查看源码",
             "status": "开发中",
@@ -116,6 +130,7 @@ COPY = {
             "intro": "我做具身智能数据平台和 AI 基础设施，把多模态机器人数据处理成可校验、可复用的数据集。",
             "github": "GitHub 主页",
             "work": "工程经历",
+            "notes": "工程笔记",
             "work_areas": (
                 ("数据平台", "构建多模态机器人数据流水线，覆盖处理、标注、质量校验和版本管理。"),
                 ("AI 基础设施", "为数据流程的执行和数据集交付构建分布式服务。"),
@@ -175,14 +190,26 @@ def render_notes(notes, locale, copy):
     return "".join(cards)
 
 
-def alpha(locale, root, notes, copy):
-    questions = "".join(
-        f"<li><strong>{label}</strong><span>{question}</span></li>"
-        for label, question in copy["questions"]
-    )
+def project_previews(here, copy):
+    previews = []
+    for key, slug, name in PROJECTS:
+        label, summary, _, _ = copy[key]
+        previews.append(f"""
+      <a class="project-preview" href="{here}products/#{slug}" aria-labelledby="preview-{slug}">
+        <p class="kicker">{label}</p>
+        <h3 id="preview-{slug}">{name}</h3>
+        <p class="preview-summary">{summary}</p>
+        <span class="preview-arrow" aria-hidden="true">↗</span>
+      </a>""")
+    return "".join(previews)
+
+
+def alpha(locale, root, here, notes, copy, products_copy):
+    categories = {entry["category"] for entry in notes}
     filters = "\n".join(
         f'        <button type="button" data-filter="{key}" aria-pressed="{str(key == "all").lower()}">{label}</button>'
         for key, label in copy["filters"].items()
+        if key == "all" or key in categories
     )
     title_start, title_end = copy["title"]
     featured = ""
@@ -201,12 +228,20 @@ def alpha(locale, root, notes, copy):
       <div class="hero-copy">
         <h1 id="title">{title_start} <span>{title_end}</span></h1>
         <p class="intro">{copy["intro"]}</p>
-        <a class="primary" href="#feed">{copy["browse"]} <span aria-hidden="true">↓</span></a>
+        <div class="hero-actions">
+          <a class="primary" href="#research-projects">{copy["browse"]} <span aria-hidden="true">↓</span></a>
+          <a class="text-link" href="#feed">{copy["read"]}</a>
+        </div>
       </div>
       <div class="hero-feature">
         <div class="cover">
           <img src="{root}assets/refraction.webp" alt="" width="1440" height="960" fetchpriority="high">
         </div>{featured}
+      </div>
+    </section>
+    <section class="section showcase" id="research-projects" aria-labelledby="projects-title">
+      <h2 id="projects-title">{copy["projects"]}</h2>
+      <div class="grid project-previews">{project_previews(here, products_copy)}
       </div>
     </section>
     <section class="section" id="feed" aria-labelledby="feed-title">
@@ -219,10 +254,6 @@ def alpha(locale, root, notes, copy):
       <div id="notes" class="grid">{render_notes(notes, locale, copy)}
       </div>
       <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
-    </section>
-    <section class="method" aria-labelledby="method-title">
-      <h2 id="method-title">{copy["method"]}</h2>
-      <ol>{questions}</ol>
     </section>
     <aside class="share">
       <p>{copy["share"]}</p>
@@ -241,14 +272,16 @@ def page_intro(title, intro, eyebrow, extra=""):
     </section>"""
 
 
-def product_card(name, label, description, features, action):
-    items = "".join(f"<li>{feature}</li>" for feature in features)
+def product_card(slug, name, label, _summary, description, steps, action):
+    workflow = "".join(
+        f"<div><dt>{step}</dt><dd>{detail}</dd></div>" for step, detail in steps
+    )
     return f"""
-      <article class="product-card">
+      <article class="product-card" id="{slug}">
         <p class="kicker">{label}</p>
         <h2>{name}</h2>
         <p>{description}</p>
-        <ul class="features">{items}</ul>
+        <dl class="product-workflow">{workflow}</dl>
         <div class="product-action">{action}</div>
       </article>"""
 
@@ -256,19 +289,31 @@ def product_card(name, label, description, features, action):
 def products(copy):
     source = f'<a class="text-link" href="{ALEPH}">{copy["source"]} <span aria-hidden="true">↗</span></a>'
     status = f'<span class="status">{copy["status"]}</span>'
+    actions = {"aleph": source, "oasis": status}
+    cards = "".join(
+        product_card(slug, name, *copy[key], actions[key])
+        for key, slug, name in PROJECTS
+    )
     return page_intro(copy["title"], copy["intro"], "ALPHAWINK / PRODUCTS") + f"""
-    <div class="grid product-grid">{product_card("AlephTX", *copy["aleph"], source)}
-{product_card("Oasis Agent", *copy["oasis"], status)}
+    <div class="grid product-grid">{cards}
     </div>"""
 
 
-def about(copy):
+def about(locale, notes, copy, notes_copy):
     github = f'<a class="text-link" href="{GITHUB}">{copy["github"]} <span aria-hidden="true">↗</span></a>'
     areas = "\n".join(
         f"      <article><h3>{title}</h3><p>{description}</p></article>"
         for title, description in copy["work_areas"]
     )
     stack = "".join(f"<div><dt>{area}</dt><dd>{tools}</dd></div>" for area, tools in copy["stack"])
+    archive = ""
+    if notes:
+        archive = f"""
+    <section class="section archive-section" aria-labelledby="archive-title">
+      <h2 id="archive-title">{copy["notes"]}</h2>
+      <div class="grid archive-grid">{render_notes(notes, locale, notes_copy)}
+      </div>
+    </section>"""
     return page_intro(copy["title"], copy["intro"], "@VIMDAY", github) + f"""
     <section class="section work-section" aria-labelledby="work-title">
       <h2 id="work-title">{copy["work"]}</h2>
@@ -279,7 +324,7 @@ def about(copy):
     <section class="section tool-section" aria-labelledby="tools-title">
       <h2 id="tools-title">{copy["tools"]}</h2>
       <dl class="tool-grid">{stack}</dl>
-    </section>"""
+    </section>{archive}"""
 
 
 def render(locale, page, notes):
@@ -298,11 +343,13 @@ def render(locale, page, notes):
     name = copy["nav"][page]
     section = copy[("alpha", "products", "about")[page]]
     if page == 0:
-        body = alpha(locale, root, notes, section)
+        market_notes = [note for note in notes if note["category"] != "data"]
+        body = alpha(locale, root, here, market_notes, section, copy["products"])
     elif page == 1:
         body = products(section)
     else:
-        body = about(section)
+        engineering_notes = [note for note in notes if note["category"] == "data"]
+        body = about(locale, engineering_notes, section, copy["alpha"])
 
     html = f"""<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
