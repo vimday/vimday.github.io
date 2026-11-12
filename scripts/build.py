@@ -22,7 +22,7 @@ ASSETS = {
 
 COPY = {
     "en": {
-        "nav": ("Alpha", "Products", "About"),
+        "nav": ("Home", "Products", "About"),
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "alpha": {
@@ -96,7 +96,7 @@ COPY = {
         },
     },
     "zh": {
-        "nav": ("Alpha 机会", "产品", "关于"),
+        "nav": ("首页", "产品", "关于"),
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "alpha": {
@@ -354,7 +354,7 @@ def render(locale, page, notes):
     root = "../" * route.count("/") or "./"
     mark = root + ASSETS["favicon.svg"]
     here = root + ("zh/" if locale == "zh" else "")
-    other_lang, other_label = ("en", "EN") if locale == "zh" else ("zh-Hans", "中文")
+    other_lang, other_label = ("en", "English") if locale == "zh" else ("zh-Hans", "中文")
     other = root + ("zh/" if locale == "en" else "") + ROUTES[page]
     current = ' aria-current="page"'
     nav = "\n".join(
@@ -381,28 +381,33 @@ def render(locale, page, notes):
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{description}">
   <meta name="theme-color" content="#f6f3ea">
-  <title>AlphaWink · {name}</title>
-  <link rel="icon" href="{mark}" type="image/svg+xml">
+  <title>{name} \\ AlphaWink</title>
+  <link rel="icon" href="{root}favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" href="{root}favicon-32x32.png" sizes="32x32" type="image/png">
+  <link rel="icon" href="{root}favicon-96x96.png" sizes="96x96" type="image/png">
+  <link rel="apple-touch-icon" href="{root}apple-touch-icon.png" sizes="180x180">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
   <link rel="alternate" hreflang="{other_lang}" href="{other}">
 </head>
 <body>
   <a class="skip" href="#main">{copy["skip"]}</a>
   <header class="bar wrap">
-    <a class="brand" href="{here}">
+    <a class="brand" href="{here}" aria-label="AlphaWink">
       <img class="brand-mark" src="{mark}" alt="" width="30" height="30">
-      AlphaWink
+      <span class="brand-name">AlphaWink</span>
     </a>
     <nav aria-label="{copy["nav_label"]}">
 {nav}
-      <a class="lang" href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
     </nav>
   </header>
   <main class="wrap" id="main">{body}
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>
-    <a href="mailto:{CONTACT}">{CONTACT}</a>
+    <div class="footer-links">
+      <a href="mailto:{CONTACT}">{CONTACT}</a>
+      <a href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
+    </div>
   </footer>
 </body>
 </html>
