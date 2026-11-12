@@ -26,7 +26,7 @@ COPY = {
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "alpha": {
-            "title": "Independent market research",
+            "title": "Independent <span>market research</span>",
             "intro": "We study market opportunities with recorded data and simulated trades.",
             "projects": "Research projects",
             "feed": "Research notes",
@@ -36,7 +36,7 @@ COPY = {
             "risk": "What to watch",
         },
         "products": {
-            "title": "From market data to decisions",
+            "title": 'From <span class="phrase">market data</span> to decisions',
             "intro": "AlephTX models how an idea might execute. Oasis Agent records how decisions were made and checks the limits for execution.",
             "example": "Illustrative replay",
             "timeline": "Replay timeline",
@@ -101,7 +101,7 @@ COPY = {
         "nav_label": "网站导航",
         "alpha": {
             "title": "独立市场研究",
-            "intro": "从盘口、成交与风险出发，研究市场机会。",
+            "intro": '从盘口、成交与风险出发，<span class="phrase">研究市场机会。</span>',
             "projects": "研究项目",
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
@@ -259,7 +259,7 @@ def alpha(locale, root, here, notes, copy):
         for _, slug, name in PROJECTS
     )
     empty_attr = " hidden" if notes else ""
-    return page_intro(copy["title"], copy["intro"]) + f"""
+    return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -278,10 +278,11 @@ def alpha(locale, root, here, notes, copy):
     <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
 
 
-def page_intro(title, intro, eyebrow="", extra=""):
+def page_intro(title, intro, eyebrow="", extra="", *, masthead=False):
     label = f'<p class="kicker">{eyebrow}</p>' if eyebrow else ""
+    classes = "page-intro masthead" if masthead else "page-intro"
     return f"""
-    <section class="page-intro" aria-labelledby="title">
+    <section class="{classes}" aria-labelledby="title">
       {label}
       <h1 id="title">{title}</h1>
       <p class="intro">{intro}</p>
@@ -361,6 +362,7 @@ def render(locale, page, notes):
     )
     name = copy["nav"][page]
     section = copy[("alpha", "products", "about")[page]]
+    description = escape(re.sub(r"<[^>]+>", "", section["intro"]), quote=True)
     if page == 0:
         market_notes = [note for note in notes if note["category"] != "data"]
         body = alpha(locale, root, here, market_notes, section)
@@ -376,8 +378,8 @@ def render(locale, page, notes):
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#faf9f6">
+  <meta name="description" content="{description}">
+  <meta name="theme-color" content="#f6f3ea">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
