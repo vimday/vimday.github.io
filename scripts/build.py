@@ -235,7 +235,7 @@ def alpha(locale, root, here, notes, copy, products_copy):
       </div>
       <div class="hero-feature">
         <div class="cover">
-          <img src="{root}assets/refraction.webp" alt="" width="1440" height="960" fetchpriority="high">
+          <img src="{root}assets/market-pulse.webp" alt="" width="1440" height="960" fetchpriority="high">
         </div>{featured}
       </div>
     </section>
@@ -358,7 +358,7 @@ def render(locale, page, notes):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(section["intro"], quote=True)}">
-  <meta name="theme-color" content="#f8f7f2">
+  <meta name="theme-color" content="#10100f">
   <title>AlphaWink · {name}</title>
   <link rel="icon" href="{root}favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="{root}assets/site.css">
