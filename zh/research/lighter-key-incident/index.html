@@ -1,0 +1,115 @@
+<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
+<!doctype html>
+<html lang="zh-Hans">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="以太坊上一笔转账证实 Lighter 流出 1,039 万 USDC。沿着签名、公共池和结算三道边界，复盘这次资金如何跨账户流动。">
+  <meta name="theme-color" content="#f6f3ea">
+  <title>Lighter 复盘｜交易密钥如何通向提款 / AlphaWink</title>
+  <link rel="icon" href="../../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" href="../../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
+  <link rel="icon" href="../../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
+  <link rel="apple-touch-icon" href="../../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
+  <link rel="stylesheet" href="../../../assets/site.css?v=30cbe8ab91">
+  <link rel="alternate" hreflang="en" href="../../../research/lighter-key-incident/">
+</head>
+<body>
+  <a class="skip" href="#main">跳到正文</a>
+  <header class="bar wrap">
+    <a class="brand" href="../../../zh/" aria-label="AlphaWink">
+      <img class="brand-mark" src="../../../favicon.svg?v=defe0f83fc" alt="" width="28" height="28">
+      <span class="brand-name">AlphaWink</span>
+    </a>
+    <nav aria-label="网站导航">
+      <a href="../../../zh/">首页</a>
+      <a href="../../../zh/products/">产品</a>
+      <a href="../../../zh/about/">关于</a>
+    </nav>
+  </header>
+  <main class="wrap" id="main">
+    <article class="report" aria-labelledby="title">
+      <header class="report-intro">
+        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> 全部报告</a>
+        <div class="report-meta"><span>事件复盘</span><time datetime="2026-11-17">2026-11-17</time></div>
+        <h1 id="title">Lighter 复盘｜交易密钥如何通向提款</h1>
+        <p class="report-deck">以太坊上一笔转账证实 Lighter 流出 1,039 万 USDC。沿着签名、公共池和结算三道边界，复盘这次资金如何跨账户流动。</p>
+      </header>
+      <div class="report-layout">
+        <nav class="report-toc" aria-labelledby="contents-title">
+          <p id="contents-title">本文目录</p>
+          <ul><li><a href="#amounts">三笔数字，三个口径</a></li><li><a href="#signing">签名通过了，密钥却失守了</a></li><li><a href="#pool">公共池改变了资产的受益人</a></li><li><a href="#response">修复覆盖了哪几道边界</a></li><li><a href="#evidence">证据范围</a></li></ul>
+        </nav>
+        <div class="report-prose">
+          <section>
+            <h2 id="amounts">三笔数字，三个口径</h2>
+            <p>2026 年 11 月 16 日 10:11 UTC，一笔成功的以太坊交易记录了 Lighter 结算合约向外部地址转出 <strong>10,393,056.789298 USDC</strong>。我们用公共以太坊节点读取交易回执，核对了 USDC 合约的 <code>Transfer</code> 日志及 6 位小数。这笔转账确立了可以独立核实的流出金额。<a href="https://etherscan.io/tx/0x5b6f27ded0e9a66ef6fa107083e28db9914e46d7635cc5112d760b9cb2f958c9">以太坊交易记录</a></p>
+            <div class="report-table">
+              <table role="table">
+                <caption>截至 2026 年 11 月 17 日的公开证据</caption>
+                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">口径</th><th scope="col" role="columnheader">金额</th><th scope="col" role="columnheader">依据</th></tr></thead>
+                <tbody role="rowgroup">
+                  <tr role="row"><th scope="row" role="rowheader">以太坊结算合约流出</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>1,039.31 万 USDC</td><td role="cell"><span class="table-field" aria-hidden="true">依据</span>已核对单笔链上转账。</td></tr>
+                  <tr role="row"><th scope="row" role="rowheader">账户受影响规模</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>约 1,550 万美元</td><td role="cell"><span class="table-field" aria-hidden="true">依据</span>外部研究者的两账户估计，平台未确认总额。<a href="https://bitquery.io/investigations/lighter-hack">Bitquery 追踪</a></td></tr>
+                  <tr role="row"><th scope="row" role="rowheader">向受影响交易者返还</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>约 500 万 USDC</td><td role="cell"><span class="table-field" aria-hidden="true">依据</span>Lighter 安全委员会的返还披露。<a href="https://x.com/Lighter_xyz/status/2122394446343946717">官方复盘</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>账户内变动和结算合约流出发生在不同账本。公开材料尚未把第二笔账户估计与返还款逐笔对上，因此无法从这三个数字算出最终净损失，也无法确认受影响账户的实际所有者。</p>
+            <figure>
+              <img src="/assets/research/lighter-timeline-zh.png" width="1400" height="730" loading="lazy" decoding="async" alt="UTC 时间线：10:11 链上转出，11:02 公告暂停提款和创建资金池，12:49 公告归因并披露 Guardian 已启用，18:21 公告恢复充提。">
+              <figcaption>图 1 · 一笔链上转账与三次公开公告。公告时点表示信息何时公开，实际启停时刻可能更早。<a href="https://x.com/Lighter_xyz/status/2122284181422284986">暂停公告</a> · <a href="https://x.com/Lighter_xyz/status/2122311006604984497">调查更新</a> · <a href="https://x.com/Lighter_xyz/status/2122394646164758654">恢复公告</a> · <a href="/assets/research/lighter-timeline-zh.png">查看大图</a></figcaption>
+            </figure>
+          </section>
+
+          <section>
+            <h2 id="signing">签名通过了，密钥却失守了</h2>
+            <p>Lighter 将入口归因于交易者使用的非官方签名实现。它在不同交易上重复使用了同一把 API 私钥的签名随机量，公开签名因而泄露了足以反推出私钥的信息。Lighter 表示官方 SDK、智能合约及平台基础设施未受这次失陷影响。原始签名样本和签名器代码未在复盘中披露，具体是哪段代码重复生成随机量仍无从核对。<a href="https://x.com/Lighter_xyz/status/2122394446343946717">Lighter 技术说明</a></p>
+            <p>这里需要区分两种 nonce。<strong>签名 nonce</strong> 是签名算法内部的一次性秘密量。对于 Schnorr 类签名，两条签名若共用了这个秘密量，观察者可以消去共同项，剩下关于私钥的关系。<strong>交易 nonce</strong> 是请求中的防重放序号，服务端用它拒绝重复提交。一次新的交易可以拥有正确的序号，同时由已经恢复出的私钥签署。</p>
+            <p>签名验证回答的是「哪把密钥签了这条指令」，证明电路检查的是「状态变更是否符合编码规则」。两项验证都可以正常工作，而密钥仍然已不再代表交易者本人。</p>
+          </section>
+
+          <section>
+            <h2 id="pool">公共池改变了资产的受益人</h2>
+            <p>Lighter 的常规提款只能发往账户自身绑定的钱包。事发时，账户创建的公共池被归入同一账户的子账户，但池的份额可以由外部账户持有。资金一旦进池，池份额就决定谁有权赎回资产。于是每一步单看都符合各自的授权规则，串起来却跨过了资产归属的边界。<a href="https://x.com/Lighter_xyz/status/2122394446343946717">官方复盘中的资金路径</a></p>
+            <figure>
+              <ol class="report-flow">
+                <li><strong>1 · 签名密钥失陷</strong><span>重复的签名随机量使交易凭证可以从公开签名中推导。</span></li>
+                <li><strong>2 · 公共池持有外部份额</strong><span>池归原账户管理，份额却可由独立账户持有。</span></li>
+                <li><strong>3 · 池净值上升</strong><span>调入资金提高净值，且这笔划入没有同步增发份额。</span></li>
+                <li><strong>4 · 份额赎回后提款</strong><span>份额持有人获得可赎回余额，再从自己的账户提款。</span></li>
+              </ol>
+              <figcaption>图 2 · 资金池内的变更依据 Lighter 复盘，结算合约流出由以太坊转账独立佐证。</figcaption>
+            </figure>
+            <p>用一个简化的会计例子看风险。池里有 100 单位资产和 100 份份额，每份净值为 1。若另划入 900 单位资产且份额数保持 100，每份净值便升至 10。控制者即便只动用了「同一账户内划转」权限，外部份额持有人也能取得新增资产对应的赎回价值。这组数字只演示份额机制。</p>
+          </section>
+
+          <section>
+            <h2 id="response">修复覆盖了哪几道边界</h2>
+            <p>Lighter 先披露暂停提款及新建资金池，随后公布合约进入 Guardian 模式。官方复盘称安全委员会向受影响交易者返还约 500 万 USDC。18:21 UTC 的公告确认 Guardian 模式解除，充提恢复。<a href="https://x.com/Lighter_xyz/status/2122394646164758654">恢复公告</a></p>
+            <p><strong>已披露上线的改动</strong>有两项。向公共池划转增加钱包签名校验，隔断了此次的资金路径。交易查询不再返回原始 API 签名，减少新签名的暴露面。此前已经公开过的签名仍需要按已暴露来处理。Lighter 同时将 IP 白名单、单密钥权限和额度、签名随机量复用监测列为后续措施。<a href="https://x.com/Lighter_xyz/status/2122394446343946717">修复及后续计划</a> · <a href="https://t.me/s/lighter_api_updates">API 变更公告</a></p>
+            <p>对交易系统，验收应覆盖两个不同问题。签名侧检查并发和重启后是否仍使用受审阅的签名器，并在轮换后确认旧键被服务端拒绝。资金侧以交易密钥作为起点，逐项检查子账户、池、份额和出金地址。验收的最终对象是资产能否到达另一个受益人。</p>
+          </section>
+
+          <section>
+            <h2 id="evidence">证据范围</h2>
+            <p>本文复核了以太坊交易回执、运营方公告与公开文档。资金池内的状态变更依据平台披露，尚未通过完整的二层账本独立重放。若平台随后发布逐账户对账、补丁版本和返还凭证，可据此更新受损与返还数字。</p>
+          </section>
+
+          <aside class="report-related" aria-label="继续阅读">
+            <p>继续阅读</p>
+            <a class="text-link" href="../perp-venue-permissions/">六家永续合约平台的交易权限边界 <span aria-hidden="true">↗</span></a>
+          </aside>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="wrap footer">
+    <span>AlphaWink</span>
+    <div class="footer-links">
+      <a href="mailto:hi@alphawink.com">hi@alphawink.com</a>
+      <a href="../../../research/lighter-key-incident/" lang="en" hreflang="en">English</a>
+    </div>
+  </footer>
+</body>
+</html>

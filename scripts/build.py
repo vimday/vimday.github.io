@@ -9,6 +9,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+REPORT_CONTENT = ROOT / "content" / "research"
 CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
 ALEPH = "https://github.com/AlephTX/aleph-tx"
@@ -33,6 +34,12 @@ COPY = {
         "nav": ("Home", "Products", "About"),
         "skip": "Skip to content",
         "nav_label": "Site navigation",
+        "research": {
+            "heading": "Research reports",
+            "back": "All reports",
+            "contents": "In this report",
+            "related": "Read next",
+        },
         "alpha": {
             "title": "Independent <span>market research</span>",
             "intro": "We study market opportunities with recorded data and simulated trades.",
@@ -107,6 +114,12 @@ COPY = {
         "nav": ("首页", "产品", "关于"),
         "skip": "跳到正文",
         "nav_label": "网站导航",
+        "research": {
+            "heading": "研究报告",
+            "back": "全部报告",
+            "contents": "本文目录",
+            "related": "继续阅读",
+        },
         "alpha": {
             "title": "独立市场研究",
             "intro": '从盘口、成交与风险出发，<span class="phrase">研究市场机会。</span>',
@@ -202,6 +215,83 @@ def read_notes():
     return sorted(notes, key=lambda note: note["date"], reverse=True)
 
 
+def read_reports():
+    reports = json.loads((REPORT_CONTENT / "index.json").read_text(encoding="utf-8"))
+    ids = set()
+    for report in reports:
+        slug = report["id"]
+        if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) or slug in ids:
+            raise ValueError(f"Invalid or duplicate report ID: {slug}")
+        ids.add(slug)
+        date.fromisoformat(report["date"])
+        for locale in COPY:
+            for field in ("title", "summary", "topic"):
+                if not report[locale][field].strip():
+                    raise ValueError(f"Empty {field} for {slug} ({locale})")
+    for report in reports:
+        related = report.get("related")
+        if related is not None and (related not in ids or related == report["id"]):
+            raise ValueError(f'Invalid related report for {report["id"]}')
+    return sorted(reports, key=lambda report: report["date"], reverse=True)
+
+
+def report_path(report):
+    return f'research/{report["id"]}/'
+
+
+def report_index(reports, locale, here):
+    heading = COPY[locale]["research"]["heading"]
+    entries = []
+    for report in reports:
+        fields = report[locale]
+        entries.append(f"""
+        <article class="report-entry">
+          <div class="report-meta"><span>{escape(fields["topic"])}</span><time datetime="{report["date"]}">{report["date"]}</time></div>
+          <h3><a href="{here}{report_path(report)}">{escape(fields["title"])} <span aria-hidden="true">↗</span></a></h3>
+          <p>{escape(fields["summary"])}</p>
+        </article>""")
+    return f"""
+    <section class="section" id="reports" aria-labelledby="reports-title">
+      <h2 id="reports-title">{heading}</h2>
+      <div class="report-index">{"".join(entries)}
+      </div>
+    </section>"""
+
+
+def report_body(report, reports, locale):
+    copy = COPY[locale]["research"]
+    fields = report[locale]
+    body = (REPORT_CONTENT / report["id"] / f"{locale}.html").read_text(encoding="utf-8")
+    headings = re.findall(r'<h2 id="([a-z0-9-]+)">([^<]+)</h2>', body)
+    contents = "".join(f'<li><a href="#{anchor}">{title}</a></li>' for anchor, title in headings)
+    related = next((item for item in reports if item["id"] == report.get("related")), None)
+    related_link = ""
+    if related:
+        related_link = f"""
+          <aside class="report-related" aria-label="{copy["related"]}">
+            <p>{copy["related"]}</p>
+            <a class="text-link" href="../{related["id"]}/">{escape(related[locale]["title"])} <span aria-hidden="true">↗</span></a>
+          </aside>"""
+    return f"""
+    <article class="report" aria-labelledby="title">
+      <header class="report-intro">
+        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> {copy["back"]}</a>
+        <div class="report-meta"><span>{escape(fields["topic"])}</span><time datetime="{report["date"]}">{report["date"]}</time></div>
+        <h1 id="title">{escape(fields["title"])}</h1>
+        <p class="report-deck">{escape(fields["summary"])}</p>
+      </header>
+      <div class="report-layout">
+        <nav class="report-toc" aria-labelledby="contents-title">
+          <p id="contents-title">{copy["contents"]}</p>
+          <ul>{contents}</ul>
+        </nav>
+        <div class="report-prose">
+{body}{related_link}
+        </div>
+      </div>
+    </article>"""
+
+
 def render_notes(notes, locale, copy):
     filters = copy["filters"]
     cards = []
@@ -255,7 +345,7 @@ def product_replay(copy, workflow, examples):
         </details>"""
 
 
-def alpha(locale, root, here, notes, copy):
+def alpha(locale, root, here, notes, reports, copy):
     categories = {entry["category"] for entry in notes}
     filters = "\n".join(
         f'        <button type="button" data-filter="{key}" aria-pressed="{str(key == "all").lower()}">{label}</button>'
@@ -268,6 +358,7 @@ def alpha(locale, root, here, notes, copy):
     )
     empty_attr = " hidden" if notes else ""
     return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
+{report_index(reports, locale, here)}
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -355,41 +446,48 @@ def about(locale, notes, copy, notes_copy):
     </section>{archive}"""
 
 
-def render(locale, page, notes):
+def render(locale, page, notes, reports):
     copy = COPY[locale]
-    lang = "zh-Hans" if locale == "zh" else "en"
-    route = ("zh/" if locale == "zh" else "") + ROUTES[page]
-    root = "../" * route.count("/") or "./"
-    mark = root + ASSETS["favicon.svg"]
-    here = root + ("zh/" if locale == "zh" else "")
-    other_lang, other_label = ("en", "English") if locale == "zh" else ("zh-Hans", "中文")
-    other = root + ("zh/" if locale == "en" else "") + ROUTES[page]
-    current = ' aria-current="page"'
-    nav = "\n".join(
-        f'      <a href="{here}{path}"{current if i == page else ""}>{copy["nav"][i]}</a>'
-        for i, path in enumerate(ROUTES)
-    )
     name = copy["nav"][page]
     section = copy[("alpha", "products", "about")[page]]
-    description = escape(re.sub(r"<[^>]+>", "", section["intro"]), quote=True)
+    description = re.sub(r"<[^>]+>", "", section["intro"])
+    path = ROUTES[page]
+    root = "../" * (path.count("/") + (locale == "zh")) or "./"
+    here = root + ("zh/" if locale == "zh" else "")
     if page == 0:
         market_notes = [note for note in notes if note["category"] != "data"]
-        body = alpha(locale, root, here, market_notes, section)
+        body = alpha(locale, root, here, market_notes, reports, section)
     elif page == 1:
         body = products(root, section)
     else:
         engineering_notes = [note for note in notes if note["category"] == "data"]
         body = about(locale, engineering_notes, section, copy["alpha"])
+    write_page(locale, path, name, description, body)
 
+
+def write_page(locale, path, name, description, body):
+    copy = COPY[locale]
+    lang = "zh-Hans" if locale == "zh" else "en"
+    route = ("zh/" if locale == "zh" else "") + path
+    root = "../" * route.count("/") or "./"
+    mark = root + ASSETS["favicon.svg"]
+    here = root + ("zh/" if locale == "zh" else "")
+    other_lang, other_label = ("en", "English") if locale == "zh" else ("zh-Hans", "中文")
+    other = root + ("zh/" if locale == "en" else "") + path
+    current = ' aria-current="page"'
+    nav = "\n".join(
+        f'      <a href="{here}{nav_path}"{current if nav_path == path else ""}>{label}</a>'
+        for nav_path, label in zip(ROUTES, copy["nav"], strict=True)
+    )
     html = f"""<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
 <html lang="{lang}">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="{description}">
+  <meta name="description" content="{escape(description, quote=True)}">
   <meta name="theme-color" content="#f6f3ea">
-  <title>{name} / AlphaWink</title>
+  <title>{escape(name)} / AlphaWink</title>
   <link rel="icon" href="{root}{ASSETS["favicon.ico"]}" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="{root}{ASSETS["favicon-32x32.png"]}" sizes="32x32" type="image/png">
   <link rel="icon" href="{root}{ASSETS["favicon-96x96.png"]}" sizes="96x96" type="image/png">
@@ -420,11 +518,17 @@ def render(locale, page, notes):
 </body>
 </html>
 """
-    (ROOT / route / "index.html").write_text(html, encoding="utf-8")
+    destination = ROOT / route
+    destination.mkdir(parents=True, exist_ok=True)
+    (destination / "index.html").write_text(html, encoding="utf-8")
 
 
 if __name__ == "__main__":
     notes = read_notes()
+    reports = read_reports()
     for locale in COPY:
         for page in range(len(ROUTES)):
-            render(locale, page, notes)
+            render(locale, page, notes, reports)
+        for report in reports:
+            fields = report[locale]
+            write_page(locale, report_path(report), fields["title"], fields["summary"], report_body(report, reports, locale))

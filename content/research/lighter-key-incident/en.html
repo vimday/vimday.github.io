@@ -1,0 +1,54 @@
+          <section>
+            <h2 id="amounts">What the three figures measure</h2>
+            <p>At 10:11 UTC on November 16, 2026, a successful Ethereum transaction moved <strong>10,393,056.789298 USDC</strong> from Lighter’s settlement contract to an external address. We checked the receipt against a public Ethereum node and decoded the USDC contract’s <code>Transfer</code> log using six decimal places. That transaction establishes the independently verifiable outflow. <a href="https://etherscan.io/tx/0x5b6f27ded0e9a66ef6fa107083e28db9914e46d7635cc5112d760b9cb2f958c9">Ethereum transaction</a></p>
+            <div class="report-table">
+              <table role="table">
+                <caption>Public evidence reviewed through November 17, 2026</caption>
+                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Measure</th><th scope="col" role="columnheader">Amount</th><th scope="col" role="columnheader">Evidence</th></tr></thead>
+                <tbody role="rowgroup">
+                  <tr role="row"><th scope="row" role="rowheader">Ethereum settlement outflow</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>10.39m USDC</td><td role="cell"><span class="table-field" aria-hidden="true">Evidence</span>One independently verified on-chain transfer.</td></tr>
+                  <tr role="row"><th scope="row" role="rowheader">Estimated account impact</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>About $15.5m</td><td role="cell"><span class="table-field" aria-hidden="true">Evidence</span>Researchers’ estimate across two accounts, unconfirmed by the venue. <a href="https://bitquery.io/investigations/lighter-hack">Bitquery investigation</a></td></tr>
+                  <tr role="row"><th scope="row" role="rowheader">Amount returned to the trader</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>About 5m USDC</td><td role="cell"><span class="table-field" aria-hidden="true">Evidence</span>Return reported by Lighter’s Security Council. <a href="https://x.com/Lighter_xyz/status/2122394446343946717">Lighter postmortem</a></td></tr>
+                </tbody>
+              </table>
+            </div>
+            <p>Internal account movements and settlement outflows appear on different ledgers. The public record does not reconcile the return with the second estimated account balance. It therefore cannot establish a final net loss or the identity of the account owner.</p>
+            <figure>
+              <img src="/assets/research/lighter-timeline-en.png" width="1400" height="730" loading="lazy" decoding="async" alt="UTC timeline: 10:11 on-chain transfer, 11:02 pause announced, 12:49 diagnosis and Guardian mode disclosed, 18:21 deposits and withdrawals restored.">
+              <figcaption>Figure 1 · The Ethereum transfer and three public updates. Announcements timestamp the disclosure of an action, which may have taken effect earlier. <a href="https://x.com/Lighter_xyz/status/2122284181422284986">Pause</a> · <a href="https://x.com/Lighter_xyz/status/2122311006604984497">Investigation update</a> · <a href="https://x.com/Lighter_xyz/status/2122394646164758654">Restoration</a> · <a href="/assets/research/lighter-timeline-en.png">Full size</a></figcaption>
+            </figure>
+          </section>
+
+          <section>
+            <h2 id="signing">Why valid signatures could expose the key</h2>
+            <p>Lighter traced the initial compromise to a trader’s custom signing code. It reused the secret signing nonce with the same API key on different transactions. The signatures were public, which gave an observer enough information to recover the signing key. Lighter said the official SDKs, contracts and infrastructure were unaffected by the compromise. Its postmortem does not publish the affected signing code or sample signatures, leaving the precise implementation defect unverified. <a href="https://x.com/Lighter_xyz/status/2122394446343946717">Lighter’s technical account</a></p>
+            <p>Two different values are often called a nonce. The <strong>signing nonce</strong> is a secret, single-use input to the signature algorithm. In a Schnorr-style scheme, reusing it across two different messages lets an observer eliminate that shared term and solve for the secret key. A <strong>transaction nonce</strong> is a request identifier used to reject replays. A new transaction can carry an unused identifier and still be signed by someone who reconstructed the key.</p>
+            <p>A valid signature identifies the credential that authorized an action. A validity proof checks that the action follows the encoded state transition rules. Both checks can pass after the credential stops representing the trader’s intent.</p>
+          </section>
+
+          <section>
+            <h2 id="pool">How the pool changed who could redeem</h2>
+            <p>Lighter’s ordinary withdrawal path pays an account’s own wallet. At the time of the incident, an account-created public pool qualified as its subaccount for transfers, while separate accounts could hold pool shares. The pool’s trading account and the owners of its redemption rights were different things. An internal transfer could therefore move economic value across owners. <a href="https://x.com/Lighter_xyz/status/2122394446343946717">Lighter’s account of the pool path</a></p>
+            <figure>
+              <ol class="report-flow">
+                <li><strong>1 · Signing key compromised</strong><span>Reused signing nonces made the key derivable from public signatures.</span></li>
+                <li><strong>2 · Pool shares held externally</strong><span>The affected account owned the pool. A separate account held shares.</span></li>
+                <li><strong>3 · Pool value increased</strong><span>Collateral entered the pool without a matching issue of new shares.</span></li>
+                <li><strong>4 · Redemption and withdrawal</strong><span>The separate account redeemed shares and withdrew its resulting balance.</span></li>
+              </ol>
+              <figcaption>Figure 2 · The authorization path described by Lighter. The Ethereum log independently establishes the final outflow.</figcaption>
+            </figure>
+            <p>Consider a pool with 100 units of assets and 100 shares. Each share is worth one unit. Moving 900 more units into the same pool without issuing shares raises each share’s value to ten units. A transfer categorized as internal can thus increase a third party’s claim. This example illustrates the accounting, using hypothetical amounts.</p>
+          </section>
+
+          <section>
+            <h2 id="response">The scope of the fixes</h2>
+            <p>Lighter first disclosed a pause in withdrawals and pool creation. It subsequently reported enabling Guardian mode and returning about 5 million USDC to the affected trader through its Security Council. The 18:21 UTC announcement confirmed that Guardian mode was lifted and deposits and withdrawals had resumed. <a href="https://x.com/Lighter_xyz/status/2122394646164758654">Restoration announcement</a></p>
+            <p><strong>Two changes were reported as shipped.</strong> Transfers into a public pool gained a wallet signature requirement, closing the reported route into the pool. Transaction interfaces stopped returning raw API signatures, reducing exposure for new signatures. Previously disclosed signatures remain material to any investigation of key exposure. Lighter listed IP allowlists, per-key scopes and limits, and monitoring for nonce reuse as follow-up work. <a href="https://x.com/Lighter_xyz/status/2122394446343946717">Incident findings</a> · <a href="https://t.me/s/lighter_api_updates">API changes</a></p>
+            <p>The incident suggests two distinct acceptance tests for a trading system. First, confirm the signer remains safe across concurrent requests and restarts, and verify that revoked credentials are rejected by the venue. Then start with a trading credential and follow every path through subaccounts, pools, shares and withdrawal destinations. The outcome to test is whether value can reach a different beneficiary.</p>
+          </section>
+
+          <section>
+            <h2 id="evidence">Evidence and limits</h2>
+            <p>This review checks the Ethereum receipt, operator announcements and published documentation. The in-pool state changes are attributed to Lighter’s account and have not been independently replayed from a complete rollup ledger. An account-by-account reconciliation, patch version and return receipts would let us revisit the impact figures.</p>
+          </section>
