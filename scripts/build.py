@@ -38,7 +38,7 @@ COPY = {
             "heading": "Research reports",
             "back": "All reports",
             "contents": "In this report",
-            "related": "Read next",
+            "moved": "This report is now part of the full investigation.",
         },
         "alpha": {
             "title": "Independent <span>market research</span>",
@@ -118,7 +118,7 @@ COPY = {
             "heading": "研究报告",
             "back": "全部报告",
             "contents": "本文目录",
-            "related": "继续阅读",
+            "moved": "这篇报告已并入完整研究。",
         },
         "alpha": {
             "title": "独立市场研究",
@@ -229,9 +229,11 @@ def read_reports():
                 if not report[locale][field].strip():
                     raise ValueError(f"Empty {field} for {slug} ({locale})")
     for report in reports:
-        related = report.get("related")
-        if related is not None and (related not in ids or related == report["id"]):
-            raise ValueError(f'Invalid related report for {report["id"]}')
+        if "redirect" in report:
+            previous = report["redirect"]["from"]
+            if previous in ids or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", previous):
+                raise ValueError(f'Invalid previous report ID: {previous}')
+            ids.add(previous)
     return sorted(reports, key=lambda report: report["date"], reverse=True)
 
 
@@ -258,20 +260,14 @@ def report_index(reports, locale, here):
     </section>"""
 
 
-def report_body(report, reports, locale):
+def report_body(report, locale):
     copy = COPY[locale]["research"]
     fields = report[locale]
     body = (REPORT_CONTENT / report["id"] / f"{locale}.html").read_text(encoding="utf-8")
     headings = re.findall(r'<h2 id="([a-z0-9-]+)">([^<]+)</h2>', body)
+    if "redirect" in report and report["redirect"]["section"] not in dict(headings):
+        raise ValueError(f'Missing redirect heading for {report["id"]} ({locale})')
     contents = "".join(f'<li><a href="#{anchor}">{title}</a></li>' for anchor, title in headings)
-    related = next((item for item in reports if item["id"] == report.get("related")), None)
-    related_link = ""
-    if related:
-        related_link = f"""
-          <aside class="report-related" aria-label="{copy["related"]}">
-            <p>{copy["related"]}</p>
-            <a class="text-link" href="../{related["id"]}/">{escape(related[locale]["title"])} <span aria-hidden="true">↗</span></a>
-          </aside>"""
     return f"""
     <article class="report" aria-labelledby="title">
       <header class="report-intro">
@@ -286,7 +282,7 @@ def report_body(report, reports, locale):
           <ul>{contents}</ul>
         </nav>
         <div class="report-prose">
-{body}{related_link}
+{body}
         </div>
       </div>
     </article>"""
@@ -465,7 +461,7 @@ def render(locale, page, notes, reports):
     write_page(locale, path, name, description, body)
 
 
-def write_page(locale, path, name, description, body):
+def write_page(locale, path, name, description, body, *, redirect=None):
     copy = COPY[locale]
     lang = "zh-Hans" if locale == "zh" else "en"
     route = ("zh/" if locale == "zh" else "") + path
@@ -479,6 +475,10 @@ def write_page(locale, path, name, description, body):
         f'      <a href="{here}{nav_path}"{current if nav_path == path else ""}>{label}</a>'
         for nav_path, label in zip(ROUTES, copy["nav"], strict=True)
     )
+    redirect_head = ""
+    if redirect:
+        target = escape(redirect, quote=True)
+        redirect_head = f'\n  <meta http-equiv="refresh" content="0; url={target}">\n  <link rel="canonical" href="{target.split("#", 1)[0]}">'
     html = f"""<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
 <html lang="{lang}">
@@ -493,7 +493,7 @@ def write_page(locale, path, name, description, body):
   <link rel="icon" href="{root}{ASSETS["favicon-96x96.png"]}" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="{root}{ASSETS["apple-touch-icon.png"]}" sizes="180x180">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
-  <link rel="alternate" hreflang="{other_lang}" href="{other}">
+  <link rel="alternate" hreflang="{other_lang}" href="{other}">{redirect_head}
 </head>
 <body>
   <a class="skip" href="#main">{copy["skip"]}</a>
@@ -531,4 +531,12 @@ if __name__ == "__main__":
             render(locale, page, notes, reports)
         for report in reports:
             fields = report[locale]
-            write_page(locale, report_path(report), fields["title"], fields["summary"], report_body(report, reports, locale))
+            write_page(locale, report_path(report), fields["title"], fields["summary"], report_body(report, locale))
+            if "redirect" in report:
+                previous = report["redirect"]
+                section = escape(previous["section"], quote=True)
+                target = f'../{report["id"]}/#{section}'
+                label = COPY[locale]["research"]["moved"]
+                link = f'<a class="text-link" href="{target}">{escape(fields["title"])}</a>'
+                body = page_intro(label, "", extra=link)
+                write_page(locale, f'research/{previous["from"]}/', fields["title"], label, body, redirect=target)

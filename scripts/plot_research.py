@@ -1,4 +1,4 @@
-"""Render the four research figures with Matplotlib."""
+"""Render the research figures in English and Simplified Chinese."""
 
 from argparse import ArgumentParser
 from pathlib import Path
@@ -90,6 +90,66 @@ def withdrawal_budget(locale, font):
     plt.close(fig)
 
 
+def incident_amounts(locale, font):
+    if locale == "zh":
+        title = "三起事件的金额证据"
+        subtitle = "百万美元或美元稳定币面值 · 每行单独阅读"
+        labels = ("Lighter · 结算合约流出", "Lighter · 平台披露返还", "Lighter · 外部账户估计",
+                  "Arcus · 披露链上付款", "Arcus · 待付请求被拦截", "Aster · 当事人申报")
+    else:
+        title = "The amounts reported in three incidents"
+        subtitle = "Millions of dollars or stablecoins at face value · read rows separately"
+        labels = ("Lighter · on-chain outflow", "Lighter · return disclosed", "Lighter · external estimate",
+                  "Arcus · payout disclosed", "Arcus · requests held", "Aster · user claim")
+
+    values = (10.393056789298, 5, 15.5, 2.234391, 3, 4.5646755)
+    labels_at_value = ("10.39", "~5.00", "~15.5", "2.23", "~3.00", "~4.56")
+    markers = ("o", "o", "s", "o", "o", "D")
+    fig, axis = plt.subplots(figsize=(7, 4.65), facecolor=PAPER)
+    fig.subplots_adjust(left=.46, right=.955, top=.74, bottom=.13)
+    fig.text(.045, .91, title, color=INK, fontproperties=font, fontsize=17)
+    fig.text(.045, .825, subtitle, color=MUTED, fontproperties=font, fontsize=10.5)
+    style_axes(axis)
+    axis.set(xlim=(0, 18.8), ylim=(-.55, 5.55), yticks=[])
+    axis.set_xticks((0, 5, 10, 15))
+    axis.grid(axis="x", color=RULE, linewidth=.65)
+    for row, (label, value, display, marker) in enumerate(zip(labels, values, labels_at_value, markers, strict=True)):
+        y = 5 - row
+        axis.axhline(y, color=RULE, linewidth=.6)
+        axis.text(-.65, y, label, ha="right", va="center", color=INK, fontproperties=font, fontsize=12.5)
+        axis.plot(value, y, marker=marker, color=ACCENT, markerfacecolor=ACCENT if row == 0 else PAPER, markersize=6)
+        axis.annotate(display, (value, y), xytext=(8, 0), textcoords="offset points", va="center", color=ACCENT,
+                      fontsize=12, bbox={"facecolor": PAPER, "edgecolor": "none", "pad": 1})
+    fig.savefig(OUTPUT / f"incident-amounts-{locale}.png", dpi=200)
+    plt.close(fig)
+
+
+def custody_snapshots(locale, font):
+    title = "六个历史资金观测值" if locale == "zh" else "Six historical snapshots of funds"
+    subtitle = "美元计价 · 对数轴 · 日期和口径见表" if locale == "zh" else "USD values · log scale · dates and scopes in the table"
+    venues = ("Hyperliquid", "Lighter", "Aster", "Variational", "GRVT", "Arcus")
+    amounts = (6500, 1000, 500, 290, 63.5, 28)
+    displays = ("~6.5B", "~1B", "~500M", "~290M", "~63.5M", "≥28M")
+    fig, axis = plt.subplots(figsize=(7, 4.35), facecolor=PAPER)
+    fig.subplots_adjust(left=.26, right=.955, top=.73, bottom=.145)
+    fig.text(.045, .91, title, color=INK, fontproperties=font, fontsize=17)
+    fig.text(.045, .82, subtitle, color=MUTED, fontproperties=font, fontsize=10)
+    style_axes(axis)
+    axis.set(xscale="log", xlim=(16, 17000), ylim=(-.55, 5.55), yticks=[])
+    axis.set_xticks((20, 100, 1000, 10000), ("20M", "100M", "1B", "10B"))
+    axis.minorticks_off()
+    axis.grid(axis="x", color=RULE, linewidth=.65)
+    for row, (venue, amount, display) in enumerate(zip(venues, amounts, displays, strict=True)):
+        y = 5 - row
+        axis.axhline(y, color=RULE, linewidth=.6)
+        axis.text(14.5, y, venue, ha="right", va="center", color=INK, fontproperties=font, fontsize=13)
+        axis.plot(amount, y, "o", color=ACCENT, markerfacecolor=PAPER, markersize=6)
+        axis.annotate(display, (amount, y), xytext=(8, 0), textcoords="offset points", va="center", color=ACCENT,
+                      fontsize=12, bbox={"facecolor": PAPER, "edgecolor": "none", "pad": 1})
+    fig.savefig(OUTPUT / f"custody-snapshots-{locale}.png", dpi=200)
+    plt.close(fig)
+
+
 if __name__ == "__main__":
     parser = ArgumentParser(description=__doc__)
     parser.add_argument("--cjk-font", type=Path, required=True, help="A local font with Simplified Chinese glyphs")
@@ -98,3 +158,5 @@ if __name__ == "__main__":
     for locale, font in (("en", FontProperties(family="DejaVu Sans")), ("zh", FontProperties(fname=args.cjk_font))):
         timeline(locale, font)
         withdrawal_budget(locale, font)
+        incident_amounts(locale, font)
+        custody_snapshots(locale, font)

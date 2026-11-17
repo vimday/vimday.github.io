@@ -4,15 +4,17 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="一把交易密钥能动用哪些保证金？谁能暂停或放行提款？对照六家平台的公开权限，并把差异转成可复测的用例。">
+  <meta name="description" content="这篇报告已并入完整研究。">
   <meta name="theme-color" content="#f6f3ea">
-  <title>六家永续合约平台的交易权限边界 / AlphaWink</title>
+  <title>从一把交易密钥到千万 USDC 流出 / AlphaWink</title>
   <link rel="icon" href="../../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="../../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../../assets/site.css?v=30cbe8ab91">
+  <link rel="stylesheet" href="../../../assets/site.css?v=5d53b0513b">
   <link rel="alternate" hreflang="en" href="../../../research/perp-venue-permissions/">
+  <meta http-equiv="refresh" content="0; url=../lighter-key-incident/#venue-comparison">
+  <link rel="canonical" href="../lighter-key-incident/">
 </head>
 <body>
   <a class="skip" href="#main">跳到正文</a>
@@ -28,83 +30,12 @@
     </nav>
   </header>
   <main class="wrap" id="main">
-    <article class="report" aria-labelledby="title">
-      <header class="report-intro">
-        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> 全部报告</a>
-        <div class="report-meta"><span>平台对比</span><time datetime="2026-11-17">2026-11-17</time></div>
-        <h1 id="title">六家永续合约平台的交易权限边界</h1>
-        <p class="report-deck">一把交易密钥能动用哪些保证金？谁能暂停或放行提款？对照六家平台的公开权限，并把差异转成可复测的用例。</p>
-      </header>
-      <div class="report-layout">
-        <nav class="report-toc" aria-labelledby="contents-title">
-          <p id="contents-title">本文目录</p>
-          <ul><li><a href="#questions">把一把密钥放进整条资金路径</a></li><li><a href="#matrix">六个平台公开了哪些边界</a></li><li><a href="#arcus">Arcus 的桥先于人工暂停介入</a></li><li><a href="#exit">日常提款与停摆退出</a></li><li><a href="#tests">上线前做四项复测</a></li></ul>
-        </nav>
-        <div class="report-prose">
-          <section>
-            <h2 id="questions">把一把密钥放进整条资金路径</h2>
-            <p>自动化交易依赖可委托的签名权限。评估这份授权时，我们从一把已失陷的生产密钥出发，依次问四个问题：它能建立或取消哪些订单？能动用哪些账户的保证金？资金能否经转账或份额赎回改变受益人？若撮合或提款停摆，谁持有恢复所需的状态和权限？</p>
-            <p>这四个问题对应不同控制。下单权可以通过不利成交、撤掉保护单或扩大杠杆消耗净值。资金权要追踪到最终受益人。退出权还取决于桥、状态数据和管理权限。IP 白名单能缩小凭证可从何处使用的范围，仍需验证被允许的服务器失陷后资金能走多远。</p>
-            <p>11 月 14 日，HyprEarn 公告称，正在调查少数已批准其代理钱包的 Hyperliquid 账户收到的未授权交易报告。它在自己的系统中停用了旧代理，同时提醒用户，交易场所里的旧授权仍需撤销。接入第三方时，撤权验收应观察交易场所是否继续认可这把密钥。<a href="https://x.com/HyprEarn/status/2121673806704243178">HyprEarn 安全公告</a></p>
-          </section>
-
-          <section>
-            <h2 id="matrix">六个平台公开了哪些边界</h2>
-            <p>下表以 2026 年 11 月 17 日能访问的公开文档为准，范围限于列出的产品和账户类型。文档说明了允许的路径。表中结论没有通过真实账户向主网发起交易进行探测。</p>
-            <div class="report-table">
-              <table class="venue-table" role="table">
-                <caption>2026 年 11 月 17 日核对的公开文档</caption>
-                <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">场所</th><th scope="col" role="columnheader">签名与交易权限</th><th scope="col" role="columnheader">资金和退出边界</th></tr></thead>
-                <tbody role="rowgroup">
-                  <tr role="row"><th scope="row" role="rowheader">Lighter</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>账户绑定独立 API 密钥，也可签发只读令牌。<a href="https://docs.lighter.xyz/developers/integration-guides/api-keys">API 密钥文档</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>API 密钥可向所有者绑定的 L1 地址发起常规提款。面向其他所有者的转账和快速提款另需 L1 签名。事件后，划入公共池也加了钱包签名校验。<a href="https://docs.lighter.xyz/developers/integration-guides/deposits-transfers-and-withdrawals">资金操作</a> · <a href="https://x.com/Lighter_xyz/status/2122394446343946717">修复公告</a></td></tr>
-                  <tr role="row"><th scope="row" role="rowheader">Hyperliquid</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>主账户批准 agent wallet 签署委托操作，可能覆盖指定子账户。文档提示代理注销或到期后，防重放记录可能被清理。<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/nonces-and-api-wallets">代理钱包与 nonce</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>桥提款和对外转账属于用户签名动作。共享保证金下，仍应检查代理能在哪些市场或账户消耗抵押品。<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint">交易接口</a></td></tr>
-                  <tr role="row"><th scope="row" role="rowheader">Arcus</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>Ed25519 API 密钥可限制在一个子账户，或覆盖同一钱包的多个子账户。子账户间划转可沿用交易授权。<a href="https://docs.arcus.xyz/api-reference/authentication">认证文档</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>公开创建的密钥不带提款权限。运营方可为特定密钥授予 <code>withdraw</code>，两种签名路径的提款目的地均为账户绑定钱包。<a href="https://docs.arcus.xyz/api-reference/exchange/submit-withdrawal">提款接口</a></td></tr>
-                  <tr role="row"><th scope="row" role="rowheader">Aster</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>子账户走 V3 API。按官方文档，子账户密钥的提款权限禁用，管理端资产划转需要钱包签名。<a href="https://docs.asterdex.com/trading/sub-accounts">子账户文档</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>子账户资金经主账户退出。子账户 API 的限制不能直接用于判定网页代理会话或主账户密钥的权限。</td></tr>
-                  <tr role="row"><th scope="row" role="rowheader">Variational Omni</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>公开 API 提供行情统计。文档中认证交易 API 仍在开发。<a href="https://docs.variational.io/technical-documentation/api">Omni API</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>每位用户与 OLP 使用独立双边结算池。池内隔离、运营方交易处理器和退出方式应分别核查。<a href="https://docs.variational.io/variational-protocol/key-concepts/settlement-pools">结算池</a> · <a href="https://docs.variational.io/variational-protocol/overview">协议角色</a></td></tr>
-                  <tr role="row"><th scope="row" role="rowheader">GRVT</th><td role="cell"><span class="table-field" aria-hidden="true">签名与交易权限</span>交易账户密钥的查看、交易和划转权限分别赋予。IP 白名单可选。<a href="https://help.grvt.io/en/articles/9614688-what-are-api-keys">API 权限</a></td><td role="cell"><span class="table-field" aria-hidden="true">资金和退出边界</span>出金由资金账户的管理或提款权限发起，目标地址须预先批准。交易权限和资金账户的外部转账权限需分开审计。<a href="https://help.grvt.io/en/articles/9614675-how-do-i-withdraw-my-funds-from-my-grvt-account">提款规则</a></td></tr>
-                </tbody>
-              </table>
-            </div>
-            <p>账户功能和市场管理权是两件事。例如 Hyperliquid 的 HIP-3 部署者拥有设置预言机与停盘的接口。交易凭证无法直接提款，也不会由此限制部署者的市场操作。HIP-4 是结果合约，本文的永续权限对照未纳入它。<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/hip-3-deployer-actions">HIP-3 部署者操作</a></p>
-          </section>
-
-          <section>
-            <h2 id="arcus">Arcus 的桥先于人工暂停介入</h2>
-            <p>按 Arcus 的复盘，11 月 9 日美东时间约 22:07，攻击者通过自己的子账户划转放大账面余额。约三分钟后，桥的链上速率限制拦住了约 300 万美元的后续提款请求。这些请求从未支付，后来被冲销。全站提款在 23:07 暂停，暂停前链上实际提出 2,234,391 USDG。Arcus 随后披露用公司财库补足缺口。财库补足与追回攻击者所得是两笔不同的账。<a href="https://arcus.xyz/blog/arcus-incident-report-november-9-2026">Arcus 事件报告</a></p>
-            <figure>
-              <img src="/assets/research/withdrawal-budget-zh.png" width="1400" height="810" loading="lazy" decoding="async" alt="提款额度示意。每分钟请求 100 万，初始额度 200 万，每分钟补充 25 万。8 分钟累计请求 800 万，最多放行 400 万。">
-              <figcaption>图 1 · 假设提款请求持续到达，单个全局额度桶从满额开始。图中参数用于演算，与 Arcus 的实际阈值无关。<a href="/assets/research/withdrawal-budget-zh.png">查看大图</a></figcaption>
-            </figure>
-            <p>设起始额度为 <em>C</em>，每分钟补充 <em>r</em>，过了 <em>t</em> 分钟，累计请求为 <em>D(t)</em>。在没有管理员绕过、所有出金都经过同一额度桶的假设下，累计放行金额至多为 <code>min(D(t), C + r × t)</code>。取 200 万的起始额度与每分钟 25 万的补充速率，8 分钟最多放行 400 万。这是一条上界。按整笔拒绝的实现可能放行得更少。只按单账户限流时，要额外检验多个账户并发是否能叠加额度。</p>
-          </section>
-
-          <section>
-            <h2 id="exit">日常提款与停摆退出</h2>
-            <p>能在正常营业时发起提款，和能独立退出，依赖的条件不同。ETHBEAT 对 Lighter 的以太坊部署记录了 Desert Mode 路径。用户需取得可用状态并构造退出证明。该评估也记录了可即时执行的升级，因此存在退出机制并不等于遇到每次升级都有等待窗口。<a href="https://ethbeat.org/scaling/projects/lighter">Lighter 合约与退出评估</a></p>
-            <p>ETHBEAT 对 GRVT 的评估记录了链下数据可用性、交易过滤和紧急升级路径。即使交易密钥的权限切分很细，停摆演练仍需回答谁能提供用户状态，以及哪条提款路径还能推进。对其余平台，本文只引用已核对的账户和结算文档，不据此断言能否绕过运营方退出。<a href="https://ethbeat.org/scaling/projects/grvt">GRVT 合约与退出评估</a></p>
-          </section>
-
-          <section>
-            <h2 id="tests">上线前做四项复测</h2>
-            <figure>
-              <ol class="report-flow">
-                <li><strong>1 · 撤销一把密钥</strong><span>在测试环境确认旧签名和在途请求的处理，再用新凭证恢复。证据是交易场所给出的拒绝与审计记录。</span></li>
-                <li><strong>2 · 列出允许到达的余额</strong><span>尝试从子账户移动到主账户、他人份额和新提款地址。记录每一步需要的签名，检查组合操作的最终受益人。</span></li>
-                <li><strong>3 · 注入坏状态</strong><span>重放重复划转、边界余额、并发兑付和重复回执。核对总账、在途金额、手续费和结算差额。</span></li>
-                <li><strong>4 · 模拟暂停和换班</strong><span>停掉自动化服务，演练暂停、告警、升级与退出。保留谁能解除限流、数据从哪拿到、积压如何对账的记录。</span></li>
-              </ol>
-              <figcaption>图 2 · 交易团队可把这些用例放进测试网或本地回放。一次成功的报单只能验证一条路径。</figcaption>
-            </figure>
-            <p>对量化执行器和交易 Agent，合适的默认边界是独立签名身份、只读行情输入与逐项开启执行权限。把每次验收的账户类型、网络、客户端版本和测试时间一起记录，场所规则升级后就能复跑同一份矩阵。</p>
-          </section>
-
-          <aside class="report-related" aria-label="继续阅读">
-            <p>继续阅读</p>
-            <a class="text-link" href="../lighter-key-incident/">Lighter 复盘｜交易密钥如何通向提款 <span aria-hidden="true">↗</span></a>
-          </aside>
-        </div>
-      </div>
-    </article>
+    <section class="page-intro" aria-labelledby="title">
+      
+      <h1 id="title">这篇报告已并入完整研究。</h1>
+      <p class="intro"></p>
+      <a class="text-link" href="../lighter-key-incident/#venue-comparison">从一把交易密钥到千万 USDC 流出</a>
+    </section>
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>

@@ -2,31 +2,16 @@
   {
     "id": "lighter-key-incident",
     "date": "2026-11-17",
-    "related": "perp-venue-permissions",
+    "redirect": {"from": "perp-venue-permissions", "section": "venue-comparison"},
     "en": {
-      "title": "How a Lighter trading key opened a path to withdrawal",
-      "summary": "An Ethereum transfer confirms 10.39 million USDC left Lighter. The incident shows how a signing failure and a shared pool combined to move funds across accounts.",
-      "topic": "Incident review"
+      "title": "From one trading key to a 10.39m USDC outflow",
+      "summary": "Inside the Lighter exploit, from signature failure to Ethereum settlement. A six-venue comparison of trading permissions, collateral custody, emergency exits, and the controls that hold up under test.",
+      "topic": "Perpetuals security"
     },
     "zh": {
-      "title": "Lighter 复盘｜交易密钥如何通向提款",
-      "summary": "以太坊上一笔转账证实 Lighter 流出 1,039 万 USDC。沿着签名、公共池和结算三道边界，复盘这次资金如何跨账户流动。",
-      "topic": "事件复盘"
-    }
-  },
-  {
-    "id": "perp-venue-permissions",
-    "date": "2026-11-17",
-    "related": "lighter-key-incident",
-    "en": {
-      "title": "The limits of a trading key on six perp venues",
-      "summary": "What can a delegated signer do with collateral, and who can halt or release a withdrawal? We compare six venues and turn those differences into tests.",
-      "topic": "Venue comparison"
-    },
-    "zh": {
-      "title": "六家永续合约平台的交易权限边界",
-      "summary": "一把交易密钥能动用哪些保证金？谁能暂停或放行提款？对照六家平台的公开权限，并把差异转成可复测的用例。",
-      "topic": "平台对比"
+      "title": "从一把交易密钥到千万 USDC 流出",
+      "summary": "沿着 Lighter 的签名漏洞、公共池和以太坊结算追踪资金，再逐家拆解六大永续合约平台的交易权限、托管与应急退出路径，附可复现的安全验收清单。",
+      "topic": "永续合约安全"
     }
   }
 ]
