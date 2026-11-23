@@ -10,6 +10,7 @@ from pathlib import Path
 from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
+WORDMARK = (ROOT / "assets" / "brand.svg").read_text(encoding="utf-8").strip()
 REPORT_CONTENT = ROOT / "content" / "research"
 CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
@@ -27,7 +28,6 @@ ASSETS = {
         "assets/site.css",
         "assets/brand.js",
         "feed.js",
-        "favicon.svg",
         "favicon.ico",
         "favicon-32x32.png",
         "favicon-96x96.png",
@@ -549,7 +549,6 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     lang = "zh-Hans" if locale == "zh" else "en"
     route = ("zh/" if locale == "zh" else "") + path
     root = "../" * route.count("/") or "./"
-    mark = root + ASSETS["favicon.svg"]
     here = root + ("zh/" if locale == "zh" else "")
     other_lang, other_label = ("en", "English") if locale == "zh" else ("zh-Hans", "中文")
     other = root + ("zh/" if locale == "en" else "") + path
@@ -587,8 +586,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
   <header class="site-header">
     <div class="bar wrap">
       <a class="brand" href="{here}" aria-label="AlphaWink">
-        <span class="brand-name" aria-hidden="true">AlphaWink</span>
-        <img class="brand-mark" src="{mark}" alt="" width="28" height="28">
+        {WORDMARK}
       </a>
       <nav aria-label="{copy["nav_label"]}">
         <div class="nav-group">
