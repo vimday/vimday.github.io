@@ -11,7 +11,7 @@
   <link rel="icon" href="../../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../../assets/site.css?v=5d53b0513b">
+  <link rel="stylesheet" href="../../../assets/site.css?v=f77b6f6de4">
   <link rel="alternate" hreflang="en" href="../../../research/lighter-key-incident/">
 </head>
 <body>
@@ -23,6 +23,7 @@
     </a>
     <nav aria-label="网站导航">
       <a href="../../../zh/">首页</a>
+      <a href="../../../zh/research/" aria-current="location">研究</a>
       <a href="../../../zh/products/">产品</a>
       <a href="../../../zh/about/">关于</a>
     </nav>
@@ -30,15 +31,15 @@
   <main class="wrap" id="main">
     <article class="report" aria-labelledby="title">
       <header class="report-intro">
-        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> 全部报告</a>
+        <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> 全部研究</a>
         <div class="report-meta"><span>永续合约安全</span><time datetime="2026-11-17">2026-11-17</time></div>
         <h1 id="title">从一把交易密钥到千万 USDC 流出</h1>
-        <p class="report-deck">沿着 Lighter 的签名漏洞、公共池和以太坊结算追踪资金，再逐家拆解六大永续合约平台的交易权限、托管与应急退出路径，附可复现的安全验收清单。</p>
+        <p class="report-deck">沿着 Lighter 的签名漏洞、公共池和以太坊结算追踪资金，再逐家拆解六大永续合约平台的交易权限、托管与应急退出路径，附可复现的安全验收清单。</p><p class="report-updated">更新于 <time datetime="2026-11-23">2026-11-23</time></p>
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
           <p id="contents-title">本文目录</p>
-          <ul><li><a href="#overview">交易密钥怎样走到了提现</a></li><li><a href="#amounts">流出、返还与待对账金额</a></li><li><a href="#signing">签名如何泄露密钥</a></li><li><a href="#pool">公共池改变了受益人</a></li><li><a href="#response">Guardian 与后续修复</a></li><li><a href="#other-incidents">Arcus、HyprEarn 与 Aster</a></li><li><a href="#custody-snapshots">六个平台的资金去向</a></li><li><a href="#venue-comparison">六家平台，六道控制</a></li><li><a href="#venue-profiles">逐家拆解平台架构</a></li><li><a href="#layered-controls">从签名到结算的五层防御</a></li><li><a href="#verification">四项安全验收</a></li><li><a href="#evidence">证据与待解问题</a></li></ul>
+          <ul><li><a href="#overview">交易密钥怎样走到了提现</a></li><li><a href="#amounts">流出、返还与待对账金额</a></li><li><a href="#signing">签名如何泄露密钥</a></li><li><a href="#pool">公共池改变了受益人</a></li><li><a href="#response">Guardian 与后续修复</a></li><li><a href="#other-incidents">Arcus、HyprEarn 与 Aster</a></li><li><a href="#custody-snapshots">六个平台的资金去向</a></li><li><a href="#venue-comparison">六家平台，六道控制</a></li><li><a href="#venue-profiles">逐家拆解平台架构</a></li><li><a href="#layered-controls">从签名到结算的五层防御</a></li><li><a href="#verification">四项安全验收</a></li><li><a href="#november-update">11 月 23 日更新 · 暂停之后有何变化</a></li><li><a href="#evidence">证据与待解问题</a></li></ul>
         </nav>
         <div class="report-prose">
 <section>
@@ -302,6 +303,12 @@
   <p>演练前写清通过条件。譬如撤权生效后由旧签名者签发的新请求必须被拒绝，已经排队的旧请求则要按其状态明确结局。验证提现桥时，按配置核对账本和出款不变量，分别显示申请、实付、撤销和仍在途的金额。演练独立退出时，记录状态数据从哪里取得、由谁提交交易、全程耗时，以及日常数据提供方下线后能否完成证明。</p>
   <p>为每次验收记录日期、场所、网络、功能、客户端或 SDK 版本、可见的合约部署或功能版本、签名者角色，以及账户或市场类型。保留请求引用、交易引用、预期规则和结果，避免在共享日志里留下私钥、凭证或个人账户信息。配置发生变化或新增出款路径后，重跑受影响的项目。</p>
   <p>公开材料留下了一些待验证的路径。事故公告记录发布方的说法和动作时间，链上转账能证明结算是否发生。要归因到上游决策，还需要核对签名与场所的授权记录。涉及委派权限时，应核对执行当时的授权范围、成交记录和审批历史。涉及账本时，应追到包含撤销与金库补款的完整对账。只有把这些记录串起来，才能判断新加的控制能否覆盖已出现的故障。</p>
+</section>
+
+<section>
+  <h2 id="november-update">11 月 23 日更新 · 暂停之后有何变化</h2>
+  <p>Lighter 的 11 月 22 日升级公告公布了分账户等级的 WebSocket 流量配额。公告按来源 IP 限制请求量，更高档位需要在握手时验证身份。接入测试应覆盖重连和状态的重复交付。按来源 IP 限流决定一个来源能发多少请求，密钥级 IP 白名单才决定哪些来源有权使用某把密钥。该公告确认的是流量配额，前文的权限表仍按现有上线证据记录。<a href="https://t.me/lighter_api_updates/203">Lighter WebSocket 公告</a> · <a href="https://t.me/lighter_api_updates/202">签名字段更新公告</a></p>
+  <p>横向比较时，把如何成交与如何出金分开。订单簿与询价模式回答价格怎样变成成交。结算架构则回答谁能把成交或账户余额变成付款。核验退出承诺时，可记录谁掌握所需状态、停机时用户能拿到哪些数据，以及哪个管理角色可以在出金前暂停或升级合约。<a href="https://ethereum.org/zh/developers/docs/scaling/validium/">以太坊关于 Validium 数据可用性的说明</a> · <a href="https://x.com/webtc_eth/status/2123071171004613048">11 月 18 日的补充分析</a></p>
 </section>
 
 <section>

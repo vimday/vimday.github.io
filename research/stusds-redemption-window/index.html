@@ -1,0 +1,94 @@
+<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.">
+  <meta name="theme-color" content="#f6f3ea">
+  <title>The 1.6 ETH trade that waited for one repayment / AlphaWink</title>
+  <link rel="icon" href="../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
+  <link rel="icon" href="../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
+  <link rel="icon" href="../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
+  <link rel="apple-touch-icon" href="../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
+  <link rel="stylesheet" href="../../assets/site.css?v=f77b6f6de4">
+  <link rel="alternate" hreflang="zh-Hans" href="../../zh/research/stusds-redemption-window/">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="bar wrap">
+    <a class="brand" href="../../" aria-label="AlphaWink">
+      <img class="brand-mark" src="../../favicon.svg?v=defe0f83fc" alt="" width="28" height="28">
+      <span class="brand-name">AlphaWink</span>
+    </a>
+    <nav aria-label="Site navigation">
+      <a href="../../">Home</a>
+      <a href="../../research/" aria-current="location">Research</a>
+      <a href="../../products/">Products</a>
+      <a href="../../about/">About</a>
+    </nav>
+  </header>
+  <main class="wrap" id="main">
+    <article class="report" aria-labelledby="title">
+      <header class="report-intro">
+        <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> All research</a>
+        <div class="report-meta"><span>On-chain liquidity</span><time datetime="2026-11-23">2026-11-23</time></div>
+        <h1 id="title">The 1.6 ETH trade that waited for one repayment</h1>
+        <p class="report-deck">A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.</p>
+      </header>
+      <div class="report-layout">
+        <nav class="report-toc" aria-labelledby="contents-title">
+          <p id="contents-title">In this report</p>
+          <ul><li><a href="#window">Why the discount persisted</a></li><li><a href="#receipt">Two adjacent transactions</a></li><li><a href="#cost">The trade’s ETH ledger</a></li><li><a href="#lesson">What an apparent spread actually measures</a></li></ul>
+        </nav>
+        <div class="report-prose">
+<section>
+  <h2 id="window">Why the discount persisted</h2>
+<p>At 12:15:23 UTC on November 19, 2026, an Ethereum block included a repayment to Sky’s Lockstake Engine and a successful arbitrage immediately afterward. The secondary market had already put a price on the stUSDS exit. What changed in that block was the amount the protocol could actually redeem. <a href="https://etherscan.io/tx/0x2a4835cf54ac60769dd98bf5a6e35d045ab162ad4558ee8eedfe44c24fc191a1">Repayment receipt</a> · <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">Arbitrage receipt</a></p>
+<p>stUSDS supplies risk capital to Sky’s staking-credit system. There are three relevant prices or limits: the vault’s share-to-asset conversion, the amount a holder can redeem at that moment, and the executable secondary-market quote for the full size. The share value measures the accounting claim. <code>maxWithdraw</code> and <code>maxRedeem</code> reflect the amount that can leave under the contract’s rules. Debt and pending liquidation obligations can constrain it even when the vault holds a large USDS balance. A holder who needs immediacy may accept a discount on Curve. <a href="https://sky.money/stusds">Sky product documentation</a> · <a href="https://github.com/sky-ecosystem/stusds/blob/master/src/StUsds.sol">Vault source</a></p>
+</section>
+
+<section>
+  <h2 id="receipt">Two adjacent transactions</h2>
+<p>In block 26,449,062, the Lockstake transaction was at position zero and the arbitrage at position one. The first reduced debt. The second used temporary borrowing, a secondary-market acquisition and vault redemption inside one transaction. In the largest leg, roughly 275,000 USDC of temporary funding ultimately supported the redemption of about 255,869 stUSDS for about 278,095 USDS. The full transaction includes several legs and assets. Summing loans reused across those legs would overstate the funding tied up at any one time. <a href="https://etherscan.io/tx/0x2a4835cf54ac60769dd98bf5a6e35d045ab162ad4558ee8eedfe44c24fc191a1">Repayment and logs</a> · <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">Arbitrage and transfers</a> · <a href="https://docs.morpho.org/developers/contracts/blue/">Morpho Blue contracts</a></p>
+<p>The repayment’s token transfers show 413,660.1706 USDS. The same transaction also moved staking collateral out of the position. The payment and the release of collateral are distinct legs of the state transition. <a href="https://etherscan.io/tx/0x2a4835cf54ac60769dd98bf5a6e35d045ab162ad4558ee8eedfe44c24fc191a1">Lockstake transaction logs</a></p>
+<p>The transaction establishes adjacency and ordering. A researcher reconstructing the counterfactual should read <code>maxRedeem</code> for the relevant holder at the preceding block, then compare it with the state immediately after the repayment. The final state of the same block includes the arbitrage and can obscure the brief window. Public execution traces cannot establish when the searcher first saw the repayment or which channel it used to reach the builder.</p>
+</section>
+
+<section>
+  <h2 id="cost">The trade’s ETH ledger</h2>
+<div class="report-table">
+  <table role="table">
+    <caption>Approximate ETH proceeds and costs for the full transaction</caption>
+    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Line</th><th scope="col" role="columnheader">ETH</th><th scope="col" role="columnheader">How to read it</th></tr></thead>
+    <tbody role="rowgroup">
+      <tr role="row"><th scope="row" role="rowheader">Before builder and gas</th><td role="cell"><span class="table-field" aria-hidden="true">ETH</span>1.886475</td><td role="cell"><span class="table-field" aria-hidden="true">How to read it</span>Aggregate execution residual after swaps and repayment</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">Payment to block fee recipient</th><td role="cell"><span class="table-field" aria-hidden="true">ETH</span>−0.282854</td><td role="cell"><span class="table-field" aria-hidden="true">How to read it</span>About 15% of pre-payment proceeds</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">Gas charged</th><td role="cell"><span class="table-field" aria-hidden="true">ETH</span>−0.000671</td><td role="cell"><span class="table-field" aria-hidden="true">How to read it</span>4,836,793 gas at the receipt’s effective gas price</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">Sender’s net increase</th><td role="cell"><span class="table-field" aria-hidden="true">ETH</span>≈1.602951</td><td role="cell"><span class="table-field" aria-hidden="true">How to read it</span>Rounded inputs leave a small rounding difference</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>The receipt reports a zero priority fee. The internal ETH payment is a separate cost observed in the transaction trace. The sender received 1.603621625577 ETH internally. Subtracting the 0.000670888723 ETH receipt fee and the 15 wei sent with the call leaves 1.602950736855 ETH, rounded to 12 decimal places. Research, infrastructure and unsuccessful attempts outside the block belong in a separate strategy ledger. <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">Receipt and internal transactions</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/coinbase-payment">Flashbots on fee-recipient payments</a></p>
+</section>
+
+<section>
+  <h2 id="lesson">What an apparent spread actually measures</h2>
+<p>At an illustrative 1.075 USDS buy price and 1.087 USDS share value, the 0.012 USDS difference looks large. If redeemable capacity is zero, the immediate redemption trade has zero capacity even at that spread. As capacity returns, the executable spread still shrinks with pool depth, stablecoin conversion costs and competition for the first eligible slot.</p>
+<p>A useful liquidity view records share value, available redemptions, executable quotes for specified sizes and the state transition that changed capacity. It should also log reverts and dropped submissions separately. A transaction that lands and reverts consumes gas. A private bundle that never lands generates no on-chain charge. The November trace measures one realized trade under one ordering. <a href="https://ethereum.org/developers/docs/gas/">Ethereum gas accounting</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/understanding-bundles">Flashbots bundle documentation</a></p>
+<p>The original post prompted this analysis. Sources and figures are scoped in the sections above. <a href="https://x.com/webtc_eth/status/2123698315741089917">Original post</a></p>
+</section>
+
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer class="wrap footer">
+    <span>AlphaWink</span>
+    <div class="footer-links">
+      <a href="mailto:hi@alphawink.com">hi@alphawink.com</a>
+      <a href="../../zh/research/stusds-redemption-window/" lang="zh-Hans" hreflang="zh-Hans">中文</a>
+    </div>
+  </footer>
+</body>
+</html>

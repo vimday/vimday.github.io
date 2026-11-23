@@ -1,0 +1,36 @@
+<section>
+  <h2 id="sample">The $1.65 median behind $24.3m</h2>
+<p>An AFT 2025 study groups several contracts under Wintermute and estimates $71.4 million of CEX–DEX arbitrage revenue between August 2023 and March 2025. Approximately $47.1 million went to block builders, leaving modeled PnL of $24.3 million. The median estimated PnL per trade was $1.65. Over the roughly $74.8 billion of labeled volume, the PnL is about 3.25 basis points. <a href="https://drops.dagstuhl.de/storage/00lipics/lipics-vol354-aft2025/html/LIPIcs.AFT.2025.26/LIPIcs.AFT.2025.26.html">AFT 2025 study, Table 1</a></p>
+<div class="report-table">
+  <table role="table">
+    <caption>Historical sample economics, USD</caption>
+    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">Measure</th><th scope="col" role="columnheader">Amount</th><th scope="col" role="columnheader">Measurement boundary</th></tr></thead>
+    <tbody role="rowgroup">
+      <tr role="row"><th scope="row" role="rowheader">Modeled arbitrage revenue</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>$71.4m</td><td role="cell"><span class="table-field" aria-hidden="true">Measurement boundary</span>CEX prices and fees are modeled, with base gas accounted for</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">Payments to block builders</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>$47.1m</td><td role="cell"><span class="table-field" aria-hidden="true">Measurement boundary</span>Identified payments for inclusion or ordering</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">Modeled PnL</th><td role="cell"><span class="table-field" aria-hidden="true">Amount</span>$24.3m</td><td role="cell"><span class="table-field" aria-hidden="true">Measurement boundary</span>Revenue after builder payments. Corporate overhead and inventory financing lie outside this calculation</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>The paper estimates one side of the trade from public exchange quotes because the actual hedge fills are private. A small median can coexist with a large aggregate through volume and a skewed distribution. The sample describes historical economics for the authors’ contract labels. It leaves today’s route share and the firm’s consolidated earnings open.</p>
+</section>
+
+<section>
+  <h2 id="transaction">Read the swap and payment separately</h2>
+<p>On March 14, 2025, the first transaction in Ethereum block 22,045,570 spent about 1,400.3562 WETH and received $2.655 million in USDC. Its receipt shows 327,663 gas and zero priority fee. A separate internal transfer of about 5.98076 ETH went to the builder’s fee recipient. Base gas was about 0.000175 ETH. The small gas figure and large ordering payment belong in the same execution-cost ledger. <a href="https://etherscan.io/tx/0x06fed3f7dc71194fe3c2fd379ef1e8aaa850354454ea9dd526364a4e24853660">Ethereum transaction</a> · <a href="https://etherscan.io/address/0x51c72848c68a965f66fa7a88855f9f7784502a7f#code">Verified contract source</a></p>
+<p>The verified contract exposes separate roles for permitted calls, counterparties and approved pools. Public approval changes can show operational preparation. Evaluating the economic result still requires the other leg, plus inventory valuation and whether that inventory was already funded. Cross-venue positions can remain exposed between the swap and the hedge.</p>
+</section>
+
+<section>
+  <h2 id="auction">Priority has a second market</h2>
+<p>An Ethereum builder can be paid inside a transaction. Arbitrum Timeboost historically auctioned access to a faster path. A 2026 event study tracks Wintermute and Selini after they began using Kairos, a secondary provider of access. The paper reports that the primary-auction payment fell from roughly 62.7% to 14.8% of the highest bid across the paper’s regimes, while the full downstream split remained unobserved. Public auction revenue and a searcher’s total cost of priority measure different things. <a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">Arbitrum sequencing documentation</a> · <a href="https://arxiv.org/abs/2603.20175">Kairos event study</a></p>
+<p><strong>November 2026 update.</strong> Arbitrum One has since decommissioned the Timeboost express lane and activated Priority Gas Auctions. A fee attached to each transaction now competes for position in short sequencer rounds. The optional Fast Feed sells earlier observations during block construction, with ordering still governed by PGA. The two mechanisms provide separate costs for information and execution. The Kairos paper describes the earlier Timeboost market. <a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">Active PGA specification</a> · <a href="https://blog.arbitrum.io/competing-for-transaction-priority-on-arbitrum/">Arbitrum on Fast Feed</a></p>
+<p>On a hypothetical $1 million trade, 5 bps of modeled spread is $500. With $150 for hedge fees and gas, $100 for execution uncertainty and $100 in targeted residual, $150 remains for ordering. Tighten the hedge by $50 and the same strategy can bid $50 more or retain it. That simple sensitivity helps explain why two searchers observing the same pool might price the same slot differently.</p>
+</section>
+
+<section>
+  <h2 id="signals">Audit the 3i story as a signal</h2>
+<p>The source recounts a $6 million 3i result. Public evidence is stronger for individual changes than for that aggregate. BitGo’s July pull requests show code support for CASHCAT and a set of Robinhood Chain stock tokens. A custody integration records software support. An approval records authority granted to a spender. A transfer shows inventory movement. A fill proves an execution at a price. None of those records alone establishes the complete attribution or realized PnL. <a href="https://github.com/BitGo/BitGoJS/pull/9357">CASHCAT code change</a> · <a href="https://github.com/BitGo/BitGoJS/pull/9371">Stock-token code change</a></p>
+<p>A signal study can timestamp each authorization and compare the first executable quote after it with a matched group of authorizations that never led to trading. Record exits and failed signals as well as winners. This keeps an integration event from receiving credit for returns that depended on execution after the news.</p>
+<p>The original post prompted this analysis. Sources and figures are scoped in the sections above. <a href="https://x.com/webtc_eth/status/2122002397082038472">Original post</a></p>
+</section>

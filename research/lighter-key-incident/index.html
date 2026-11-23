@@ -11,7 +11,7 @@
   <link rel="icon" href="../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../assets/site.css?v=5d53b0513b">
+  <link rel="stylesheet" href="../../assets/site.css?v=f77b6f6de4">
   <link rel="alternate" hreflang="zh-Hans" href="../../zh/research/lighter-key-incident/">
 </head>
 <body>
@@ -23,6 +23,7 @@
     </a>
     <nav aria-label="Site navigation">
       <a href="../../">Home</a>
+      <a href="../../research/" aria-current="location">Research</a>
       <a href="../../products/">Products</a>
       <a href="../../about/">About</a>
     </nav>
@@ -30,15 +31,15 @@
   <main class="wrap" id="main">
     <article class="report" aria-labelledby="title">
       <header class="report-intro">
-        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> All reports</a>
+        <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> All research</a>
         <div class="report-meta"><span>Perpetuals security</span><time datetime="2026-11-17">2026-11-17</time></div>
         <h1 id="title">From one trading key to a 10.39m USDC outflow</h1>
-        <p class="report-deck">Inside the Lighter exploit, from signature failure to Ethereum settlement. A six-venue comparison of trading permissions, collateral custody, emergency exits, and the controls that hold up under test.</p>
+        <p class="report-deck">Inside the Lighter exploit, from signature failure to Ethereum settlement. A six-venue comparison of trading permissions, collateral custody, emergency exits, and the controls that hold up under test.</p><p class="report-updated">Updated <time datetime="2026-11-23">2026-11-23</time></p>
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
           <p id="contents-title">In this report</p>
-          <ul><li><a href="#overview">How a trading key became a withdrawal</a></li><li><a href="#amounts">What the ledgers say</a></li><li><a href="#signing">The signing failure</a></li><li><a href="#pool">The public-pool detour</a></li><li><a href="#response">Guardian and the fixes</a></li><li><a href="#other-incidents">Arcus, HyprEarn and Aster</a></li><li><a href="#custody-snapshots">Where the collateral sat</a></li><li><a href="#venue-comparison">Six venues, six controls</a></li><li><a href="#venue-profiles">Inside each venue</a></li><li><a href="#layered-controls">Five layers of defense</a></li><li><a href="#verification">Four acceptance tests</a></li><li><a href="#evidence">Sources and open questions</a></li></ul>
+          <ul><li><a href="#overview">How a trading key became a withdrawal</a></li><li><a href="#amounts">What the ledgers say</a></li><li><a href="#signing">The signing failure</a></li><li><a href="#pool">The public-pool detour</a></li><li><a href="#response">Guardian and the fixes</a></li><li><a href="#other-incidents">Arcus, HyprEarn and Aster</a></li><li><a href="#custody-snapshots">Where the collateral sat</a></li><li><a href="#venue-comparison">Six venues, six controls</a></li><li><a href="#venue-profiles">Inside each venue</a></li><li><a href="#layered-controls">Five layers of defense</a></li><li><a href="#verification">Four acceptance tests</a></li><li><a href="#november-update">November 23 · What changed after the pause</a></li><li><a href="#evidence">Sources and open questions</a></li></ul>
         </nav>
         <div class="report-prose">
 <section>
@@ -302,6 +303,12 @@
   <p>Define pass criteria before each run. For example, no new request signed after venue revocation should be accepted, and requests signed earlier need a documented result for each state in the queue. For bridge tests, compare transfers and reservations against the configured ledger and payout invariants, with requested, paid, reversed, and still pending amounts visible separately. For an emergency exit, capture where the required state came from, which actor submitted the transaction, what time elapsed, and whether the proof can still be built if the usual data provider is unavailable.</p>
   <p>Capture the test date, venue and network, functionality under test, client or SDK version, deployed contract or feature revision where available, signer role, and relevant account or market type. Keep request and transaction references with the observed result and expected rule. Keep credentials, raw private key material and personal account details out of shared logs. A configuration change or a new payout route affects the evidence for that path and should trigger a rerun.</p>
   <p>The public record leaves some paths unresolved. An incident notice can establish what the reporting party said and when it acted. An on-chain transfer can establish that settlement occurred, but the signature and venue authorization records are needed to attribute the upstream decision. For delegated access, request the scope at the time of execution and the venue’s fill and approval history. For ledger incidents, seek the full reconciliation, including reversal and treasury funding. These records determine whether a proposed control covers the failure described.</p>
+</section>
+
+<section>
+  <h2 id="november-update">November 23 · What changed after the pause</h2>
+  <p>Lighter’s November 22 upgrade notice announced new WebSocket traffic ceilings by account tier. The notice lists limits per source IP and ties higher tiers to authentication in the handshake. Record the change when testing reconnects and duplicate state updates. A source-IP traffic budget controls how many messages an origin can send. A key-level IP allowlist determines which origins may use a credential. The documented traffic changes establish the first control. The investigation’s table still labels the credential controls according to the available rollout evidence. <a href="https://t.me/lighter_api_updates/203">Lighter WebSocket notice</a> · <a href="https://t.me/lighter_api_updates/202">Signature response change</a></p>
+  <p>Separate the order-entry and custody questions when comparing the six venues. An order book and a request-for-quote system describe how a price becomes a fill. Settlement architecture describes which actors can turn that fill or a collateral balance into a payment. To test the custody promise, write down who holds the required state, what data a user can obtain during an outage, and which administrator can pause or upgrade the path before the claim becomes payable. <a href="https://ethereum.org/developers/docs/scaling/validium/">Ethereum on validium data availability</a> · <a href="https://x.com/webtc_eth/status/2123071171004613048">November 18 companion analysis</a></p>
 </section>
 
 <section>

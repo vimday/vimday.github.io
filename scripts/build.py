@@ -14,6 +14,7 @@ CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
 ALEPH = "https://github.com/AlephTX/aleph-tx"
 ROUTES = ("", "products/", "about/")
+NAV_ROUTES = ("", "research/", "products/", "about/")
 PROJECTS = (("aleph", "aleph-tx", "AlephTX"), ("oasis", "oasis-agent", "Oasis Agent"))
 REPLAY_OFFSETS_MS = (0, 240, 480)
 ASSETS = {
@@ -31,12 +32,16 @@ ASSETS = {
 
 COPY = {
     "en": {
-        "nav": ("Home", "Products", "About"),
+        "nav": ("Home", "Research", "Products", "About"),
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "research": {
-            "heading": "Research reports",
-            "back": "All reports",
+            "heading": "Latest research",
+            "archive": "Research archive",
+            "archive_intro": "Investigations into trading, market structure and risk.",
+            "back": "All research",
+            "read": "Read the report",
+            "updated": "Updated",
             "contents": "In this report",
             "moved": "This report is now part of the full investigation.",
         },
@@ -111,12 +116,16 @@ COPY = {
         },
     },
     "zh": {
-        "nav": ("首页", "产品", "关于"),
+        "nav": ("首页", "研究", "产品", "关于"),
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "research": {
-            "heading": "研究报告",
-            "back": "全部报告",
+            "heading": "最新研究",
+            "archive": "研究归档",
+            "archive_intro": "关于交易、市场结构和风险的深度研究。",
+            "back": "全部研究",
+            "read": "阅读全文",
+            "updated": "更新于",
             "contents": "本文目录",
             "moved": "这篇报告已并入完整研究。",
         },
@@ -223,7 +232,9 @@ def read_reports():
         if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug) or slug in ids:
             raise ValueError(f"Invalid or duplicate report ID: {slug}")
         ids.add(slug)
-        date.fromisoformat(report["date"])
+        published = date.fromisoformat(report["date"])
+        if "updated" in report and date.fromisoformat(report["updated"]) < published:
+            raise ValueError(f"Update precedes publication: {slug}")
         for locale in COPY:
             for field in ("title", "summary", "topic"):
                 if not report[locale][field].strip():
@@ -241,23 +252,51 @@ def report_path(report):
     return f'research/{report["id"]}/'
 
 
-def report_index(reports, locale, here):
-    heading = COPY[locale]["research"]["heading"]
-    entries = []
-    for report in reports:
-        fields = report[locale]
-        entries.append(f"""
-        <article class="report-entry">
-          <div class="report-meta"><span>{escape(fields["topic"])}</span><time datetime="{report["date"]}">{report["date"]}</time></div>
-          <h3><a href="{here}{report_path(report)}">{escape(fields["title"])} <span aria-hidden="true">↗</span></a></h3>
+def report_meta(report, locale):
+    topic = escape(report[locale]["topic"])
+    day = report["date"]
+    return f'<div class="report-meta"><span>{topic}</span><time datetime="{day}">{day}</time></div>'
+
+
+def report_entry(report, locale, here, *, heading="h3", featured=False):
+    fields = report[locale]
+    url = here + report_path(report)
+    label = COPY[locale]["research"]["read"]
+    action = f'<a class="text-link" href="{url}" aria-label="{label} · {escape(fields["title"], quote=True)}">{label} <span aria-hidden="true">→</span></a>' if featured else ""
+    return f"""
+        <article class="report-entry{' report-feature' if featured else ''}">
+          {report_meta(report, locale)}
+          <{heading}><a href="{url}">{escape(fields["title"])}</a></{heading}>
           <p>{escape(fields["summary"])}</p>
-        </article>""")
+          {action}
+        </article>"""
+
+
+def latest_research(reports, locale, here):
+    if not reports:
+        return ""
+    copy = COPY[locale]["research"]
+    lead = report_entry(reports[0], locale, here, featured=True)
+    more = "".join(report_entry(report, locale, here) for report in reports[1:4])
     return f"""
     <section class="section" id="reports" aria-labelledby="reports-title">
-      <h2 id="reports-title">{heading}</h2>
-      <div class="report-index">{"".join(entries)}
+      <div class="section-header">
+        <h2 id="reports-title">{copy["heading"]}</h2>
+        <a class="text-link" href="{here}research/">{copy["back"]} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="research-front">
+        {lead}
+        <div class="research-front-list">{more}
+        </div>
       </div>
     </section>"""
+
+
+def research_archive(reports, locale):
+    copy = COPY[locale]["research"]
+    here = "/zh/" if locale == "zh" else "/"
+    entries = "".join(report_entry(report, locale, here, heading="h2") for report in reports)
+    return page_intro(copy["archive"], copy["archive_intro"]) + f'<div class="research-archive">{entries}</div>'
 
 
 def report_body(report, locale):
@@ -268,13 +307,17 @@ def report_body(report, locale):
     if "redirect" in report and report["redirect"]["section"] not in dict(headings):
         raise ValueError(f'Missing redirect heading for {report["id"]} ({locale})')
     contents = "".join(f'<li><a href="#{anchor}">{title}</a></li>' for anchor, title in headings)
+    updated = ""
+    if "updated" in report:
+        day = report["updated"]
+        updated = f'<p class="report-updated">{copy["updated"]} <time datetime="{day}">{day}</time></p>'
     return f"""
     <article class="report" aria-labelledby="title">
       <header class="report-intro">
-        <a class="text-link report-back" href="../../#reports"><span aria-hidden="true">←</span> {copy["back"]}</a>
-        <div class="report-meta"><span>{escape(fields["topic"])}</span><time datetime="{report["date"]}">{report["date"]}</time></div>
+        <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> {copy["back"]}</a>
+        {report_meta(report, locale)}
         <h1 id="title">{escape(fields["title"])}</h1>
-        <p class="report-deck">{escape(fields["summary"])}</p>
+        <p class="report-deck">{escape(fields["summary"])}</p>{updated}
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
@@ -354,7 +397,7 @@ def alpha(locale, root, here, notes, reports, copy):
     )
     empty_attr = " hidden" if notes else ""
     return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
-{report_index(reports, locale, here)}
+{latest_research(reports, locale, here)}
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -444,10 +487,10 @@ def about(locale, notes, copy, notes_copy):
 
 def render(locale, page, notes, reports):
     copy = COPY[locale]
-    name = copy["nav"][page]
+    path = ROUTES[page]
+    name = copy["nav"][NAV_ROUTES.index(path)]
     section = copy[("alpha", "products", "about")[page]]
     description = re.sub(r"<[^>]+>", "", section["intro"])
-    path = ROUTES[page]
     root = "../" * (path.count("/") + (locale == "zh")) or "./"
     here = root + ("zh/" if locale == "zh" else "")
     if page == 0:
@@ -470,10 +513,12 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     here = root + ("zh/" if locale == "zh" else "")
     other_lang, other_label = ("en", "English") if locale == "zh" else ("zh-Hans", "中文")
     other = root + ("zh/" if locale == "en" else "") + path
-    current = ' aria-current="page"'
+    current = {path: ' aria-current="page"'}
+    if path.startswith("research/") and path != "research/":
+        current["research/"] = ' aria-current="location"'
     nav = "\n".join(
-        f'      <a href="{here}{nav_path}"{current if nav_path == path else ""}>{label}</a>'
-        for nav_path, label in zip(ROUTES, copy["nav"], strict=True)
+        f'      <a href="{here}{nav_path}"{current.get(nav_path, "")}>{label}</a>'
+        for nav_path, label in zip(NAV_ROUTES, copy["nav"], strict=True)
     )
     redirect_head = ""
     if redirect:
@@ -529,6 +574,8 @@ if __name__ == "__main__":
     for locale in COPY:
         for page in range(len(ROUTES)):
             render(locale, page, notes, reports)
+        archive = COPY[locale]["research"]
+        write_page(locale, "research/", archive["archive"], archive["archive_intro"], research_archive(reports, locale))
         for report in reports:
             fields = report[locale]
             write_page(locale, report_path(report), fields["title"], fields["summary"], report_body(report, locale))

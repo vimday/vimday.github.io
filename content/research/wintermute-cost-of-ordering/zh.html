@@ -1,0 +1,36 @@
+<section>
+  <h2 id="sample">单笔中位 1.65 美元，累计怎么到 2,430 万</h2>
+<p>AFT 2025 的研究把若干合约归在 Wintermute 名下，估计 2023 年 8 月至 2025 年 3 月的 CEX–DEX 套利收入约为 7,140 万美元。其中约 4,710 万付给区块构建者，模型盈亏剩 2,430 万美元。单笔估算盈亏的中位数为 1.65 美元。按约 748 亿美元的归类成交量算，累计盈亏约为 3.25 个基点。 <a href="https://drops.dagstuhl.de/storage/00lipics/lipics-vol354-aft2025/html/LIPIcs.AFT.2025.26/LIPIcs.AFT.2025.26.html">AFT 论文表 1</a></p>
+<div class="report-table">
+  <table role="table">
+    <caption>历史样本的收入与支付，美元</caption>
+    <thead role="rowgroup"><tr role="row"><th scope="col" role="columnheader">项目</th><th scope="col" role="columnheader">金额</th><th scope="col" role="columnheader">测量边界</th></tr></thead>
+    <tbody role="rowgroup">
+      <tr role="row"><th scope="row" role="rowheader">模型估算的套利收入</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>7,140 万</td><td role="cell"><span class="table-field" aria-hidden="true">测量边界</span>CEX 价格和费用使用模型，已考虑基础 Gas</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">付给区块构建者</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>4,710 万</td><td role="cell"><span class="table-field" aria-hidden="true">测量边界</span>识别到的打包或排序付款</td></tr>
+      <tr role="row"><th scope="row" role="rowheader">模型估算盈亏</th><td role="cell"><span class="table-field" aria-hidden="true">金额</span>2,430 万</td><td role="cell"><span class="table-field" aria-hidden="true">测量边界</span>扣构建者付款，经营成本与库存融资在模型范围之外</td></tr>
+    </tbody>
+  </table>
+</div>
+<p>研究者看不到交易员在中心化交易所的真实对冲成交，因此用当时的市场报价和假定的手续费复原这一腿。大量交易和歪斜的收益分布，可以让很小的中位数与很大的总额同时出现。样本只描述该时段所标注的合约，最新市场份额和公司合并利润仍待其他资料核对。</p>
+</section>
+
+<section>
+  <h2 id="transaction">当 Gas 一栏看起来很便宜</h2>
+<p>2025 年 3 月 14 日，以太坊区块 22,045,570 的首笔交易卖出约 1,400.3562 WETH，收到约 265.5 万 USDC。回执显示用了 327,663 Gas，优先费为零，基础 Gas 约 0.000175 ETH。再看内部转账，还有约 5.98076 ETH 付给构建者的费用接收地址。两笔成本都要进执行账。 <a href="https://etherscan.io/tx/0x06fed3f7dc71194fe3c2fd379ef1e8aaa850354454ea9dd526364a4e24853660">以太坊交易</a> · <a href="https://etherscan.io/address/0x51c72848c68a965f66fa7a88855f9f7784502a7f#code">已验证合约源码</a></p>
+<p>合约将可调用的操作、交易池和资金接收方等权限分开。公开授权变更可以反映运营准备。要评价这笔交易的净利润，还得知道对冲成交、库存成本，以及两条腿之间暴露了多少价格风险。链上换币和交易所对冲可以在不同时间成交。</p>
+</section>
+
+<section>
+  <h2 id="auction">排序也有二级市场</h2>
+<p>以太坊上可以通过交易内部付款给构建者。Arbitrum 的 Timeboost 曾拍卖更快的交易通道。2026 年一份事件研究跟踪了 Wintermute 与 Selini 改用 Kairos 二级服务前后的变化。按该论文所划分的阶段，一级拍卖成交价与最高报价的比值约从 62.7% 降到 14.8%。完整的二级费用仍不可见。协议收到的拍卖收入只覆盖排序成本的一部分。 <a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">Arbitrum 排序文档</a> · <a href="https://arxiv.org/abs/2603.20175">Kairos 事件研究</a></p>
+<p><strong>2026 年 11 月更新。</strong>Arbitrum One 已停用 Timeboost 快车道，切换到优先 Gas 拍卖（PGA）。现在按笔提交的优先费，会在排序器的短轮次中竞争顺序。可选的 Fast Feed 则让订阅者在构建区块期间更早看到交易信息，排序仍由 PGA 决定。更早看见与更早执行是两项成本。Kairos 研究适用于较早的 Timeboost 市场。<a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">现行 PGA 文档</a> · <a href="https://blog.arbitrum.io/competing-for-transaction-priority-on-arbitrum/">Arbitrum 对 Fast Feed 的介绍</a></p>
+<p>用假设交易算一下。100 万美元乘 5 个基点，账面价差为 500 美元。给对冲手续费和 Gas 留 150，给执行不确定性留 100，目标盈余留 100，排序出价上限就剩 150 美元。另一家把对冲成本降 50 美元，就多出 50 美元来出价或留作盈余。同一个池子的价格，对不同执行系统意味着不同的出价。</p>
+</section>
+
+<section>
+  <h2 id="signals">把 3i 的故事变成可检验的信号</h2>
+<p>原帖引述 3i 获利 600 万美元的说法。公开记录能确认的是具体动作。BitGo 7 月的合并请求有 CASHCAT 和一批 Robinhood Chain 股票代币的代码支持。托管集成说明软件支持了什么，授权说明某地址拿到了什么权限，转账说明库存去了哪里，成交才给出真实价格。要验证收益归因，还需把这些记录与实际仓位、退出和成本对齐。 <a href="https://github.com/BitGo/BitGoJS/pull/9357">CASHCAT 代码变更</a> · <a href="https://github.com/BitGo/BitGoJS/pull/9371">股票代币代码变更</a></p>
+<p>研究这类信号，可按首次可见时间标记授权变更，取紧随其后的可执行报价，再找一组最终没有成交的变更作对照。要记录退出深度和失败信号。这样才能判断可观察的准备动作，是否在扣完两端成本后还有价值。</p>
+<p>本文由原帖引发，文中列出了各项数据的证据及适用范围。 <a href="https://x.com/webtc_eth/status/2122002397082038472">原始文章</a></p>
+</section>

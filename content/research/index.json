@@ -1,8 +1,67 @@
 [
   {
+    "id": "stusds-redemption-window",
+    "date": "2026-11-23",
+    "en": {
+      "title": "The 1.6 ETH trade that waited for one repayment",
+      "summary": "A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.",
+      "topic": "On-chain liquidity"
+    },
+    "zh": {
+      "title": "等到一笔还款，才有这 1.6 ETH",
+      "summary": "复盘 11 月 19 日的一段以太坊区块，拆解 stUSDS 的赎回额度、执行顺序与套利净收益。",
+      "topic": "链上流动性"
+    }
+  },
+  {
+    "id": "wintermute-cost-of-ordering",
+    "date": "2026-11-23",
+    "en": {
+      "title": "Wintermute and the price of going first",
+      "summary": "A $2.65m swap, a zero priority fee and nearly 6 ETH paid for ordering reveal which costs a public receipt can show.",
+      "topic": "Execution research"
+    },
+    "zh": {
+      "title": "Wintermute 为什么愿意花钱买第一笔",
+      "summary": "从一笔 265 万美元换币看零优先费背后的真实成本，再拆解机构如何为执行顺序定价。",
+      "topic": "执行研究"
+    }
+  },
+  {
+    "id": "weekend-squeeze-stock-tokens",
+    "date": "2026-11-23",
+    "en": {
+      "title": "Could the next GameStop squeeze start on a Saturday?",
+      "summary": "Stock tokens give traders a weekend price. Whether that price moves the shares depends on who can carry the trade across markets.",
+      "topic": "Market structure"
+    },
+    "zh": {
+      "title": "下一场 GME 轧空，会从周六开始吗？",
+      "summary": "股票代币让周末也有报价。这个价格能否传到美股，要看谁能把仓位从一边带到另一边。",
+      "topic": "市场结构"
+    }
+  },
+  {
+    "id": "ai-valuation-and-credit",
+    "date": "2026-11-23",
+    "en": {
+      "title": "If the AI trade breaks, which risk breaks first?",
+      "summary": "The latest Alphabet and Microsoft results give us a baseline. Three stress scenarios separate valuations, rates and credit.",
+      "topic": "Equity and credit"
+    },
+    "zh": {
+      "title": "如果 AI 行情转向，先出问题的是估值、利率还是信用？",
+      "summary": "用 Alphabet 和微软最新一季财报重做五月的压力测试，拆解三种下跌和不同保护工具的成本。",
+      "topic": "股票与信用"
+    }
+  },
+  {
     "id": "lighter-key-incident",
     "date": "2026-11-17",
-    "redirect": {"from": "perp-venue-permissions", "section": "venue-comparison"},
+    "redirect": {
+      "from": "perp-venue-permissions",
+      "section": "venue-comparison"
+    },
     "en": {
       "title": "From one trading key to a 10.39m USDC outflow",
       "summary": "Inside the Lighter exploit, from signature failure to Ethereum settlement. A six-venue comparison of trading permissions, collateral custody, emergency exits, and the controls that hold up under test.",
@@ -12,6 +71,7 @@
       "title": "从一把交易密钥到千万 USDC 流出",
       "summary": "沿着 Lighter 的签名漏洞、公共池和以太坊结算追踪资金，再逐家拆解六大永续合约平台的交易权限、托管与应急退出路径，附可复现的安全验收清单。",
       "topic": "永续合约安全"
-    }
+    },
+    "updated": "2026-11-23"
   }
 ]
