@@ -582,7 +582,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(description, quote=True)}">
-  <meta name="theme-color" content="#f5f5f5">
+  <meta name="theme-color" content="#fcfcfa">
   <title>{escape(name)} / AlphaWink</title>
   <link rel="icon" href="{root}{ASSETS["favicon.ico"]}" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="{root}{ASSETS["favicon-32x32.png"]}" sizes="32x32" type="image/png">
