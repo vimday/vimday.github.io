@@ -3,6 +3,7 @@
 import json
 import re
 from datetime import date
+from decimal import Decimal
 from hashlib import sha256
 from html import escape
 from pathlib import Path
@@ -51,6 +52,14 @@ COPY = {
         "alpha": {
             "title": "Independent <span>market research</span>",
             "intro": "We study how markets trade, what execution costs, and where risk sits. Our research and code are public.",
+            "browse": "Explore research",
+            "receipt": {
+                "block": "Ethereum block",
+                "net": "Wallet net increase",
+                "builder": "Builder payment",
+                "gas": "Gas",
+                "trace": "Read the transaction analysis",
+            },
             "projects": "Research systems",
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
@@ -132,6 +141,14 @@ COPY = {
         "alpha": {
             "title": "独立市场研究",
             "intro": '研究成交、成本与风险。我们公开研究文章和验证这些判断的代码。',
+            "browse": "浏览研究",
+            "receipt": {
+                "block": "以太坊区块",
+                "net": "发起钱包净增",
+                "builder": "构建者付款",
+                "gas": "Gas",
+                "trace": "阅读交易复盘",
+            },
             "projects": "研究系统",
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
@@ -249,6 +266,46 @@ def report_path(report):
     return f'research/{report["id"]}/'
 
 
+def featured_receipt(report, copy, here):
+    receipt = report["receipt"]
+    amounts = {key: Decimal(receipt[key]) for key in ("net", "builder", "gas")}
+    if any(not value.is_finite() or value < 0 for value in amounts.values()) or not (total := sum(amounts.values())):
+        raise ValueError(f'Invalid receipt amounts for {report["id"]}')
+    asset = escape(receipt["asset"])
+    widths = "".join(f'<span style="flex-grow:{value / total:.7f}"></span>' for value in amounts.values())
+    costs = "".join(f'<div><dt>{copy[key]}</dt><dd>{amounts[key]:f} {asset}</dd></div>'
+                    for key in ("builder", "gas"))
+    return f"""
+      <figure class="hero-receipt">
+        <figcaption>
+          <strong>{escape(receipt["market"])}</strong>
+          <span>{copy["block"]} {receipt["block"]:,}</span>
+        </figcaption>
+        <dl class="receipt-data">
+          <div class="receipt-net">
+            <dt>{copy["net"]}</dt>
+            <dd>{amounts["net"]:f} <span>{asset}</span></dd>
+          </div>
+          {costs}
+        </dl>
+        <div class="receipt-bar" aria-hidden="true">{widths}</div>
+        <a class="receipt-link" href="{here}{report_path(report)}#cost">{copy["trace"]} <span aria-hidden="true">↗</span></a>
+      </figure>"""
+
+
+def home_intro(reports, copy, here):
+    lead = reports[0] if reports else None
+    receipt = featured_receipt(lead, copy["receipt"], here) if lead and "receipt" in lead else ""
+    return f"""
+    <section class="home-hero{' home-hero-receipt' if receipt else ''}" aria-labelledby="title">
+      <div class="hero-copy">
+        <h1 id="title">{copy["title"]}</h1>
+        <p>{copy["intro"]}</p>
+        <a class="hero-link" href="{here}research/">{copy["browse"]} <span aria-hidden="true">↗</span></a>
+      </div>{receipt}
+    </section>"""
+
+
 def report_meta(report, locale):
     topic = escape(report[locale]["topic"])
     day = report["date"]
@@ -301,8 +358,11 @@ def report_body(report, locale):
     fields = report[locale]
     body = (REPORT_CONTENT / report["id"] / f"{locale}.html").read_text(encoding="utf-8")
     headings = re.findall(r'<h2 id="([a-z0-9-]+)">([^<]+)</h2>', body)
-    if "redirect" in report and report["redirect"]["section"] not in dict(headings):
+    anchors = dict(headings)
+    if "redirect" in report and report["redirect"]["section"] not in anchors:
         raise ValueError(f'Missing redirect heading for {report["id"]} ({locale})')
+    if "receipt" in report and "cost" not in anchors:
+        raise ValueError(f'Missing receipt cost heading for {report["id"]} ({locale})')
     contents = "".join(f'<li><a href="#{anchor}">{title}</a></li>' for anchor, title in headings)
     updated = ""
     if "updated" in report:
@@ -310,6 +370,7 @@ def report_body(report, locale):
         updated = f'<p class="report-updated">{copy["updated"]} <time datetime="{day}">{day}</time></p>'
     return f"""
     <article class="report" aria-labelledby="title">
+      <div class="reading-progress" aria-hidden="true"></div>
       <header class="report-intro">
         <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> {copy["back"]}</a>
         {report_meta(report, locale)}
@@ -323,6 +384,7 @@ def report_body(report, locale):
         </nav>
         <div class="report-prose">
 {body}
+          <div class="report-end"><a class="text-link" href="../"><span aria-hidden="true">←</span> {copy["back"]}</a></div>
         </div>
       </div>
     </article>"""
@@ -375,7 +437,7 @@ def alpha(locale, root, here, notes, reports, copy):
         if key == "all" or key in categories
     )
     empty_attr = " hidden" if notes else ""
-    return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
+    return home_intro(reports, copy, here) + f"""
 {latest_research(reports, locale, here)}
 {project_index(locale, here, copy["projects"])}
     <section class="section" id="feed" aria-labelledby="feed-title">
@@ -438,7 +500,10 @@ def products(copy):
           </div>
         </div>
       </article>""")
+    names = "".join(f'<a class="text-link" href="#{slug}">{name} <span aria-hidden="true">↓</span></a>'
+                    for _, slug, name, *_ in PROJECTS)
     return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
+    <div class="product-jump">{names}</div>
     <div class="product-list" id="research-walkthrough">{"".join(cards)}
     </div>"""
 
@@ -517,7 +582,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="description" content="{escape(description, quote=True)}">
-  <meta name="theme-color" content="#f6f3ea">
+  <meta name="theme-color" content="#f5f2e9">
   <title>{escape(name)} / AlphaWink</title>
   <link rel="icon" href="{root}{ASSETS["favicon.ico"]}" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="{root}{ASSETS["favicon-32x32.png"]}" sizes="32x32" type="image/png">
