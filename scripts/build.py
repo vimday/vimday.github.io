@@ -40,7 +40,6 @@ COPY = {
         "skip": "Skip to content",
         "nav_label": "Site navigation",
         "research": {
-            "heading": "Latest research",
             "archive": "Research archive",
             "archive_intro": "Investigations into trading, market structure and risk.",
             "back": "All research",
@@ -50,9 +49,16 @@ COPY = {
             "moved": "This report is now part of the full investigation.",
         },
         "alpha": {
-            "title": "Independent <span>market research</span>",
-            "intro": "We study how markets trade, what execution costs, and where risk sits. Our research and code are public.",
+            "title": "Market research <span>you can retrace</span>",
+            "intro": "AlphaWink studies market opportunities and risk. We follow a claim through quotes, trades and settlement, then show the evidence behind our conclusions.",
             "browse": "Explore research",
+            "featured": "Selected research",
+            "method": "How we work",
+            "steps": (
+                ("Pose a testable question", "Turn a spread, a crowded trade or a risk event into a concrete question tied to a market and a time window."),
+                ("Reconstruct what could execute", "Use market depth, fees and receipts to see which trades could fill and what those fills would cost."),
+                ("Show the limits", "Link the source data, state the assumptions and explain what evidence would change the conclusion."),
+            ),
             "receipt": {
                 "block": "Ethereum block",
                 "net": "Wallet net increase",
@@ -60,7 +66,6 @@ COPY = {
                 "gas": "Gas",
                 "trace": "Read the transaction analysis",
             },
-            "projects": "Research systems",
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
             "empty": "No notes in this category yet.",
@@ -74,7 +79,6 @@ COPY = {
             "start": "Quickstart",
             "changes": "Recent work",
             "commit": "View change",
-            "browse": "Explore products",
             "aleph": {
                 "topic": "Perpetual futures",
                 "summary": "Multi-venue order books, causal replay and supervised execution in Rust and Go.",
@@ -129,7 +133,6 @@ COPY = {
         "skip": "跳到正文",
         "nav_label": "网站导航",
         "research": {
-            "heading": "最新研究",
             "archive": "研究归档",
             "archive_intro": "关于交易、市场结构和风险的深度研究。",
             "back": "全部研究",
@@ -139,9 +142,16 @@ COPY = {
             "moved": "这篇报告已并入完整研究。",
         },
         "alpha": {
-            "title": "独立市场研究",
-            "intro": '研究成交、成本与风险。我们公开研究文章和验证这些判断的代码。',
+            "title": "让市场判断<span>经得起复核</span>",
+            "intro": "AlphaWink 研究市场机会与风险。我们沿着报价、成交和结算追查一个判断，并公开支撑结论的证据。",
             "browse": "浏览研究",
+            "featured": "研究选读",
+            "method": "我们如何研究",
+            "steps": (
+                ("先问一个能检验的问题", "从价差、拥挤交易或风险事件出发，确定要观察的市场与时间窗口。"),
+                ("还原能成交的条件", "用盘口、费率和回执还原执行路径，算清能成交多少、成本是多少。"),
+                ("写清结论的边界", "给出原始来源和关键假设，说明什么证据会改变结论。"),
+            ),
             "receipt": {
                 "block": "以太坊区块",
                 "net": "发起钱包净增",
@@ -149,7 +159,6 @@ COPY = {
                 "gas": "Gas",
                 "trace": "阅读交易复盘",
             },
-            "projects": "研究系统",
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
             "empty": "这个分类还没有笔记。",
@@ -163,7 +172,6 @@ COPY = {
             "start": "快速开始",
             "changes": "近期更新",
             "commit": "查看提交",
-            "browse": "查看产品",
             "aleph": {
                 "topic": "永续合约",
                 "summary": "跨平台订单簿、因果回放与受监督执行，核心由 Rust 和 Go 实现。",
@@ -259,6 +267,8 @@ def read_reports():
             if previous in ids or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", previous):
                 raise ValueError(f'Invalid previous report ID: {previous}')
             ids.add(previous)
+    if sum(report.get("featured") is True for report in reports) > 1:
+        raise ValueError("Only one report can be featured on the homepage")
     return sorted(reports, key=lambda report: report["date"], reverse=True)
 
 
@@ -293,64 +303,60 @@ def featured_receipt(report, copy, here):
       </figure>"""
 
 
-def home_intro(reports, copy, here):
-    lead = reports[0] if reports else None
-    receipt = featured_receipt(lead, copy["receipt"], here) if lead and "receipt" in lead else ""
-    return f"""
-    <section class="home-hero{' home-hero-receipt' if receipt else ''}" aria-labelledby="title">
-      <div class="hero-copy">
-        <h1 id="title">{copy["title"]}</h1>
-        <p>{copy["intro"]}</p>
-        <a class="hero-link" href="{here}research/">{copy["browse"]} <span aria-hidden="true">↗</span></a>
-      </div>{receipt}
-    </section>"""
-
-
 def report_meta(report, locale):
     topic = escape(report[locale]["topic"])
     day = report["date"]
     return f'<div class="report-meta"><span>{topic}</span><time datetime="{day}">{day}</time></div>'
 
 
-def report_entry(report, locale, here, *, heading="h3", featured=False):
-    fields = report[locale]
-    url = here + report_path(report)
-    label = COPY[locale]["research"]["read"]
-    action = f'<a class="text-link" href="{url}" aria-label="{label} · {escape(fields["title"], quote=True)}">{label} <span aria-hidden="true">→</span></a>' if featured else ""
-    return f"""
-        <article class="report-entry{' report-feature' if featured else ''}">
-          {report_meta(report, locale)}
-          <{heading}><a href="{url}">{escape(fields["title"])}</a></{heading}>
+def home(locale, root, here, notes, reports):
+    copy = COPY[locale]["alpha"]
+    read = COPY[locale]["research"]["read"]
+    lead = next((report for report in reports if report.get("featured") is True), None)
+    feature = ""
+    if lead:
+        fields = lead[locale]
+        receipt = featured_receipt(lead, copy["receipt"], here) if "receipt" in lead else ""
+        feature = f"""
+    <section class="section home-feature{' home-feature-receipt' if receipt else ''}" id="reports" aria-labelledby="reports-title">
+        <div class="home-feature-copy">
+          <p class="kicker">{copy["featured"]}</p>
+          <h2 id="reports-title">{escape(fields["title"])}</h2>
           <p>{escape(fields["summary"])}</p>
-          {action}
-        </article>"""
-
-
-def latest_research(reports, locale, here):
-    if not reports:
-        return ""
-    copy = COPY[locale]["research"]
-    lead = report_entry(reports[0], locale, here, featured=True)
-    more = "".join(report_entry(report, locale, here) for report in reports[1:4])
-    return f"""
-    <section class="section" id="reports" aria-labelledby="reports-title">
-      <div class="section-header">
-        <h2 id="reports-title">{copy["heading"]}</h2>
-        <a class="text-link" href="{here}research/">{copy["back"]} <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="research-front">
-        {lead}
-        <div class="research-front-list">{more}
+          <a class="text-link" href="{here}{report_path(lead)}">{read} <span aria-hidden="true">→</span></a>
         </div>
-      </div>
+        {receipt}
     </section>"""
+    steps = "".join(f"<li><h3>{escape(title)}</h3><p>{escape(detail)}</p></li>" for title, detail in copy["steps"])
+    note_ids = " ".join(note["id"] for note in notes)
+    return f"""
+    <section class="home-hero" aria-labelledby="title">
+      <h1 id="title">{copy["title"]}</h1>
+      <div class="home-deck">
+        <p>{copy["intro"]}</p>
+        <a class="hero-link" href="{here}research/">{copy["browse"]} <span aria-hidden="true">→</span></a>
+      </div>
+    </section>{feature}
+    <section class="section home-method" aria-labelledby="method-title">
+      <h2 id="method-title">{copy["method"]}</h2>
+      <ul class="home-steps" role="list">{steps}</ul>
+    </section>
+    <script src="{root}{ASSETS["feed.js"]}" data-home-notes="{escape(note_ids, quote=True)}" defer></script>"""
 
 
-def research_archive(reports, locale):
+def research_archive(reports, notes, locale):
     copy = COPY[locale]["research"]
-    here = "/zh/" if locale == "zh" else "/"
-    entries = "".join(report_entry(report, locale, here, heading="h2") for report in reports)
-    return page_intro(copy["archive"], copy["archive_intro"]) + f'<div class="research-archive">{entries}</div>'
+    entries = "".join(f"""
+      <article class="report-entry">
+        {report_meta(report, locale)}
+        <h2><a href="../{report_path(report)}">{escape(report[locale]["title"])}</a></h2>
+        <p>{escape(report[locale]["summary"])}</p>
+      </article>""" for report in reports)
+    notes_copy = COPY[locale]["alpha"]
+    notes_link = f'<a class="text-link" href="#feed">{notes_copy["feed"]} <span aria-hidden="true">↓</span></a>' if notes else ""
+    intro = page_intro(copy["archive"], copy["archive_intro"], extra=notes_link)
+    root = "../../" if locale == "zh" else "../"
+    return intro + f'<div class="research-archive">{entries}</div>' + research_notes(locale, root, notes, notes_copy)
 
 
 def report_body(report, locale):
@@ -412,34 +418,16 @@ def render_notes(notes, locale, copy):
     return "".join(cards)
 
 
-def project_index(locale, here, title):
-    copy = COPY[locale]["products"]
-    entries = "".join(
-        f'<article><h3><a href="{here}products/#{slug}">{name} <span aria-hidden="true">↗</span></a></h3>'
-        f'<p>{escape(copy[key]["summary"])}</p></article>'
-        for key, slug, name, *_ in PROJECTS
-    )
-    return f"""
-    <section class="section project-index" id="research-walkthrough" aria-labelledby="research-projects">
-      <div class="section-header">
-        <h2 id="research-projects">{title}</h2>
-        <a class="text-link" href="{here}products/">{copy["browse"]} <span aria-hidden="true">→</span></a>
-      </div>
-      <div class="project-index-grid">{entries}</div>
-    </section>"""
-
-
-def alpha(locale, root, here, notes, reports, copy):
+def research_notes(locale, root, notes, copy):
+    if not notes:
+        return ""
     categories = {entry["category"] for entry in notes}
     filters = "\n".join(
         f'        <button type="button" data-filter="{key}" aria-pressed="{str(key == "all").lower()}">{label}</button>'
         for key, label in copy["filters"].items()
         if key == "all" or key in categories
     )
-    empty_attr = " hidden" if notes else ""
-    return home_intro(reports, copy, here) + f"""
-{latest_research(reports, locale, here)}
-{project_index(locale, here, copy["projects"])}
+    return f"""
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -449,7 +437,7 @@ def alpha(locale, root, here, notes, reports, copy):
       </div>
       <div id="notes" class="note-index">{render_notes(notes, locale, copy)}
       </div>
-      <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
+      <p id="empty" class="empty" hidden>{copy["empty"]}</p>
     </section>
     <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
 
@@ -546,7 +534,7 @@ def render(locale, page, notes, reports):
     here = root + ("zh/" if locale == "zh" else "")
     if page == 0:
         market_notes = [note for note in notes if note["category"] != "data"]
-        body = alpha(locale, root, here, market_notes, reports, section)
+        body = home(locale, root, here, market_notes, reports)
     elif page == 1:
         body = products(section)
     else:
@@ -622,11 +610,12 @@ def write_page(locale, path, name, description, body, *, redirect=None):
 if __name__ == "__main__":
     notes = read_notes()
     reports = read_reports()
+    market_notes = [note for note in notes if note["category"] != "data"]
     for locale in COPY:
         for page in range(len(ROUTES)):
             render(locale, page, notes, reports)
         archive = COPY[locale]["research"]
-        write_page(locale, "research/", archive["archive"], archive["archive_intro"], research_archive(reports, locale))
+        write_page(locale, "research/", archive["archive"], archive["archive_intro"], research_archive(reports, market_notes, locale))
         for report in reports:
             fields = report[locale]
             write_page(locale, report_path(report), fields["title"], fields["summary"], report_body(report, locale))

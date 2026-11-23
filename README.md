@@ -8,7 +8,7 @@ Add notes to `opportunities.json`. Each entry has a stable `id` for links, a
 `date` (YYYY-MM-DD), a `category` (`markets`, `data`, or `tools`), an HTTPS
 `source`, and `en` and `zh` objects with `title`, `summary`, and `risk`.
 Notes appear newest first. Include a primary source and what would weaken the
-finding. Market mechanics and research methods appear on Alpha. Notes tagged
+finding. Market mechanics and research methods appear in the research archive. Notes tagged
 `data` appear under Engineering notes on About.
 
 Page copy lives in `scripts/build.py`. After updating the copy or notes, run
@@ -16,8 +16,8 @@ Page copy lives in `scripts/build.py`. After updating the copy or notes, run
 Long-form reports use metadata in `content/research/index.json` and HTML
 fragments in `content/research/<id>/en.html` and `zh.html`. Give each report
 a stable ID and optionally an `updated` date for a substantive revision.
-The homepage features the newest report and previews three more. Optionally add a
-`receipt` to a transaction report for the homepage chart. Its fields record the
+Set `featured: true` on one report to select it for the homepage. Optionally add a
+`receipt` to that report for the homepage chart. Its fields record the
 market, block, asset, and net increase, builder payment, and gas in the asset's
 units. The chart links to that report's `cost` section.
 The research archive lists every report. When it absorbs an older report, set `redirect.from` to the old ID

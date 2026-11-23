@@ -2,6 +2,7 @@
   {
     "id": "stusds-redemption-window",
     "date": "2026-11-23",
+    "featured": true,
     "receipt": {
       "market": "stUSDS",
       "block": 26449062,

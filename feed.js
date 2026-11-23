@@ -1,3 +1,15 @@
+const homeNotes = document.currentScript.dataset.homeNotes;
+if (homeNotes !== undefined) {
+  const noteAnchors = new Set(homeNotes ? ["feed", "notes", ...homeNotes.split(" ")] : []);
+  function followMovedSection() {
+    const section = window.location.hash.slice(1);
+    const path = section === "research-walkthrough" ? "products/" : noteAnchors.has(section) ? "research/" : "";
+    if (path) window.location.replace(path + window.location.hash);
+  }
+  followMovedSection();
+  window.addEventListener("hashchange", followMovedSection);
+}
+
 const filters = document.querySelector("#filters");
 const notes = [...document.querySelectorAll("#notes [data-category]")];
 const empty = document.querySelector("#empty");
