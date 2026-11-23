@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.">
+  <meta name="description" content="The November 19 Sky repayment reopened stUSDS redemptions. The receipt shows what a flash loan funded and how much the searcher kept after ordering and gas.">
   <meta name="theme-color" content="#f6f3ea">
-  <title>The 1.6 ETH trade that waited for one repayment / AlphaWink</title>
+  <title>How a flash loan turned one repayment into 1.6 ETH / AlphaWink</title>
   <link rel="icon" href="../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../assets/site.css?v=f77b6f6de4">
+  <link rel="stylesheet" href="../../assets/site.css?v=0fcbe53784">
   <link rel="alternate" hreflang="zh-Hans" href="../../zh/research/stusds-redemption-window/">
 </head>
 <body>
@@ -33,8 +33,8 @@
       <header class="report-intro">
         <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> All research</a>
         <div class="report-meta"><span>On-chain liquidity</span><time datetime="2026-11-23">2026-11-23</time></div>
-        <h1 id="title">The 1.6 ETH trade that waited for one repayment</h1>
-        <p class="report-deck">A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.</p>
+        <h1 id="title">How a flash loan turned one repayment into 1.6 ETH</h1>
+        <p class="report-deck">The November 19 Sky repayment reopened stUSDS redemptions. The receipt shows what a flash loan funded and how much the searcher kept after ordering and gas.</p>
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
@@ -46,6 +46,7 @@
   <h2 id="window">Why the discount persisted</h2>
 <p>At 12:15:23 UTC on November 19, 2026, an Ethereum block included a repayment to Sky’s Lockstake Engine and a successful arbitrage immediately afterward. The secondary market had already put a price on the stUSDS exit. What changed in that block was the amount the protocol could actually redeem. <a href="https://etherscan.io/tx/0x2a4835cf54ac60769dd98bf5a6e35d045ab162ad4558ee8eedfe44c24fc191a1">Repayment receipt</a> · <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">Arbitrage receipt</a></p>
 <p>stUSDS supplies risk capital to Sky’s staking-credit system. There are three relevant prices or limits: the vault’s share-to-asset conversion, the amount a holder can redeem at that moment, and the executable secondary-market quote for the full size. The share value measures the accounting claim. <code>maxWithdraw</code> and <code>maxRedeem</code> reflect the amount that can leave under the contract’s rules. Debt and pending liquidation obligations can constrain it even when the vault holds a large USDS balance. A holder who needs immediacy may accept a discount on Curve. <a href="https://sky.money/stusds">Sky product documentation</a> · <a href="https://github.com/sky-ecosystem/stusds/blob/master/src/StUsds.sol">Vault source</a></p>
+  <p>At the end of block 26,449,061, the source analysis reports about 162 million USDS held by the stUSDS contract and about 1.79 million stUSDS shares held by the Curve pool, with zero USDS immediately withdrawable by that holder. Those are historical state observations attributed to the source. The receipts independently establish the repayment and redemptions in the following block. <a href="https://github.com/sky-ecosystem/stusds/blob/master/src/StUsds.sol">Sky contract</a></p>
 </section>
 
 <section>
@@ -70,6 +71,7 @@
   </table>
 </div>
 <p>The receipt reports a zero priority fee. The internal ETH payment is a separate cost observed in the transaction trace. The sender received 1.603621625577 ETH internally. Subtracting the 0.000670888723 ETH receipt fee and the 15 wei sent with the call leaves 1.602950736855 ETH, rounded to 12 decimal places. Research, infrastructure and unsuccessful attempts outside the block belong in a separate strategy ledger. <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">Receipt and internal transactions</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/coinbase-payment">Flashbots on fee-recipient payments</a></p>
+  <p>The source counted seven principal rounds and roughly $401,100 of cumulative borrowing, with about 275,000 USDC in the largest round. Temporary financing removed the need to pre-fund that principal or post collateral. Repayment still had to occur within the transaction, and the sender paid gas. Swap fees were embedded in the realized proceeds.</p>
 </section>
 
 <section>
@@ -77,6 +79,7 @@
 <p>At an illustrative 1.075 USDS buy price and 1.087 USDS share value, the 0.012 USDS difference looks large. If redeemable capacity is zero, the immediate redemption trade has zero capacity even at that spread. As capacity returns, the executable spread still shrinks with pool depth, stablecoin conversion costs and competition for the first eligible slot.</p>
 <p>A useful liquidity view records share value, available redemptions, executable quotes for specified sizes and the state transition that changed capacity. It should also log reverts and dropped submissions separately. A transaction that lands and reverts consumes gas. A private bundle that never lands generates no on-chain charge. The November trace measures one realized trade under one ordering. <a href="https://ethereum.org/developers/docs/gas/">Ethereum gas accounting</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/understanding-bundles">Flashbots bundle documentation</a></p>
 <p>The original post prompted this analysis. Sources and figures are scoped in the sections above. <a href="https://x.com/webtc_eth/status/2123698315741089917">Original post</a></p>
+  <p>Holders face two distinct questions. Can they exit at the time and size they need, and can losses against staking credit reduce what a share is worth? Sky’s module exposes holders to both liquidity and loss allocation. Track redeemable capacity and secondary depth alongside the condition of the underlying credit. <a href="https://sky.money/stusds">Sky product risks</a></p>
 </section>
 
         </div>

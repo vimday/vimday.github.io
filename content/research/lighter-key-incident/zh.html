@@ -1,5 +1,7 @@
 <section>
   <h2 id="overview">交易密钥怎样走到了提现</h2>
+  <p>原文问的是一把无对外提现权限的交易密钥，仍能给账户造成多大损失。答案还取决于三层约束。第一是交易和内转实际授权。第二是亏损会穿透哪些账户和抵押品。第三是平台中断后，哪些规则仍能保护余额和退出。六家平台会在不同层占优，总分会抹掉这些差别。</p>
+
   <p>10:11 UTC 的以太坊交易看起来是一笔普通提现。决定资金去向的变化，发生在它上游。按 Lighter 的复盘，失陷的密钥能把抵押品转入受影响账户名下的公共池。另一个账户持有池份额，由此取得了新增抵押品的一部分索取权，再赎回份额，以自己的名义提款。提现直到链上结算都通过了所有者校验，但真正受益的账户已在中途变了。</p>
   <p>把这条路径放到任何一家永续合约平台，都可以问三个问题。谁能签署操作？操作执行后，谁多了一笔可兑现的权益？正常运行或服务中断时，谁能把这笔权益变成实际付款？三个问题对应三层控制。只允许下单的密钥仍能通过成交与清算造成大额损失。有效性证明可以证明状态按规则变化。备用退出能否兑现，还要看用户能否拿到所需数据，并赶在权限或合约规则变化前提交请求。</p>
   <p>这篇报告先沿着 Lighter 的资金路径复盘，再用同样的边界逐一检查 Hyperliquid、Aster、Variational、GRVT 和 Arcus，最后给出接入方与平台都可以复现的验收步骤。<a href="#venue-comparison">前往六平台对照</a> · <a href="#verification">前往验收清单</a></p>
@@ -43,6 +45,7 @@
     </table>
   </div>
   <p>签名验证能确定哪把密钥提交了授权。Rollup 证明能验证状态变化是否符合程序实现的规则。私钥一旦泄露，攻击者照样可以生成有效签名，协议也就可能证明一笔密钥合法持有人从未授权的状态变化。公开证据指向授权凭证的泄露，以及它在这套规则下能够触达的资金。<a href="https://github.com/elliottech/lighter-go">官方签名 SDK</a> · <a href="https://github.com/elliottech/poseidon_crypto/tree/main/signature/schnorr">Schnorr 参考实现</a> · <a href="https://docs.lighter.xyz/developers/integration-guides/api-keys">API 密钥范围与序号</a></p>
+  <p>比较六家 API 时，先把凭证、编码和权限分开。HMAC 用共享秘密认证。EIP‑712 规定结构化消息的编码和域，ECDSA 用于签名。Ed25519 属于 EdDSA。请求的重放限制和授权边界仍要由各自实现核对。Lighter 官方签名库被原文核验的版本使用安全随机源，具体风险出在复用了秘密 nonce 的第三方签名器。 <a href="https://www.rfc-editor.org/rfc/rfc2104.html">HMAC 规范</a> · <a href="https://eips.ethereum.org/EIPS/eip-712">EIP‑712</a> · <a href="https://www.rfc-editor.org/rfc/rfc8032.html">EdDSA 规范</a> · <a href="https://github.com/elliottech/poseidon_crypto/blob/v0.0.15/signature/schnorr/schnorr.go">固定版本签名器</a></p>
 </section>
 
 <section>
@@ -188,6 +191,8 @@
 
 <p>Lighter 在 Robinhood Chain 上还有一个以 USDG 作为保证金的独立实例，使用不同的签名域和合约。前面的链上回执、退出时长和升级时长均指以太坊部署。跨实例迁移接入代码或应急手册时，需要重新核对链、签名域与结算地址。<a href="https://docs.robinhood.com/chain/lighter-domains/">Robinhood Chain 部署文档</a></p>
 
+<p>14 天是合约进入 Desert Mode 的触发条件。ETHBEAT 的十一月部署记录指出，更新后的 DesertVerifier 对应电路源码当时尚未公布。要独立重现实际退出，仍需拿到对应实现、数据和可用的生成证明工具。 <a href="https://ethbeat.org/layer2s/projects/lighter">ETHBEAT 部署记录</a></p>
+
 <h3 id="venue-hyperliquid">Hyperliquid｜统一的交易层，多种资产托管路径</h3>
 <p>HyperCore 在 HyperBFT 下执行订单簿、仓位与清算，HyperEVM 提供通用合约执行环境。HyperCore 里的交易余额和支撑它的资产沿不同路径流转。10 月 31 日链上分析分别追踪了原生 USDC 托管、Circle 合约及其管理员，以及旧 Arbitrum 桥。该文记录当时所查旧桥需要四份中的三份签名，并设约 200 秒争议窗口。桥合约实际校验验证者投票权与等待期，Circle 则能冻结它发行的 USDC。该分析未在所查托管路径找到绕开运营方的独立赎回机制。通过其他桥进入 Hyperliquid 的资产要按各自路径判断。<a href="https://hyperliquid.gitbook.io/hyperliquid-docs">HyperCore 架构</a> · <a href="https://github.com/hyperliquid-dex/contracts">官方桥合约源代码</a> · <a href="https://x.com/0xJaehaerys/article/2116531786125553828">10 月 31 日合约分析</a></p>
 <p>经批准的 API 钱包对序列化后的交易动作哈希做结构化签名，账户所有者签名的动作使用另一套消息结构。跨桥提现由账户所有者签名，验证者再转送至桥。一把只能交易的代理密钥依然能用可成交订单造成亏损。Hyperliquid 按签名者保留 nonce 窗口，文档列出撤销或到期后可能清理 nonce 历史的情形，轮换应使用新签名者。评估一把密钥可动用的保证金时，还需看批准范围和账户模式。统一等账户模式会改变合格抵押品的共用范围。<a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/signing">签名方案</a> · <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/nonces-and-api-wallets">代理钱包与 nonce</a> · <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/for-developers/api/exchange-endpoint">交易与提现动作</a> · <a href="https://hyperliquid.gitbook.io/hyperliquid-docs/trading/account-abstraction-modes">账户模式</a></p>
@@ -259,6 +264,7 @@
   <p>演练前写清通过条件。譬如撤权生效后由旧签名者签发的新请求必须被拒绝，已经排队的旧请求则要按其状态明确结局。验证提现桥时，按配置核对账本和出款不变量，分别显示申请、实付、撤销和仍在途的金额。演练独立退出时，记录状态数据从哪里取得、由谁提交交易、全程耗时，以及日常数据提供方下线后能否完成证明。</p>
   <p>为每次验收记录日期、场所、网络、功能、客户端或 SDK 版本、可见的合约部署或功能版本、签名者角色，以及账户或市场类型。保留请求引用、交易引用、预期规则和结果，避免在共享日志里留下私钥、凭证或个人账户信息。配置发生变化或新增出款路径后，重跑受影响的项目。</p>
   <p>公开材料留下了一些待验证的路径。事故公告记录发布方的说法和动作时间，链上转账能证明结算是否发生。要归因到上游决策，还需要核对签名与场所的授权记录。涉及委派权限时，应核对执行当时的授权范围、成交记录和审批历史。涉及账本时，应追到包含撤销与金库补款的完整对账。只有把这些记录串起来，才能判断新加的控制能否覆盖已出现的故障。</p>
+  <p>量化团队要按权限核对保证金实际隔离，并把不合理报价、杠杆变更和一条腿被减仓纳入告警。只读的 AI 或跟单工具可以从公开地址或查看权限起步，停用交易工具后，应在平台端收回凭证。大额保证金账户还要给存量仓位留压力缓冲，并实测前端关闭时所需的状态、等待时间和退出步骤。</p>
 </section>
 
 <section>

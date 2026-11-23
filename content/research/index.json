@@ -3,13 +3,13 @@
     "id": "stusds-redemption-window",
     "date": "2026-11-23",
     "en": {
-      "title": "The 1.6 ETH trade that waited for one repayment",
-      "summary": "A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.",
+      "title": "How a flash loan turned one repayment into 1.6 ETH",
+      "summary": "The November 19 Sky repayment reopened stUSDS redemptions. The receipt shows what a flash loan funded and how much the searcher kept after ordering and gas.",
       "topic": "On-chain liquidity"
     },
     "zh": {
-      "title": "等到一笔还款，才有这 1.6 ETH",
-      "summary": "复盘 11 月 19 日的一段以太坊区块，拆解 stUSDS 的赎回额度、执行顺序与套利净收益。",
+      "title": "一笔还款，怎样让闪电贷套利留下 1.6 ETH",
+      "summary": "复盘 11 月 19 日 Sky 还款如何释放 stUSDS 赎回额度，并逐笔核对临时本金、构建者付款与钱包净收益。",
       "topic": "链上流动性"
     }
   },
@@ -17,13 +17,13 @@
     "id": "wintermute-cost-of-ordering",
     "date": "2026-11-23",
     "en": {
-      "title": "Wintermute and the price of going first",
-      "summary": "A $2.65m swap, a zero priority fee and nearly 6 ETH paid for ordering reveal which costs a public receipt can show.",
+      "title": "Where could 3i have found its edge? A look inside Wintermute",
+      "summary": "Follow the reported $6m 3i story into custody signals, a $2.65m Wintermute swap and the economics of buying execution priority.",
       "topic": "Execution research"
     },
     "zh": {
-      "title": "Wintermute 为什么愿意花钱买第一笔",
-      "summary": "从一笔 265 万美元换币看零优先费背后的真实成本，再拆解机构如何为执行顺序定价。",
+      "title": "3i 从哪看见机会？拆开 Wintermute 的链上生意",
+      "summary": "从 3i 所称的 600 万美元收益出发，追踪托管集成、部署与授权，再用一笔 265 万美元换币拆解机构的排序成本。",
       "topic": "执行研究"
     }
   },
@@ -32,12 +32,12 @@
     "date": "2026-11-23",
     "en": {
       "title": "Could the next GameStop squeeze start on a Saturday?",
-      "summary": "Stock tokens give traders a weekend price. Whether that price moves the shares depends on who can carry the trade across markets.",
+      "summary": "When U.S. equities and primary stock-token issuance both close, liquidity and dealer inventory shape which weekend prices reach Monday.",
       "topic": "Market structure"
     },
     "zh": {
       "title": "下一场 GME 轧空，会从周六开始吗？",
-      "summary": "股票代币让周末也有报价。这个价格能否传到美股，要看谁能把仓位从一边带到另一边。",
+      "summary": "正股休市，股票代币一级申赎窗口也关闭。周末的链上买盘，能否通过做市商库存与对冲传到下一个交易日？",
       "topic": "市场结构"
     }
   },
@@ -45,13 +45,13 @@
     "id": "ai-valuation-and-credit",
     "date": "2026-11-23",
     "en": {
-      "title": "If the AI trade breaks, which risk breaks first?",
-      "summary": "The latest Alphabet and Microsoft results give us a baseline. Three stress scenarios separate valuations, rates and credit.",
+      "title": "How do you hedge an AI bubble unwind?",
+      "summary": "Revisit the original four hedges using recent earnings. Track valuation, rates and credit so each form of protection has a stated job.",
       "topic": "Equity and credit"
     },
     "zh": {
-      "title": "如果 AI 行情转向，先出问题的是估值、利率还是信用？",
-      "summary": "用 Alphabet 和微软最新一季财报重做五月的压力测试，拆解三种下跌和不同保护工具的成本。",
+      "title": "如果 AI 泡沫退潮，怎么做下行保护？",
+      "summary": "回到原文的四层保护，用四家公司的三季报重新检验估值、利率与信用风险。",
       "topic": "股票与信用"
     }
   },
@@ -63,13 +63,13 @@
       "section": "venue-comparison"
     },
     "en": {
-      "title": "From one trading key to a 10.39m USDC outflow",
-      "summary": "Inside the Lighter exploit, from signature failure to Ethereum settlement. A six-venue comparison of trading permissions, collateral custody, emergency exits, and the controls that hold up under test.",
+      "title": "Who can move your margin? Six perpetuals venues compared",
+      "summary": "A Lighter outflow of 10.39m USDC frames a six-venue investigation of delegation, collateral controls and emergency exit.",
       "topic": "Perpetuals security"
     },
     "zh": {
-      "title": "从一把交易密钥到千万 USDC 流出",
-      "summary": "沿着 Lighter 的签名漏洞、公共池和以太坊结算追踪资金，再逐家拆解六大永续合约平台的交易权限、托管与应急退出路径，附可复现的安全验收清单。",
+      "title": "钱在链上，谁能动你的保证金？",
+      "summary": "从 Lighter 的 1,039 万 USDC 链上流出出发，对照六大永续合约平台的权限、托管与应急退出。",
       "topic": "永续合约安全"
     },
     "updated": "2026-11-23"

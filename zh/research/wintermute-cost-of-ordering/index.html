@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="从一笔 265 万美元换币看零优先费背后的真实成本，再拆解机构如何为执行顺序定价。">
+  <meta name="description" content="从 3i 所称的 600 万美元收益出发，追踪托管集成、部署与授权，再用一笔 265 万美元换币拆解机构的排序成本。">
   <meta name="theme-color" content="#f6f3ea">
-  <title>Wintermute 为什么愿意花钱买第一笔 / AlphaWink</title>
+  <title>3i 从哪看见机会？拆开 Wintermute 的链上生意 / AlphaWink</title>
   <link rel="icon" href="../../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="../../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../../assets/site.css?v=f77b6f6de4">
+  <link rel="stylesheet" href="../../../assets/site.css?v=0fcbe53784">
   <link rel="alternate" hreflang="en" href="../../../research/wintermute-cost-of-ordering/">
 </head>
 <body>
@@ -33,8 +33,8 @@
       <header class="report-intro">
         <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> 全部研究</a>
         <div class="report-meta"><span>执行研究</span><time datetime="2026-11-23">2026-11-23</time></div>
-        <h1 id="title">Wintermute 为什么愿意花钱买第一笔</h1>
-        <p class="report-deck">从一笔 265 万美元换币看零优先费背后的真实成本，再拆解机构如何为执行顺序定价。</p>
+        <h1 id="title">3i 从哪看见机会？拆开 Wintermute 的链上生意</h1>
+        <p class="report-deck">从 3i 所称的 600 万美元收益出发，追踪托管集成、部署与授权，再用一笔 265 万美元换币拆解机构的排序成本。</p>
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
@@ -44,7 +44,9 @@
         <div class="report-prose">
 <section>
   <h2 id="sample">单笔中位 1.65 美元，累计怎么到 2,430 万</h2>
-<p>AFT 2025 的研究把若干合约归在 Wintermute 名下，估计 2023 年 8 月至 2025 年 3 月的 CEX–DEX 套利收入约为 7,140 万美元。其中约 4,710 万付给区块构建者，模型盈亏剩 2,430 万美元。单笔估算盈亏的中位数为 1.65 美元。按约 748 亿美元的归类成交量算，累计盈亏约为 3.25 个基点。 <a href="https://drops.dagstuhl.de/storage/00lipics/lipics-vol354-aft2025/html/LIPIcs.AFT.2025.26/LIPIcs.AFT.2025.26.html">AFT 论文表 1</a></p>
+  <p>原帖从 3i 的说法出发：CASHCAT 与 PONS 的机会是否能提前从托管集成、部署和授权中看出来？下文先查有据可回溯的 Wintermute 执行样本，再回到 3i 的具体证据。论文估算的 2,430 万美元与 3i 所称的 600 万美元是两段独立的研究。</p>
+
+<p>AFT 2025 的研究把若干合约归在 Wintermute 名下，估计 2023 年 8 月至 2025 年 3 月的 CEX–DEX 套利收入约为 7,140 万美元。其中约 4,710 万付给区块构建者，模型盈亏剩 2,430 万美元。单笔估算盈亏的中位数为 1.65 美元。按约 748 亿美元的归类成交量算，累计盈亏约为 3.25 个基点。 <a href="https://arxiv.org/html/2507.13023v3#S7.T1">AFT 论文表 1</a></p>
 <div class="report-table">
   <table role="table">
     <caption>历史样本的收入与支付，美元</caption>
@@ -57,12 +59,14 @@
   </table>
 </div>
 <p>研究者看不到交易员在中心化交易所的真实对冲成交，因此用当时的市场报价和假定的手续费复原这一腿。大量交易和歪斜的收益分布，可以让很小的中位数与很大的总额同时出现。样本只描述该时段所标注的合约，最新市场份额和公司合并利润仍待其他资料核对。</p>
+  <p>同表的 SCP 与 Wintermute 估算收入都约 7,100 万美元，扣除构建者付款后分别留下约 1,370 万和 2,430 万美元。差额体现了两组历史记录不同的支付结构，不能单凭汇总判断手续费、速度或某段关系的因果贡献。 <a href="https://arxiv.org/html/2507.13023v3#S7.T1">论文表 1</a></p>
 </section>
 
 <section>
   <h2 id="transaction">当 Gas 一栏看起来很便宜</h2>
 <p>2025 年 3 月 14 日，以太坊区块 22,045,570 的首笔交易卖出约 1,400.3562 WETH，收到约 265.5 万 USDC。回执显示用了 327,663 Gas，优先费为零，基础 Gas 约 0.000175 ETH。再看内部转账，还有约 5.98076 ETH 付给构建者的费用接收地址。两笔成本都要进执行账。 <a href="https://etherscan.io/tx/0x06fed3f7dc71194fe3c2fd379ef1e8aaa850354454ea9dd526364a4e24853660">以太坊交易</a> · <a href="https://etherscan.io/address/0x51c72848c68a965f66fa7a88855f9f7784502a7f#code">已验证合约源码</a></p>
 <p>合约将可调用的操作、交易池和资金接收方等权限分开。公开授权变更可以反映运营准备。要评价这笔交易的净利润，还得知道对冲成交、库存成本，以及两条腿之间暴露了多少价格风险。链上换币和交易所对冲可以在不同时间成交。</p>
+  <p>金库可参与主动套利，也能校验 RFQ 的签名报价。某个代币出现在金库、授权名单或准备好的池子里，可能服务于客户报价、对冲或库存调拨。链上持仓本身只给出某条链上的资产余额，推断机构方向要继续核对其他市场的头寸。 <a href="https://www.wintermute.com/defi">Wintermute 的 DeFi 执行说明</a></p>
 </section>
 
 <section>
@@ -70,6 +74,7 @@
 <p>以太坊上可以通过交易内部付款给构建者。Arbitrum 的 Timeboost 曾拍卖更快的交易通道。2026 年一份事件研究跟踪了 Wintermute 与 Selini 改用 Kairos 二级服务前后的变化。按该论文所划分的阶段，一级拍卖成交价与最高报价的比值约从 62.7% 降到 14.8%。完整的二级费用仍不可见。协议收到的拍卖收入只覆盖排序成本的一部分。 <a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">Arbitrum 排序文档</a> · <a href="https://arxiv.org/abs/2603.20175">Kairos 事件研究</a></p>
 <p><strong>2026 年 11 月更新。</strong>Arbitrum One 已停用 Timeboost 快车道，切换到优先 Gas 拍卖（PGA）。现在按笔提交的优先费，会在排序器的短轮次中竞争顺序。可选的 Fast Feed 则让订阅者在构建区块期间更早看到交易信息，排序仍由 PGA 决定。更早看见与更早执行是两项成本。Kairos 研究适用于较早的 Timeboost 市场。<a href="https://docs.arbitrum.io/how-arbitrum-works/priority-gas-auction/pga">现行 PGA 文档</a> · <a href="https://blog.arbitrum.io/competing-for-transaction-priority-on-arbitrum/">Arbitrum 对 Fast Feed 的介绍</a></p>
 <p>用假设交易算一下。100 万美元乘 5 个基点，账面价差为 500 美元。给对冲手续费和 Gas 留 150，给执行不确定性留 100，目标盈余留 100，排序出价上限就剩 150 美元。另一家把对冲成本降 50 美元，就多出 50 美元来出价或留作盈余。同一个池子的价格，对不同执行系统意味着不同的出价。</p>
+  <p>原文用另一组 2024 年 12 月 3 日、约八分钟的候选区块研究链下对冲。这篇论文的 v2 估计，两只机器人在低于 100 ETH 的样本成交中，隐含 CEX 价格比同期 Binance 报价好约 2.8 个基点。同一交易交给不同构建者时，Rsync-bot 给 Rsync 的付款平均比给 Titan 高 18%。两项结果都属于这组样本。上文 265 万美元的交易仍缺真实对冲成交。<a href="https://arxiv.org/html/2506.04940v2">候选区块研究 v2</a></p>
 </section>
 
 <section>
@@ -77,6 +82,7 @@
 <p>原帖引述 3i 获利 600 万美元的说法。公开记录能确认的是具体动作。BitGo 7 月的合并请求有 CASHCAT 和一批 Robinhood Chain 股票代币的代码支持。托管集成说明软件支持了什么，授权说明某地址拿到了什么权限，转账说明库存去了哪里，成交才给出真实价格。要验证收益归因，还需把这些记录与实际仓位、退出和成本对齐。 <a href="https://github.com/BitGo/BitGoJS/pull/9357">CASHCAT 代码变更</a> · <a href="https://github.com/BitGo/BitGoJS/pull/9371">股票代币代码变更</a></p>
 <p>研究这类信号，可按首次可见时间标记授权变更，取紧随其后的可执行报价，再找一组最终没有成交的变更作对照。要记录退出深度和失败信号。这样才能判断可观察的准备动作，是否在扣完两端成本后还有价值。</p>
 <p>本文由原帖引发，文中列出了各项数据的证据及适用范围。 <a href="https://x.com/webtc_eth/status/2122002397082038472">原始文章</a></p>
+  <p>原文还追了跨链同地址部署。普通 CREATE 由部署者与部署 nonce 推导地址。CREATE2 另取部署者、salt 与初始化代码哈希。同一地址出现后，逐链核对部署方式、运行代码和管理员，比按地址相同推断用途更可靠。CASHCAT 和 PONS 是否真的形成过可执行机会，最终仍要回到资金到位、成交时间与退出价格。 <a href="https://eips.ethereum.org/EIPS/eip-1014">CREATE2 规范</a></p>
 </section>
 
         </div>

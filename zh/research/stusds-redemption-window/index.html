@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="复盘 11 月 19 日的一段以太坊区块，拆解 stUSDS 的赎回额度、执行顺序与套利净收益。">
+  <meta name="description" content="复盘 11 月 19 日 Sky 还款如何释放 stUSDS 赎回额度，并逐笔核对临时本金、构建者付款与钱包净收益。">
   <meta name="theme-color" content="#f6f3ea">
-  <title>等到一笔还款，才有这 1.6 ETH / AlphaWink</title>
+  <title>一笔还款，怎样让闪电贷套利留下 1.6 ETH / AlphaWink</title>
   <link rel="icon" href="../../../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="../../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../../assets/site.css?v=f77b6f6de4">
+  <link rel="stylesheet" href="../../../assets/site.css?v=0fcbe53784">
   <link rel="alternate" hreflang="en" href="../../../research/stusds-redemption-window/">
 </head>
 <body>
@@ -33,8 +33,8 @@
       <header class="report-intro">
         <a class="text-link report-back" href="../"><span aria-hidden="true">←</span> 全部研究</a>
         <div class="report-meta"><span>链上流动性</span><time datetime="2026-11-23">2026-11-23</time></div>
-        <h1 id="title">等到一笔还款，才有这 1.6 ETH</h1>
-        <p class="report-deck">复盘 11 月 19 日的一段以太坊区块，拆解 stUSDS 的赎回额度、执行顺序与套利净收益。</p>
+        <h1 id="title">一笔还款，怎样让闪电贷套利留下 1.6 ETH</h1>
+        <p class="report-deck">复盘 11 月 19 日 Sky 还款如何释放 stUSDS 赎回额度，并逐笔核对临时本金、构建者付款与钱包净收益。</p>
       </header>
       <div class="report-layout">
         <nav class="report-toc" aria-labelledby="contents-title">
@@ -46,6 +46,7 @@
   <h2 id="window">折价为什么会持续</h2>
 <p>2026 年 11 月 19 日 12:15:23 UTC，Sky 的 Lockstake Engine 收到一笔还款。同一个以太坊区块里，紧随其后的是一笔套利。二级市场此前已经给 stUSDS 的退出定了价。这一刻发生变化的是协议实际能放出去的 USDS。 <a href="https://etherscan.io/tx/0x2a4835cf54ac60769dd98bf5a6e35d045ab162ad4558ee8eedfe44c24fc191a1">还款回执</a> · <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">套利回执</a></p>
 <p>stUSDS 给 Sky 的质押借贷业务提供风险资本。理解它要同时看三件事。第一，按协议账面每份值多少 USDS。第二，这一刻能实际赎回多少。第三，给定规模在二级市场按什么价格能成交。未偿借款与清算中的债务可以占住退出额度，合约里仍能显示很大的 USDS 余额。急于退出的持有人可能接受 Curve 上的折价。 <a href="https://sky.money/stusds">Sky 产品说明</a> · <a href="https://github.com/sky-ecosystem/stusds/blob/master/src/StUsds.sol">赎回合约源码</a></p>
+  <p>原文在前一区块 26,449,061 末尾读取状态，报告称 stUSDS 合约持有约 1.62 亿 USDS，Curve 池持有约 179 万份 stUSDS，但该持有人当时可从协议赎回的 USDS 为零。余额和份额价值分别描述资产和权益，可赎额度才描述眼下能付出的金额。交易回执独立确认了下一块中的还款与赎回。 <a href="https://github.com/sky-ecosystem/stusds/blob/master/src/StUsds.sol">Sky 合约</a></p>
 </section>
 
 <section>
@@ -70,6 +71,7 @@
   </table>
 </div>
 <p>回执里优先费为零。交易内部另有一笔 ETH 转账，经执行轨迹可核查。发起钱包内部收到 1.603621625577 ETH，扣除回执中的 0.000670888723 ETH 和调用附带的 15 wei，净增 1.602950736855 ETH，按 12 位小数展示。开发、基础设施和未成功的其他尝试，需要放在策略账本里单独计算。 <a href="https://etherscan.io/tx/0xfaa5a6b841871a25350e24b8ab0bf9fe51f3e18c582ee4b4f0b12470b7dd9cf9">回执与内部转账</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/coinbase-payment">Flashbots 的区块费用接收方付款文档</a></p>
+  <p>原文统计七轮主要套利，累计借入约 40.11 万美元，最大单轮约 27.5 万 USDC。在这笔记录中，闪电贷免去预先持有这笔本金和提供抵押的需求，借款则须在同笔交易内归还。发起钱包仍需支付 Gas，换币费用已体现在实际成交结果里。</p>
 </section>
 
 <section>
@@ -77,6 +79,7 @@
 <p>用示意价格算，每份按 1.075 USDS 买入，按 1.087 USDS 计价，账面差 0.012 USDS。赎回额度为零时，即刻赎回这条路径的容量也是零。额度恢复后，池子深度、稳定币转换成本和其他交易争抢执行顺序，会继续改变能留下多少。</p>
 <p>连接行情与链上状态时，可以同时记录每份账面价值、可赎回额度、指定规模的可执行价格，以及哪笔交易改变了额度。失败上链会消耗 Gas，未被收录的私有包没有链上费用。11 月这笔回执只展示了一个特定状态和顺序下的实际结果。 <a href="https://ethereum.org/developers/docs/gas/">以太坊 Gas 计费</a> · <a href="https://docs.flashbots.net/flashbots-auction/advanced/understanding-bundles">Flashbots 交易包文档</a></p>
 <p>本文由原帖引发，文中列出了各项数据的证据及适用范围。 <a href="https://x.com/webtc_eth/status/2123698315741089917">原始文章</a></p>
+  <p>对 stUSDS 持有人，短时赎回受限是流动性风险，份额价值下调是另一层风险。Sky 的份额承担质押借贷损失，合约可按规则下调份额价值。评估退出时，要同时观察协议可赎额度、二级市场深度和对应的信贷风险。 <a href="https://sky.money/stusds">Sky 风险说明</a></p>
 </section>
 
         </div>

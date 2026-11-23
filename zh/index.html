@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="从盘口、成交与风险出发，研究市场机会。">
+  <meta name="description" content="研究成交、成本与风险。我们公开研究文章和验证这些判断的代码。">
   <meta name="theme-color" content="#f6f3ea">
   <title>首页 / AlphaWink</title>
   <link rel="icon" href="../favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../assets/site.css?v=f77b6f6de4">
+  <link rel="stylesheet" href="../assets/site.css?v=0fcbe53784">
   <link rel="alternate" hreflang="en" href="../">
 </head>
 <body>
@@ -32,7 +32,7 @@
     <section class="page-intro masthead" aria-labelledby="title">
       
       <h1 id="title">独立市场研究</h1>
-      <p class="intro">从盘口、成交与风险出发，<span class="phrase">研究市场机会。</span></p>
+      <p class="intro">研究成交、成本与风险。我们公开研究文章和验证这些判断的代码。</p>
       
     </section>
 
@@ -45,31 +45,39 @@
         
         <article class="report-entry report-feature">
           <div class="report-meta"><span>链上流动性</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="../zh/research/stusds-redemption-window/">等到一笔还款，才有这 1.6 ETH</a></h3>
-          <p>复盘 11 月 19 日的一段以太坊区块，拆解 stUSDS 的赎回额度、执行顺序与套利净收益。</p>
-          <a class="text-link" href="../zh/research/stusds-redemption-window/" aria-label="阅读全文 · 等到一笔还款，才有这 1.6 ETH">阅读全文 <span aria-hidden="true">→</span></a>
+          <h3><a href="../zh/research/stusds-redemption-window/">一笔还款，怎样让闪电贷套利留下 1.6 ETH</a></h3>
+          <p>复盘 11 月 19 日 Sky 还款如何释放 stUSDS 赎回额度，并逐笔核对临时本金、构建者付款与钱包净收益。</p>
+          <a class="text-link" href="../zh/research/stusds-redemption-window/" aria-label="阅读全文 · 一笔还款，怎样让闪电贷套利留下 1.6 ETH">阅读全文 <span aria-hidden="true">→</span></a>
         </article>
         <div class="research-front-list">
         <article class="report-entry">
           <div class="report-meta"><span>执行研究</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="../zh/research/wintermute-cost-of-ordering/">Wintermute 为什么愿意花钱买第一笔</a></h3>
-          <p>从一笔 265 万美元换币看零优先费背后的真实成本，再拆解机构如何为执行顺序定价。</p>
+          <h3><a href="../zh/research/wintermute-cost-of-ordering/">3i 从哪看见机会？拆开 Wintermute 的链上生意</a></h3>
+          <p>从 3i 所称的 600 万美元收益出发，追踪托管集成、部署与授权，再用一笔 265 万美元换币拆解机构的排序成本。</p>
           
         </article>
         <article class="report-entry">
           <div class="report-meta"><span>市场结构</span><time datetime="2026-11-23">2026-11-23</time></div>
           <h3><a href="../zh/research/weekend-squeeze-stock-tokens/">下一场 GME 轧空，会从周六开始吗？</a></h3>
-          <p>股票代币让周末也有报价。这个价格能否传到美股，要看谁能把仓位从一边带到另一边。</p>
+          <p>正股休市，股票代币一级申赎窗口也关闭。周末的链上买盘，能否通过做市商库存与对冲传到下一个交易日？</p>
           
         </article>
         <article class="report-entry">
           <div class="report-meta"><span>股票与信用</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="../zh/research/ai-valuation-and-credit/">如果 AI 行情转向，先出问题的是估值、利率还是信用？</a></h3>
-          <p>用 Alphabet 和微软最新一季财报重做五月的压力测试，拆解三种下跌和不同保护工具的成本。</p>
+          <h3><a href="../zh/research/ai-valuation-and-credit/">如果 AI 泡沫退潮，怎么做下行保护？</a></h3>
+          <p>回到原文的四层保护，用四家公司的三季报重新检验估值、利率与信用风险。</p>
           
         </article>
         </div>
       </div>
+    </section>
+
+    <section class="section project-index" id="research-walkthrough" aria-labelledby="research-projects">
+      <div class="section-header">
+        <h2 id="research-projects">研究系统</h2>
+        <a class="text-link" href="../zh/products/">查看产品 <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="project-index-grid"><article><h3><a href="../zh/products/#aleph-tx">AlephTX <span aria-hidden="true">↗</span></a></h3><p>跨平台订单簿、因果回放与受监督执行，核心由 Rust 和 Go 实现。</p></article><article><h3><a href="../zh/products/#oasis-agent">Oasis Agent <span aria-hidden="true">↗</span></a></h3><p>固定区块状态的研究、可复现回放，以及由独立风控限制的执行。</p></article></div>
     </section>
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
@@ -102,11 +110,7 @@
       </div>
       <p id="empty" class="empty" hidden>这个分类还没有笔记。</p>
     </section>
-    <section class="project-index" id="research-walkthrough" aria-labelledby="research-projects">
-      <h2 id="research-projects">研究项目</h2>
-      <div><a class="text-link" href="../zh/products/#aleph-tx">AlephTX <span aria-hidden="true">↗</span></a><a class="text-link" href="../zh/products/#oasis-agent">Oasis Agent <span aria-hidden="true">↗</span></a></div>
-    </section>
-    <script src="../feed.js?v=c2f956ae51" defer></script>
+    <script src="../feed.js?v=febee61b87" defer></script>
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>

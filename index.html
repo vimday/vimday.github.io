@@ -4,14 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="We study market opportunities with recorded data and simulated trades.">
+  <meta name="description" content="We study how markets trade, what execution costs, and where risk sits. Our research and code are public.">
   <meta name="theme-color" content="#f6f3ea">
   <title>Home / AlphaWink</title>
   <link rel="icon" href="./favicon.ico?v=c063c9c2bd" sizes="16x16 32x32 48x48" type="image/x-icon">
   <link rel="icon" href="./favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="./favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="./assets/site.css?v=f77b6f6de4">
+  <link rel="stylesheet" href="./assets/site.css?v=0fcbe53784">
   <link rel="alternate" hreflang="zh-Hans" href="./zh/">
 </head>
 <body>
@@ -32,7 +32,7 @@
     <section class="page-intro masthead" aria-labelledby="title">
       
       <h1 id="title">Independent <span>market research</span></h1>
-      <p class="intro">We study market opportunities with recorded data and simulated trades.</p>
+      <p class="intro">We study how markets trade, what execution costs, and where risk sits. Our research and code are public.</p>
       
     </section>
 
@@ -45,31 +45,39 @@
         
         <article class="report-entry report-feature">
           <div class="report-meta"><span>On-chain liquidity</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="./research/stusds-redemption-window/">The 1.6 ETH trade that waited for one repayment</a></h3>
-          <p>A November 19 Ethereum block shows how a loan repayment reopened a stUSDS redemption window, and how execution order divided the proceeds.</p>
-          <a class="text-link" href="./research/stusds-redemption-window/" aria-label="Read the report · The 1.6 ETH trade that waited for one repayment">Read the report <span aria-hidden="true">→</span></a>
+          <h3><a href="./research/stusds-redemption-window/">How a flash loan turned one repayment into 1.6 ETH</a></h3>
+          <p>The November 19 Sky repayment reopened stUSDS redemptions. The receipt shows what a flash loan funded and how much the searcher kept after ordering and gas.</p>
+          <a class="text-link" href="./research/stusds-redemption-window/" aria-label="Read the report · How a flash loan turned one repayment into 1.6 ETH">Read the report <span aria-hidden="true">→</span></a>
         </article>
         <div class="research-front-list">
         <article class="report-entry">
           <div class="report-meta"><span>Execution research</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="./research/wintermute-cost-of-ordering/">Wintermute and the price of going first</a></h3>
-          <p>A $2.65m swap, a zero priority fee and nearly 6 ETH paid for ordering reveal which costs a public receipt can show.</p>
+          <h3><a href="./research/wintermute-cost-of-ordering/">Where could 3i have found its edge? A look inside Wintermute</a></h3>
+          <p>Follow the reported $6m 3i story into custody signals, a $2.65m Wintermute swap and the economics of buying execution priority.</p>
           
         </article>
         <article class="report-entry">
           <div class="report-meta"><span>Market structure</span><time datetime="2026-11-23">2026-11-23</time></div>
           <h3><a href="./research/weekend-squeeze-stock-tokens/">Could the next GameStop squeeze start on a Saturday?</a></h3>
-          <p>Stock tokens give traders a weekend price. Whether that price moves the shares depends on who can carry the trade across markets.</p>
+          <p>When U.S. equities and primary stock-token issuance both close, liquidity and dealer inventory shape which weekend prices reach Monday.</p>
           
         </article>
         <article class="report-entry">
           <div class="report-meta"><span>Equity and credit</span><time datetime="2026-11-23">2026-11-23</time></div>
-          <h3><a href="./research/ai-valuation-and-credit/">If the AI trade breaks, which risk breaks first?</a></h3>
-          <p>The latest Alphabet and Microsoft results give us a baseline. Three stress scenarios separate valuations, rates and credit.</p>
+          <h3><a href="./research/ai-valuation-and-credit/">How do you hedge an AI bubble unwind?</a></h3>
+          <p>Revisit the original four hedges using recent earnings. Track valuation, rates and credit so each form of protection has a stated job.</p>
           
         </article>
         </div>
       </div>
+    </section>
+
+    <section class="section project-index" id="research-walkthrough" aria-labelledby="research-projects">
+      <div class="section-header">
+        <h2 id="research-projects">Research systems</h2>
+        <a class="text-link" href="./products/">Explore products <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="project-index-grid"><article><h3><a href="./products/#aleph-tx">AlephTX <span aria-hidden="true">↗</span></a></h3><p>Multi-venue order books, causal replay and supervised execution in Rust and Go.</p></article><article><h3><a href="./products/#oasis-agent">Oasis Agent <span aria-hidden="true">↗</span></a></h3><p>Block-pinned research, deterministic replay and execution with independently enforced limits.</p></article></div>
     </section>
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
@@ -102,11 +110,7 @@
       </div>
       <p id="empty" class="empty" hidden>No notes in this category yet.</p>
     </section>
-    <section class="project-index" id="research-walkthrough" aria-labelledby="research-projects">
-      <h2 id="research-projects">Research projects</h2>
-      <div><a class="text-link" href="./products/#aleph-tx">AlephTX <span aria-hidden="true">↗</span></a><a class="text-link" href="./products/#oasis-agent">Oasis Agent <span aria-hidden="true">↗</span></a></div>
-    </section>
-    <script src="./feed.js?v=c2f956ae51" defer></script>
+    <script src="./feed.js?v=febee61b87" defer></script>
   </main>
   <footer class="wrap footer">
     <span>AlphaWink</span>

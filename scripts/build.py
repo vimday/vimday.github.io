@@ -12,11 +12,14 @@ ROOT = Path(__file__).resolve().parents[1]
 REPORT_CONTENT = ROOT / "content" / "research"
 CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
-ALEPH = "https://github.com/AlephTX/aleph-tx"
 ROUTES = ("", "products/", "about/")
 NAV_ROUTES = ("", "research/", "products/", "about/")
-PROJECTS = (("aleph", "aleph-tx", "AlephTX"), ("oasis", "oasis-agent", "Oasis Agent"))
-REPLAY_OFFSETS_MS = (0, 240, 480)
+PROJECTS = (
+    ("aleph", "aleph-tx", "AlephTX", "https://github.com/AlephTX/aleph-tx",
+     "blob/main/docs/QUICKSTART.md", "commit/5fe4251ce09341c6a6148571ab5b8606065db928", "blob/main/docs/CROSS_VENUE.md"),
+    ("oasis", "oasis-agent", "Oasis Agent", "https://github.com/vimday/oasis-agent",
+     "#quickstart", "commit/13acce072dfdfeb98e0cb2b0ad5af55308df997d", "blob/main/docs/CURRENT_IMPLEMENTATION.md"),
+)
 ASSETS = {
     path: f"{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}"
     for path in (
@@ -47,8 +50,8 @@ COPY = {
         },
         "alpha": {
             "title": "Independent <span>market research</span>",
-            "intro": "We study market opportunities with recorded data and simulated trades.",
-            "projects": "Research projects",
+            "intro": "We study how markets trade, what execution costs, and where risk sits. Our research and code are public.",
+            "projects": "Research systems",
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
             "empty": "No notes in this category yet.",
@@ -56,44 +59,41 @@ COPY = {
             "risk": "What to watch",
         },
         "products": {
-            "title": 'From <span class="phrase">market data</span> to decisions',
-            "intro": "AlephTX models how an idea might execute. Oasis Agent records how decisions were made and checks the limits for execution.",
-            "example": "Illustrative replay",
-            "timeline": "Replay timeline",
-            "play": "Play",
-            "pause": "Pause",
-            "replay": {
-                "aleph": (
-                    (("Venue A ask", "100.04"), ("Venue B bid", "100.07"), ("Available size", "2.00")),
-                    (("A · simulated buy", "100.05"), ("B · simulated sell", "100.06"), ("Matched size", "1.50")),
-                    (("Fees · quote units", "0.06"), ("Slippage · quote units", "0.03"), ("Funding · quote units", "0.00")),
+            "title": "Systems for market research",
+            "intro": "AlephTX records and replays how perpetual markets trade. Oasis Agent reconstructs on-chain decisions from evidence and applies independent risk checks before execution.",
+            "source": "View on GitHub",
+            "start": "Quickstart",
+            "changes": "Recent work",
+            "commit": "View change",
+            "browse": "Explore products",
+            "aleph": {
+                "topic": "Perpetual futures",
+                "summary": "Multi-venue order books, causal replay and supervised execution in Rust and Go.",
+                "detail": "AlephTX links three workflows. Its Go feeder and Rust strategy engine share a versioned market-data interface. A separate capture pipeline retains the data for replay, so research can evaluate a decision using the information available at the time.",
+                "status": "MIT licensed",
+                "docs": "Venue and replay guide",
+                "capabilities": (
+                    ("Record", "Capture depth, public trades and funding, with independent reference prices and sealed archive segments."),
+                    ("Replay", "Compile events in arrival order, model the fills on each leg and attribute fees, funding and post-fill markouts."),
+                    ("Execute with supervision", "Track orders and journal recovery. Maker, cancel and taker lanes use separate signing credentials and nonce tracking."),
                 ),
-                "oasis": (
-                    (("Source", "Order books"), ("Observed spread", "0.03"), ("Record", "Snapshot")),
-                    (("Mode", "Simulation"), ("Requested size", "2.00"), ("Matched size", "1.50")),
-                    (("Exposure / limit", "1.50 / 2.00"), ("Loss limit", "Within limit"), ("Authorization", "Review required")),
-                ),
+                "scope": "The supervised mode supports Lighter market making and a separately gated Hyperliquid hedge. Paper trading keeps quantitative profit, hedge arbitrage and incentive turnover in separate ledgers.",
+                "recent": "The market-making replay now captures common price shocks across venues, recovery and attribution for risk-reducing bids.",
             },
-            "aleph": (
-                "Perpetual futures",
-                "AlephTX combines recorded order-book depth, funding, and independent reference prices to study relative value across venues.",
-                (
-                    ("Build the dataset", "Align market depth, funding events, and reference prices."),
-                    ("Replay execution", "Model order latency and partial fills across both legs."),
-                    ("Read the costs", "Inspect simulated fills, fees, slippage, and settled funding."),
+            "oasis": {
+                "topic": "On-chain evidence and risk",
+                "summary": "Block-pinned research, deterministic replay and execution with independently enforced limits.",
+                "detail": "Oasis Agent retains raw observations and ties them to a chain, block hash and input configuration. It reconciles strategy decisions with balances and receipts. Loss, exposure and transaction-scope checks run independently of the strategy.",
+                "status": "Public repository",
+                "docs": "Verified capabilities",
+                "capabilities": (
+                    ("Reconstruct evidence", "Retain the provider response and replay from pinned state, including the exact pre-transaction state when available."),
+                    ("Run in shadow", "Review Uniswap v4 liquidity provision, Base spot paper positions and multihop swap research on retained inputs."),
+                    ("Gate execution", "Live canaries require explicit authorization and run within configured bounds. Journals preserve receipts, recovery and STOP state."),
                 ),
-            ),
-            "oasis": (
-                "Evidence and risk",
-                "Oasis Agent records the inputs behind a strategy decision so researchers can replay it and examine the execution limits separately.",
-                (
-                    ("Keep the evidence", "Preserve the original observation, its source, and the state it came from."),
-                    ("Replay the decision", "Revisit the decision and its accounting in simulation."),
-                    ("Check the limits", "Evaluate exposure, loss limits, and authorization before execution."),
-                ),
-            ),
-            "source": "View source on GitHub",
-            "status": "In development",
+                "scope": "The quickstart runs an offline benchmark. The project also documents a bounded Base LP canary and a Base spot shadow ledger. Each new live run requires fresh evidence and approval.",
+                "recent": "Recent research work replays historical multihop swaps from the exact pre-transaction state. The capability index links the evidence and the conditions of each result.",
+            },
         },
         "about": {
             "title": "Robotics data and AI infrastructure",
@@ -131,8 +131,8 @@ COPY = {
         },
         "alpha": {
             "title": "独立市场研究",
-            "intro": '从盘口、成交与风险出发，<span class="phrase">研究市场机会。</span>',
-            "projects": "研究项目",
+            "intro": '研究成交、成本与风险。我们公开研究文章和验证这些判断的代码。',
+            "projects": "研究系统",
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
             "empty": "这个分类还没有笔记。",
@@ -140,44 +140,41 @@ COPY = {
             "risk": "需要留意",
         },
         "products": {
-            "title": "从市场数据到决策",
-            "intro": "AlephTX 模拟策略在市场中可能如何成交。Oasis Agent 记录决策过程，并检查执行边界。",
-            "example": "示例回放",
-            "timeline": "回放时间轴",
-            "play": "播放",
-            "pause": "暂停",
-            "replay": {
-                "aleph": (
-                    (("A 市场卖一价", "100.04"), ("B 市场买一价", "100.07"), ("可用数量", "2.00")),
-                    (("A 市场模拟买入价", "100.05"), ("B 市场模拟卖出价", "100.06"), ("双边成交量", "1.50")),
-                    (("手续费 · 计价单位", "0.06"), ("滑点 · 计价单位", "0.03"), ("资金费 · 计价单位", "0.00")),
+            "title": "为市场研究构建的系统",
+            "intro": "AlephTX 记录并回放永续合约市场。Oasis Agent 用原始证据复盘链上决策，在执行前独立校验风险。",
+            "source": "GitHub 源码",
+            "start": "快速开始",
+            "changes": "近期更新",
+            "commit": "查看提交",
+            "browse": "查看产品",
+            "aleph": {
+                "topic": "永续合约",
+                "summary": "跨平台订单簿、因果回放与受监督执行，核心由 Rust 和 Go 实现。",
+                "detail": "AlephTX 将采集、研究与执行连起来。Go 行情进程和 Rust 策略引擎通过版本化的共享内存接口交换数据，独立采集链路保存回放材料，让研究能按决策当时可见的信息检验策略。",
+                "status": "MIT 许可",
+                "docs": "平台与回放文档",
+                "capabilities": (
+                    ("采集", "连续采集盘口深度、公开成交与资金费率，保留独立参考价，为归档分段做校验。"),
+                    ("回放", "按数据实际到达顺序重放，建模两腿成交，再核算手续费、资金费与成交后的价格偏移。"),
+                    ("受监督执行", "追踪订单与恢复日志。挂单、撤单和吃单使用分离的签名密钥与 nonce 跟踪。"),
                 ),
-                "oasis": (
-                    (("来源", "盘口"), ("观察到的价差", "0.03"), ("记录", "快照")),
-                    (("运行模式", "模拟"), ("委托数量", "2.00"), ("双边成交量", "1.50")),
-                    (("敞口 / 上限", "1.50 / 2.00"), ("亏损检查", "限额内"), ("执行授权", "待审核")),
-                ),
+                "scope": "受监督模式支持 Lighter 做市，Hyperliquid 对冲单独授权。纸面研究将量化收益、对冲套利与激励周转分别记账。",
+                "recent": "做市回放新增跨市场共同价格冲击的触发与恢复判断，并为降低敞口的买单补上成交归因。",
             },
-            "aleph": (
-                "永续合约",
-                "AlephTX 用记录下来的盘口深度、资金费率和独立参考价，研究不同市场之间的相对价值。",
-                (
-                    ("整理行情", "对齐盘口深度、资金费率结算事件和参考价格。"),
-                    ("回放执行", "为策略的两条腿模拟订单延迟和部分成交。"),
-                    ("拆解成本", "查看模拟成交、手续费、滑点和资金费收支。"),
+            "oasis": {
+                "topic": "链上证据与风控",
+                "summary": "固定区块状态的研究、可复现回放，以及由独立风控限制的执行。",
+                "detail": "Oasis Agent 保留原始观测，将它与链、区块哈希和输入配置绑定，再用余额和回执核对策略决策。亏损、敞口和交易权限由策略之外的风控层校验。",
+                "status": "公开仓库",
+                "docs": "已验证的能力",
+                "capabilities": (
+                    ("还原证据", "保留数据源的原始响应，按固定状态回放。有条件时精确恢复交易前状态。"),
+                    ("影子验证", "用留存输入研究 Uniswap v4 流动性、Base 现货纸面仓位与多跳兑换。"),
+                    ("审核后执行", "实盘小范围验证要求明确授权，按配置限制执行。日志保留回执、恢复记录和停止状态。"),
                 ),
-            ),
-            "oasis": (
-                "证据与风控",
-                "Oasis Agent 保存策略判断的输入，让研究者能回放决策，并独立检查执行的风险边界。",
-                (
-                    ("保留证据", "记录原始观察、数据来源和观察对应的状态。"),
-                    ("回放判断", "在模拟环境中复查决策和记账过程。"),
-                    ("检查边界", "在执行前检查敞口、亏损上限和授权范围。"),
-                ),
-            ),
-            "source": "在 GitHub 查看源码",
-            "status": "开发中",
+                "scope": "快速开始可以离线运行基准案例。仓库也公开了 Base LP 的小范围实盘验证和 Base 现货影子账本。新一轮实盘仍需当期证据与授权。",
+                "recent": "近期新增了从精确交易前状态回放历史多跳兑换。能力索引列出各项结论对应的证据和适用条件。",
+            },
         },
         "about": {
             "title": '机器人数据与 <span class="phrase">AI 基础设施</span>',
@@ -353,35 +350,21 @@ def render_notes(notes, locale, copy):
     return "".join(cards)
 
 
-def product_replay(copy, workflow, examples):
-    ticks = "".join(f"<span>{offset} ms</span>" for offset in REPLAY_OFFSETS_MS)
-    frames = []
-    for (title, detail), offset, values in zip(workflow, REPLAY_OFFSETS_MS, examples, strict=True):
-        metrics = "".join(f"<div><dt>{label}</dt><dd>{value}</dd></div>" for label, value in values)
-        frames.append(f"""
-          <div class="replay-frame" data-frame>
-            <div class="frame-copy">
-              <p class="frame-time">00:00.{offset:03d}</p>
-              <h3>{title}</h3>
-              <p>{detail}</p>
-            </div>
-            <dl class="frame-metrics">{metrics}</dl>
-          </div>""")
+def project_index(locale, here, title):
+    copy = COPY[locale]["products"]
+    entries = "".join(
+        f'<article><h3><a href="{here}products/#{slug}">{name} <span aria-hidden="true">↗</span></a></h3>'
+        f'<p>{escape(copy[key]["summary"])}</p></article>'
+        for key, slug, name, *_ in PROJECTS
+    )
     return f"""
-        <details class="replay" name="project-replay" data-replay>
-          <summary>{copy["example"]}</summary>
-          <div class="replay-frames">{"".join(frames)}
-          </div>
-          <div class="replay-controls" data-replay-controls hidden>
-            <button class="replay-play" type="button" data-play="{copy["play"]}" data-pause="{copy["pause"]}">
-              <span class="play-icon" aria-hidden="true"></span><span>{copy["play"]}</span>
-            </button>
-            <div class="replay-track">
-              <input type="range" min="0" max="{len(REPLAY_OFFSETS_MS) - 1}" step="1" value="0" aria-label="{copy["timeline"]}">
-              <div class="replay-ticks" aria-hidden="true">{ticks}</div>
-            </div>
-          </div>
-        </details>"""
+    <section class="section project-index" id="research-walkthrough" aria-labelledby="research-projects">
+      <div class="section-header">
+        <h2 id="research-projects">{title}</h2>
+        <a class="text-link" href="{here}products/">{copy["browse"]} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="project-index-grid">{entries}</div>
+    </section>"""
 
 
 def alpha(locale, root, here, notes, reports, copy):
@@ -391,13 +374,10 @@ def alpha(locale, root, here, notes, reports, copy):
         for key, label in copy["filters"].items()
         if key == "all" or key in categories
     )
-    projects = "".join(
-        f'<a class="text-link" href="{here}products/#{slug}">{name} <span aria-hidden="true">↗</span></a>'
-        for _, slug, name in PROJECTS
-    )
     empty_attr = " hidden" if notes else ""
     return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
 {latest_research(reports, locale, here)}
+{project_index(locale, here, copy["projects"])}
     <section class="section" id="feed" aria-labelledby="feed-title">
       <div class="section-header">
         <h2 id="feed-title">{copy["feed"]}</h2>
@@ -408,10 +388,6 @@ def alpha(locale, root, here, notes, reports, copy):
       <div id="notes" class="note-index">{render_notes(notes, locale, copy)}
       </div>
       <p id="empty" class="empty"{empty_attr}>{copy["empty"]}</p>
-    </section>
-    <section class="project-index" id="research-walkthrough" aria-labelledby="research-projects">
-      <h2 id="research-projects">{copy["projects"]}</h2>
-      <div>{projects}</div>
     </section>
     <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
 
@@ -428,33 +404,43 @@ def page_intro(title, intro, eyebrow="", extra="", *, masthead=False):
     </section>"""
 
 
-def product_card(slug, name, label, description, replay, action):
-    return f"""
-      <article class="product" id="{slug}">
-        <div class="product-title">
-          <p class="kicker">{label}</p>
-          <h2>{name}</h2>
-        </div>
-        <div class="product-content">
-          <p>{description}</p>
-          <div class="product-action">{action}</div>{replay}
-        </div>
-      </article>"""
-
-
-def products(root, copy):
-    source = f'<a class="text-link" href="{ALEPH}">{copy["source"]} <span aria-hidden="true">↗</span></a>'
-    status = copy["status"]
-    actions = {"aleph": source, "oasis": status}
+def products(copy):
     cards = []
-    for key, slug, name in PROJECTS:
-        label, description, workflow = copy[key]
-        replay = product_replay(copy, workflow, copy["replay"][key])
-        cards.append(product_card(slug, name, label, description, replay, actions[key]))
-    return page_intro(copy["title"], copy["intro"]) + f"""
+    for key, slug, name, repo, start, recent, docs in PROJECTS:
+        fields = copy[key]
+        quickstart = repo + start if start.startswith("#") else f"{repo}/{start}"
+        capabilities = "".join(
+            f"<div><dt>{escape(title)}</dt><dd>{escape(detail)}</dd></div>"
+            for title, detail in fields["capabilities"]
+        )
+        cards.append(f"""
+      <article class="product" id="{slug}" aria-labelledby="{slug}-title">
+        <header class="product-heading">
+          <p class="kicker">{fields["topic"]} <span aria-hidden="true">·</span> {fields["status"]}</p>
+          <h2 id="{slug}-title">{name}</h2>
+          <p>{escape(fields["summary"])}</p>
+          <div class="product-actions">
+            <a class="product-source" href="{repo}" aria-label="{copy["source"]} · {name}">{copy["source"]} <span aria-hidden="true">↗</span></a>
+            <a class="text-link" href="{quickstart}">{copy["start"]}</a>
+          </div>
+        </header>
+        <div class="product-content">
+          <p>{escape(fields["detail"])}</p>
+          <dl class="product-capabilities">{capabilities}</dl>
+          <p class="product-scope">{escape(fields["scope"])}</p>
+          <div class="product-update">
+            <h3>{copy["changes"]}</h3>
+            <p>{escape(fields["recent"])}</p>
+            <div class="product-docs">
+              <a class="text-link" href="{repo}/{recent}">{copy["commit"]} <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="{repo}/{docs}">{fields["docs"]} <span aria-hidden="true">↗</span></a>
+            </div>
+          </div>
+        </div>
+      </article>""")
+    return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
     <div class="product-list" id="research-walkthrough">{"".join(cards)}
-    </div>
-    <script src="{root}{ASSETS["feed.js"]}" defer></script>"""
+    </div>"""
 
 
 def about(locale, notes, copy, notes_copy):
@@ -497,7 +483,7 @@ def render(locale, page, notes, reports):
         market_notes = [note for note in notes if note["category"] != "data"]
         body = alpha(locale, root, here, market_notes, reports, section)
     elif page == 1:
-        body = products(root, section)
+        body = products(section)
     else:
         engineering_notes = [note for note in notes if note["category"] == "data"]
         body = about(locale, engineering_notes, section, copy["alpha"])
