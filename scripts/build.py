@@ -25,6 +25,7 @@ ASSETS = {
     path: f"{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}"
     for path in (
         "assets/site.css",
+        "assets/brand.js",
         "feed.js",
         "favicon.svg",
         "favicon.ico",
@@ -555,10 +556,12 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     current = {path: ' aria-current="page"'}
     if path.startswith("research/") and path != "research/":
         current["research/"] = ' aria-current="location"'
-    nav = "\n".join(
+    nav = [
         f'      <a href="{here}{nav_path}"{current.get(nav_path, "")}>{label}</a>'
         for nav_path, label in zip(NAV_ROUTES, copy["nav"], strict=True)
-    )
+    ]
+    nav_start = "\n".join(nav[:2])
+    nav_end = "\n".join(nav[2:])
     redirect_head = ""
     if redirect:
         target = escape(redirect, quote=True)
@@ -581,14 +584,21 @@ def write_page(locale, path, name, description, body, *, redirect=None):
 </head>
 <body>
   <a class="skip" href="#main">{copy["skip"]}</a>
-  <header class="bar wrap">
-    <a class="brand" href="{here}" aria-label="AlphaWink">
-      <img class="brand-mark" src="{mark}" alt="" width="28" height="28">
-      <span class="brand-name">AlphaWink</span>
-    </a>
-    <nav aria-label="{copy["nav_label"]}">
-{nav}
-    </nav>
+  <header class="site-header">
+    <div class="bar wrap">
+      <a class="brand" href="{here}" aria-label="AlphaWink">
+        <span class="brand-name" aria-hidden="true">AlphaWink</span>
+        <img class="brand-mark" src="{mark}" alt="" width="28" height="28">
+      </a>
+      <nav aria-label="{copy["nav_label"]}">
+        <div class="nav-group">
+{nav_start}
+        </div>
+        <div class="nav-group">
+{nav_end}
+        </div>
+      </nav>
+    </div>
   </header>
   <main class="wrap" id="main">{body}
   </main>
@@ -599,6 +609,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
       <a href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
     </div>
   </footer>
+  <script src="{root}{ASSETS["assets/brand.js"]}" defer></script>
 </body>
 </html>
 """
