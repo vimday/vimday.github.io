@@ -17,6 +17,7 @@ CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
 ROUTES = ("", "products/", "about/")
 NAV_ROUTES = ("", "research/", "products/", "about/")
+ENGINEERING_ROUTE = "engineering/"
 LEGAL_ROUTES = ("privacy", "terms")
 LEGAL_UPDATED = "2026-11-27"
 PROJECTS = (
@@ -43,6 +44,7 @@ COPY = {
         "nav": ("Home", "Research", "Products", "About"),
         "skip": "Skip to content",
         "nav_label": "Site navigation",
+        "engineering_link": "Engineering portfolio",
         "footer": {
             "summary": "Research and software for on-chain markets.",
             "contact": "Contact",
@@ -74,9 +76,9 @@ COPY = {
             "featured": "Selected research",
             "method": "From data to evidence",
             "steps": (
-                ("Capture market events", "Stream order books and trades. Record on-chain state and transaction receipts."),
-                ("Preserve the evidence", "Archive timestamped events and tie chain observations to a block hash."),
-                ("Replay and simulate", "Reconstruct liquidity and test execution assumptions from retained inputs."),
+                ("Capture market events", "Stream order books and trades from decentralized markets.", "WebSocket feeds"),
+                ("Preserve the evidence", "Archive timestamped events, chain state and transaction receipts.", "Block hash · SHA-256"),
+                ("Replay and simulate", "Reconstruct liquidity and test execution assumptions from retained inputs.", "Arrival-ordered tapes"),
             ),
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
@@ -135,13 +137,11 @@ COPY = {
             "scope": "AlphaWink builds research software and publishes technical analysis. Visitors use the tools in their own environments. AlphaWink does not operate an exchange, hold customer assets or manage funds on behalf of others.",
             "contact": "Contact AlphaWink",
             "github": "GitHub profile",
-            "work": "Engineering work",
-            "notes": "Engineering notes",
             "work_areas": (
-                ("Data platforms", "Pipelines for processing, annotating, validating, and versioning multimodal robot datasets."),
-                ("AI infrastructure", "Distributed services that run data workflows and deliver datasets."),
-                ("Workflow graph engine", "I built an engine from scratch to run robot data processing steps with explicit dependencies."),
-                ("Advertising platform", "Go backend development for an advertising platform, from before I used coding agents in my daily work."),
+                ("Data platforms", "I build pipelines for processing, annotating, validating and versioning multimodal robot datasets."),
+                ("AI infrastructure", "I develop distributed services that execute data workflows and deliver datasets for downstream AI workloads."),
+                ("Workflow graph engine", "I built a graph engine from scratch that represents robot data processing as steps with explicit dependencies."),
+                ("Advertising platform", "I worked on Go backend services for an advertising platform."),
             ),
             "tools": "Daily tools",
             "stack": (
@@ -150,11 +150,51 @@ COPY = {
                 ("Systems", "Go · Rust · Python · Kubernetes · Docker"),
             ),
         },
+        "engineering": {
+            "name": "Neo · Engineering portfolio",
+            "label": "Neo",
+            "title": "Data platforms and <span>AI infrastructure</span>",
+            "intro": "I build systems that turn raw data into artifacts teams can validate, replay and reuse. My work spans multimodal robotics data, workflow execution and low-latency research infrastructure.",
+            "contact": "Get in touch",
+            "work": "Engineering experience",
+            "projects": "Public system designs",
+            "jump": "Explore the case studies",
+            "notes": "Engineering notes",
+            "cases": (
+                {
+                    "id": "aleph-tx",
+                    "name": "AlephTX",
+                    "title": "Replay what the strategy could know",
+                    "summary": "An analysis query wants a convenient view of market events. A simulation needs the exact order and timing in which inputs became available, including gaps. AlephTX keeps distinct representations for those two jobs.",
+                    "detail": "The live path connects a Go WebSocket feeder to Rust over versioned shared memory. A separate capture path seals raw events with SHA-256 and produces Parquet partitions for queries and arrival-ordered replay tapes for simulation.",
+                    "steps": ("Go WebSocket feeder", "Versioned shared memory", "Rust strategy engine"),
+                    "flow": "Live data path",
+                    "links": (
+                        ("IPC protocol", "https://github.com/AlephTX/aleph-tx/raw/refs/heads/main/docs/DUAL_TRACK_IPC.md"),
+                        ("Data and replay design", "https://github.com/AlephTX/aleph-tx/raw/refs/heads/main/docs/QUANT_DATA_LAKEHOUSE.md"),
+                    ),
+                },
+                {
+                    "id": "oasis-agent",
+                    "name": "Oasis Agent",
+                    "title": "Make replay safe to retry",
+                    "summary": "A worker can die after claiming a job. A chain reorganization can invalidate its inputs. The replay scheduler needs recovery from both while keeping stale results out of the evidence record.",
+                    "detail": "Oasis Agent commits replay jobs and coverage state together in SQLite. Workers retry under fenced leases. Completion is idempotent, and chain reorganizations invalidate affected work. Retained provider payloads tie each replay to its original inputs.",
+                    "steps": ("Block-pinned inputs", "SQLite replay queue", "Evidence report"),
+                    "flow": "Replay data path",
+                    "links": (
+                        ("Queue and recovery design", "https://github.com/vimday/oasis-agent/raw/refs/heads/main/docs/verification/CYCLE_OUTBOX_20261114.md"),
+                        ("Feature pipeline", "https://github.com/vimday/oasis-agent/raw/refs/heads/main/docs/architecture/LP_MARKET_FEATURE_PIPELINE.md"),
+                    ),
+                },
+            ),
+        },
     },
     "zh": {
         "nav": ("首页", "研究", "产品", "关于"),
         "skip": "跳到正文",
         "nav_label": "网站导航",
+        "engineering_link": "工程作品集",
         "footer": {
             "summary": "面向链上市场的研究与软件。",
             "contact": "联系邮箱",
@@ -186,9 +226,9 @@ COPY = {
             "featured": "研究选读",
             "method": "从数据到证据",
             "steps": (
-                ("实时采集", "持续采集订单簿与公开成交，记录链上状态和交易回执。"),
-                ("保留证据", "归档带时间戳的事件，用区块哈希锚定链上观测。"),
-                ("回放与模拟", "基于留存数据还原流动性，检验执行假设。"),
+                ("实时采集", "持续采集去中心化市场的订单簿与公开成交。", "WebSocket 行情"),
+                ("保留证据", "归档带时间戳的事件、链上状态和交易回执。", "区块哈希 · SHA-256"),
+                ("回放与模拟", "基于留存数据还原流动性，检验执行假设。", "按到达顺序记录"),
             ),
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
@@ -247,19 +287,56 @@ COPY = {
             "scope": "AlphaWink 开发研究软件并发布技术分析，使用者在自己的环境中运行工具。AlphaWink 不运营交易所，不托管客户资产，也不提供代客资金管理。",
             "contact": "联系 AlphaWink",
             "github": "GitHub 主页",
-            "work": "工程经历",
-            "notes": "工程笔记",
             "work_areas": (
-                ("数据平台", "构建多模态机器人数据流水线，覆盖处理、标注、质量校验和版本管理。"),
-                ("AI 基础设施", "为数据流程的执行和数据集交付构建分布式服务。"),
-                ("图流程引擎", "从零开发机器人数据处理引擎，用图表达处理步骤及依赖关系。"),
-                ("广告平台", "早期手写代码时，参与过广告平台的 Go 后端开发。"),
+                ("数据平台", "构建多模态机器人数据流水线，覆盖处理、标注、质量校验和数据集版本管理。"),
+                ("AI 基础设施", "建设分布式服务，支撑数据流程执行和面向下游 AI 工作负载的数据集交付。"),
+                ("图流程引擎", "从零开发面向机器人数据处理的图流程引擎，用节点和显式依赖表达处理步骤。"),
+                ("广告平台", "参与广告平台的 Go 后端服务开发。"),
             ),
             "tools": "日常工具",
             "stack": (
                 ("编程 Agent", "Codex · Claude Code · MCP"),
                 ("终端环境", "Herdr · Neovim · Linux · Git"),
                 ("系统开发", "Go · Rust · Python · Kubernetes · Docker"),
+            ),
+        },
+        "engineering": {
+            "name": "Neo · 工程作品集",
+            "label": "Neo",
+            "title": "数据平台与 <span>AI 基础设施</span>",
+            "intro": "我做数据平台和基础设施，把原始数据变成可校验、可回放、可复用的产物。工作涉及多模态机器人数据、流程执行和低延迟研究基础设施。",
+            "contact": "联系我",
+            "work": "工程经历",
+            "projects": "公开系统设计",
+            "jump": "查看项目案例",
+            "notes": "工程笔记",
+            "cases": (
+                {
+                    "id": "aleph-tx",
+                    "name": "AlephTX",
+                    "title": "只回放策略当时能看到的数据",
+                    "summary": "分析查询需要易用的数据视图，模拟则要还原数据对策略可见的时点和顺序，还得保留采集缺口。AlephTX 为两种场景保留各自的数据表示。",
+                    "detail": "实时链路中，Go 行情进程通过版本化共享内存向 Rust 策略引擎供数。独立采集链路用 SHA-256 校验原始归档，分别生成供查询的 Parquet 分区，以及按到达顺序生成的模拟回放文件。",
+                    "steps": ("Go WebSocket 行情进程", "版本化共享内存", "Rust 策略引擎"),
+                    "flow": "实时数据链路",
+                    "links": (
+                        ("进程间通信协议", "https://github.com/AlephTX/aleph-tx/raw/refs/heads/main/docs/DUAL_TRACK_IPC.md"),
+                        ("数据与回放设计", "https://github.com/AlephTX/aleph-tx/raw/refs/heads/main/docs/QUANT_DATA_LAKEHOUSE.md"),
+                    ),
+                },
+                {
+                    "id": "oasis-agent",
+                    "name": "Oasis Agent",
+                    "title": "让回放在失败后安全重试",
+                    "summary": "工作进程可能在领取任务后退出，链重组也可能让输入失效。回放调度既要能恢复任务，也要防止过期结果被写入证据记录。",
+                    "detail": "Oasis Agent 在同一个 SQLite 事务中提交回放任务和覆盖状态。工作进程通过带校验的租约重试，重复完成操作保持幂等，遇到链重组则使受影响的任务失效。每次回放都能追溯到留存的原始数据响应。",
+                    "steps": ("固定区块的输入", "SQLite 回放队列", "证据报告"),
+                    "flow": "回放数据链路",
+                    "links": (
+                        ("队列与恢复设计", "https://github.com/vimday/oasis-agent/raw/refs/heads/main/docs/verification/CYCLE_OUTBOX_20261114.md"),
+                        ("特征数据管线", "https://github.com/vimday/oasis-agent/raw/refs/heads/main/docs/architecture/LP_MARKET_FEATURE_PIPELINE.md"),
+                    ),
+                },
             ),
         },
     },
@@ -325,8 +402,9 @@ def report_meta(report, locale):
 
 
 def home(locale, root, here, notes, reports):
-    copy = COPY[locale]["alpha"]
-    read = COPY[locale]["research"]["read"]
+    locale_copy = COPY[locale]
+    copy = locale_copy["alpha"]
+    read = locale_copy["research"]["read"]
     lead = next((report for report in reports if report.get("featured") is True), None)
     feature = ""
     if lead:
@@ -342,7 +420,8 @@ def home(locale, root, here, notes, reports):
       </div>
     </section>"""
     steps = "\n".join(
-        f"        <li><h3>{title}</h3><p>{detail}</p></li>" for title, detail in copy["steps"]
+        f'          <li><h3>{title}</h3><p>{detail}</p><span class="flow-data">{data}</span></li>'
+        for title, detail, data in copy["steps"]
     )
     note_ids = " ".join(note["id"] for note in notes)
     return f"""
@@ -363,6 +442,7 @@ def home(locale, root, here, notes, reports):
         <ol role="list">
 {steps}
         </ol>
+        <a class="text-link flow-portfolio" href="{here}{ENGINEERING_ROUTE}">{locale_copy["engineering_link"]} <span aria-hidden="true">→</span></a>
       </section>
     </section>{feature}
     <script src="{root}{ASSETS["feed.js"]}" data-home-notes="{escape(note_ids, quote=True)}" defer></script>"""
@@ -536,41 +616,98 @@ def products(copy):
     </section>"""
 
 
-def about(locale, notes, copy, notes_copy):
-    github = f'<a class="text-link" href="{GITHUB}">{copy["github"]} <span aria-hidden="true">↗</span></a>'
+def about(here, copy):
+    about_copy = copy["about"]
+    contact = f'<a class="text-link" href="mailto:{CONTACT}">{about_copy["contact"]} <span aria-hidden="true">↗</span></a>'
+    return page_intro(about_copy["title"], about_copy["intro"], extra=contact) + f"""
+    <section class="section editorial-split founder-section" aria-labelledby="founder-title">
+      <h2 id="founder-title">{about_copy["founder"]}</h2>
+      <div>
+        <p>{about_copy["founder_intro"]}</p>
+        <div class="engineering-links">
+          <a class="text-link" href="{here}{ENGINEERING_ROUTE}">{copy["engineering_link"]} <span aria-hidden="true">→</span></a>
+          <a class="text-link" href="{GITHUB}">{about_copy["github"]} <span aria-hidden="true">↗</span></a>
+        </div>
+      </div>
+    </section>
+    <p class="site-scope">{about_copy["scope"]}</p>"""
+
+
+def engineering_case(case, projects_copy):
+    slug = case["id"]
+    repository = next(repo for _, project, _, repo, *_ in PROJECTS if project == slug)
+    stages = "".join(f"<li>{stage}</li>" for stage in case["steps"])
+    links = "\n".join(
+        f'        <a class="text-link" href="{url}">{label} <span aria-hidden="true">↗</span></a>'
+        for label, url in (*case["links"], (projects_copy["source"], repository))
+    )
+    return f"""
+      <article class="engineering-case" id="{slug}" aria-labelledby="{slug}-title">
+        <div class="case-copy">
+          <p class="kicker">{case["name"]}</p>
+          <h3 id="{slug}-title">{case["title"]}</h3>
+          <p>{case["summary"]}</p>
+          <p>{case["detail"]}</p>
+        </div>
+        <figure class="case-flow">
+          <figcaption>{case["flow"]}</figcaption>
+          <ol role="list">{stages}</ol>
+        </figure>
+        <div class="engineering-links case-links">
+{links}
+        </div>
+      </article>"""
+
+
+def write_engineering_page(locale, notes):
+    locale_copy = COPY[locale]
+    copy = locale_copy["engineering"]
+    about_copy = locale_copy["about"]
     areas = "\n".join(
         f"      <article><h3>{title}</h3><p>{description}</p></article>"
-        for title, description in copy["work_areas"]
+        for title, description in about_copy["work_areas"]
     )
-    stack = "".join(f"<div><dt>{area}</dt><dd>{tools}</dd></div>" for area, tools in copy["stack"])
+    cases = "".join(engineering_case(case, locale_copy["products"]) for case in copy["cases"])
+    stack = "".join(f"<div><dt>{area}</dt><dd>{tools}</dd></div>" for area, tools in about_copy["stack"])
     archive = ""
     if notes:
         archive = f"""
     <section class="section archive-section" aria-labelledby="archive-title">
       <h2 id="archive-title">{copy["notes"]}</h2>
-      <div class="archive-grid">{render_notes(notes, locale, notes_copy)}
+      <div class="archive-grid">{render_notes(notes, locale, locale_copy["alpha"])}
       </div>
     </section>"""
-    contact = f'<a class="text-link" href="mailto:{CONTACT}">{copy["contact"]} <span aria-hidden="true">↗</span></a>'
-    return page_intro(copy["title"], copy["intro"], extra=contact) + f"""
-    <section class="section editorial-split founder-section" aria-labelledby="founder-title">
-      <h2 id="founder-title">{copy["founder"]}</h2>
+    body = f"""
+    <section class="page-intro engineering-hero" aria-labelledby="title">
       <div>
-        <p>{copy["founder_intro"]}</p>
-        {github}
+        <p class="kicker">{copy["label"]}</p>
+        <h1 id="title">{copy["title"]}</h1>
+      </div>
+      <div>
+        <p class="intro">{copy["intro"]}</p>
+        <div class="engineering-links">
+          <a class="text-link" href="mailto:{CONTACT}">{copy["contact"]} <span aria-hidden="true">↗</span></a>
+          <a class="text-link" href="{GITHUB}">{about_copy["github"]} <span aria-hidden="true">↗</span></a>
+        </div>
       </div>
     </section>
     <section class="section work-section" aria-labelledby="work-title">
-      <h2 id="work-title">{copy["work"]}</h2>
+      <div class="section-header">
+        <h2 id="work-title">{copy["work"]}</h2>
+        <a class="text-link" href="#case-studies">{copy["jump"]} <span aria-hidden="true">↓</span></a>
+      </div>
       <div class="grid work-grid">
 {areas}
       </div>
     </section>
+    <section class="section case-section" aria-labelledby="case-studies">
+      <h2 id="case-studies">{copy["projects"]}</h2>{cases}
+    </section>
     <section class="section tool-section" aria-labelledby="tools-title">
-      <h2 id="tools-title">{copy["tools"]}</h2>
+      <h2 id="tools-title">{about_copy["tools"]}</h2>
       <dl class="tool-grid">{stack}</dl>
-    </section>{archive}
-    <p class="site-scope">{copy["scope"]}</p>"""
+    </section>{archive}"""
+    write_page(locale, ENGINEERING_ROUTE, copy["name"], copy["intro"], body)
 
 
 def render(locale, page, notes, reports):
@@ -587,8 +724,7 @@ def render(locale, page, notes, reports):
     elif page == 1:
         body = products(section)
     else:
-        engineering_notes = [note for note in notes if note["category"] == "data"]
-        body = about(locale, engineering_notes, section, copy["alpha"])
+        body = about(here, copy)
     write_page(locale, path, name, description, body)
 
 
@@ -616,6 +752,8 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     current = {path: ' aria-current="page"'}
     if path.startswith("research/") and path != "research/":
         current["research/"] = ' aria-current="location"'
+    if path == ENGINEERING_ROUTE:
+        current["about/"] = ' aria-current="location"'
     nav = [
         f'      <a href="{here}{nav_path}"{current.get(nav_path, "")}>{label}</a>'
         for nav_path, label in zip(NAV_ROUTES, copy["nav"], strict=True)
@@ -687,6 +825,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     <div class="footer-base">
       <p>{footer["copyright"]}</p>
       <nav class="footer-links" aria-label="{footer["links"]}">
+        <a href="{here}{ENGINEERING_ROUTE}"{current.get(ENGINEERING_ROUTE, "")}>{copy["engineering_link"]}</a>
 {legal_links}
         <a href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
       </nav>
@@ -705,9 +844,11 @@ if __name__ == "__main__":
     notes = read_notes()
     reports = read_reports()
     market_notes = [note for note in notes if note["category"] != "data"]
+    engineering_notes = [note for note in notes if note["category"] == "data"]
     for locale in COPY:
         for page in range(len(ROUTES)):
             render(locale, page, notes, reports)
+        write_engineering_page(locale, engineering_notes)
         write_legal_pages(locale)
         archive = COPY[locale]["research"]
         write_page(locale, "research/", archive["archive"], archive["archive_intro"], research_archive(reports, market_notes, locale))
