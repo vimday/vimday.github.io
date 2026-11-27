@@ -11,7 +11,7 @@
   <link rel="icon" href="../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../assets/site.css?v=c3647b692c">
+  <link rel="stylesheet" href="../assets/site.css?v=90a60d40af">
   <link rel="canonical" href="https://alphawink.com/about/">
   <link rel="alternate" hreflang="zh-Hans" href="../zh/about/">
 </head>
@@ -75,10 +75,10 @@
         <a class="text-link" href="../products/">See system designs <span aria-hidden="true">→</span></a>
       </div>
       <div class="work-grid">
-        <article><h4>Data platforms</h4><p>I build pipelines for processing, annotating, validating and versioning multimodal robot datasets.</p></article>
-        <article><h4>AI infrastructure</h4><p>I develop distributed services that execute data workflows and deliver datasets for downstream AI workloads.</p></article>
-        <article><h4>Workflow graph engine</h4><p>I built a graph engine from scratch that represents robot data processing as steps with explicit dependencies.</p></article>
-        <article><h4>Advertising platform</h4><p>I worked on Go backend services for an advertising platform.</p></article>
+        <article><h4>Data platforms</h4><p>Video and sensor records can each look valid and still disagree. I built quality checks for each stream and for consistency across modalities.</p><p>Automated rules covered repeatable checks. I used sampling to review what the rules could miss and kept the inspection results traceable for dataset delivery.</p></article>
+        <article><h4>AI infrastructure</h4><p>Automated labeling needs to support both streaming video and batch inference. I used model versioning and idempotent execution to make reruns predictable.</p><p>I used resource isolation and rate limits to manage contention. The tradeoff was how much batch work to admit while giving streaming tasks enough capacity.</p></article>
+        <article><h4>Workflow graph engine</h4><p>I built a graph engine from scratch for robot data processing. Each step is a node that declares which steps must finish before it can run.</p><p>The node boundary is a tradeoff. Smaller steps are easier to reuse and inspect, and a finer graph has more dependencies to maintain.</p></article>
+        <article><h4>Advertising platform</h4><p>I developed Go services for budget and order workflows, using gRPC for service interfaces and MySQL for business state.</p><p>I worked on real-time status tracking and retries for failed synchronization. Retrying helps restore visibility, and repeated updates have to preserve a consistent order state.</p></article>
       </div>
     </section>
     <section class="section tool-section" aria-labelledby="tools-title">

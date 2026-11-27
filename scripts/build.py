@@ -157,10 +157,18 @@ COPY = {
             "contact": "Contact AlphaWink",
             "github": "GitHub profile",
             "work_areas": (
-                ("Data platforms", "I build pipelines for processing, annotating, validating and versioning multimodal robot datasets."),
-                ("AI infrastructure", "I develop distributed services that execute data workflows and deliver datasets for downstream AI workloads."),
-                ("Workflow graph engine", "I built a graph engine from scratch that represents robot data processing as steps with explicit dependencies."),
-                ("Advertising platform", "I worked on Go backend services for an advertising platform."),
+                ("Data platforms",
+                 "Video and sensor records can each look valid and still disagree. I built quality checks for each stream and for consistency across modalities.",
+                 "Automated rules covered repeatable checks. I used sampling to review what the rules could miss and kept the inspection results traceable for dataset delivery."),
+                ("AI infrastructure",
+                 "Automated labeling needs to support both streaming video and batch inference. I used model versioning and idempotent execution to make reruns predictable.",
+                 "I used resource isolation and rate limits to manage contention. The tradeoff was how much batch work to admit while giving streaming tasks enough capacity."),
+                ("Workflow graph engine",
+                 "I built a graph engine from scratch for robot data processing. Each step is a node that declares which steps must finish before it can run.",
+                 "The node boundary is a tradeoff. Smaller steps are easier to reuse and inspect, and a finer graph has more dependencies to maintain."),
+                ("Advertising platform",
+                 "I developed Go services for budget and order workflows, using gRPC for service interfaces and MySQL for business state.",
+                 "I worked on real-time status tracking and retries for failed synchronization. Retrying helps restore visibility, and repeated updates have to preserve a consistent order state."),
             ),
             "work": "Engineering experience",
             "notes": "Engineering notes",
@@ -291,10 +299,18 @@ COPY = {
             "contact": "联系 AlphaWink",
             "github": "GitHub 主页",
             "work_areas": (
-                ("数据平台", "构建多模态机器人数据流水线，覆盖处理、标注、质量校验和数据集版本管理。"),
-                ("AI 基础设施", "建设分布式服务，支撑数据流程执行和面向下游 AI 工作负载的数据集交付。"),
-                ("图流程引擎", "从零开发面向机器人数据处理的图流程引擎，用节点和显式依赖表达处理步骤。"),
-                ("广告平台", "参与广告平台的 Go 后端服务开发。"),
+                ("数据平台",
+                 "机器人视频和传感器记录可能各自正常，合在一起却对不上。我把质检拆成视频检查、传感器检查和跨模态一致性检查。",
+                 "用自动化规则覆盖可重复检查的问题，用抽检补足规则覆盖不到的情况。交付数据集时保留可追溯的质检结果。"),
+                ("AI 基础设施",
+                 "自动标注既要处理流式视频，也要承载批量推理。我用模型版本管理和幂等执行，让同一批任务重跑时的行为可预期。",
+                 "通过资源隔离和限流控制竞争。取舍在于允许多少批量任务并发，同时为流式任务留够资源。"),
+                ("图流程引擎",
+                 "我从零搭建了面向机器人数据处理的图流程引擎。每个处理步骤都是一个节点，显式声明哪些步骤完成后自己才能运行。",
+                 "节点划得细，处理逻辑更容易复用和定位，编排层要维护的依赖也更多。节点粒度是这里的设计取舍。"),
+                ("广告平台",
+                 "我用 Go 开发预算与订单相关的后端服务，用 gRPC 定义服务接口，在 MySQL 中建模业务状态。",
+                 "我参与了实时状态跟踪和同步失败后的重试。重试有助于补齐状态更新，重复处理时仍要保持订单状态一致。"),
             ),
             "work": "工程经历",
             "notes": "工程笔记",
@@ -370,20 +386,40 @@ def report_meta(report, locale):
 
 
 def home(locale, root, here, notes, reports):
-    copy = COPY[locale]["alpha"]
-    read = COPY[locale]["research"]["read"]
+    locale_copy = COPY[locale]
+    copy = locale_copy["alpha"]
+    research = locale_copy["research"]
     lead = next((report for report in reports if report.get("featured") is True), None)
     feature = ""
     if lead:
         fields = lead[locale]
+        preview = ""
+        if timeline := lead.get("timeline"):
+            day = escape(timeline["date"])
+            rows = "\n".join(
+                f'            <li><time datetime="{day}T{escape(event["time"])}Z">{escape(event["time"])}</time> <span>{escape(event[locale])}</span></li>'
+                for event in timeline["events"]
+            )
+            preview = f"""
+        <figure class="feature-timeline">
+          <figcaption><strong>{escape(timeline["title"][locale])}</strong> <span><time datetime="{day}">{day}</time> UTC</span></figcaption>
+          <ol role="list">
+{rows}
+          </ol>
+        </figure>"""
         feature = f"""
     <section class="section home-feature" id="reports" aria-labelledby="reports-title">
-      <h2 class="kicker" id="reports-title">{copy["featured"]}</h2>
-      <div class="home-feature-copy">
-        {report_meta(lead, locale)}
-        <h3><a href="{here}{report_path(lead)}">{escape(fields["title"])}</a></h3>
-        <p>{escape(fields["summary"])}</p>
-        <a class="text-link" href="{here}{report_path(lead)}">{read} <span aria-hidden="true">→</span></a>
+      <div class="section-header">
+        <h2 class="kicker" id="reports-title">{copy["featured"]}</h2>
+        <a class="text-link" href="{here}research/">{research["back"]} <span aria-hidden="true">→</span></a>
+      </div>
+      <div class="feature-body">
+        <div class="home-feature-copy">
+          {report_meta(lead, locale)}
+          <h3>{escape(fields["title"])}</h3>
+          <p>{escape(fields["summary"])}</p>
+          <a class="text-link" href="{here}{report_path(lead)}">{research["read"]} <span aria-hidden="true">→</span></a>
+        </div>{preview}
       </div>
     </section>"""
     steps = "\n".join(
@@ -603,8 +639,8 @@ def about(locale, here, notes):
     locale_copy = COPY[locale]
     copy = locale_copy["about"]
     areas = "\n".join(
-        f"        <article><h4>{title}</h4><p>{description}</p></article>"
-        for title, description in copy["work_areas"]
+        f"        <article><h4>{title}</h4><p>{problem}</p><p>{decision}</p></article>"
+        for title, problem, decision in copy["work_areas"]
     )
     stack = "".join(f"<div><dt>{area}</dt><dd>{tools}</dd></div>" for area, tools in copy["stack"])
     archive = ""

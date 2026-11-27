@@ -11,7 +11,7 @@
   <link rel="icon" href="../../favicon-32x32.png?v=a73ccec246" sizes="32x32" type="image/png">
   <link rel="icon" href="../../favicon-96x96.png?v=4ce4235b61" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="../../apple-touch-icon.png?v=d38a52b22c" sizes="180x180">
-  <link rel="stylesheet" href="../../assets/site.css?v=c3647b692c">
+  <link rel="stylesheet" href="../../assets/site.css?v=90a60d40af">
   <link rel="canonical" href="https://alphawink.com/zh/about/">
   <link rel="alternate" hreflang="en" href="../../about/">
 </head>
@@ -75,10 +75,10 @@
         <a class="text-link" href="../../zh/products/">查看产品架构 <span aria-hidden="true">→</span></a>
       </div>
       <div class="work-grid">
-        <article><h4>数据平台</h4><p>构建多模态机器人数据流水线，覆盖处理、标注、质量校验和数据集版本管理。</p></article>
-        <article><h4>AI 基础设施</h4><p>建设分布式服务，支撑数据流程执行和面向下游 AI 工作负载的数据集交付。</p></article>
-        <article><h4>图流程引擎</h4><p>从零开发面向机器人数据处理的图流程引擎，用节点和显式依赖表达处理步骤。</p></article>
-        <article><h4>广告平台</h4><p>参与广告平台的 Go 后端服务开发。</p></article>
+        <article><h4>数据平台</h4><p>机器人视频和传感器记录可能各自正常，合在一起却对不上。我把质检拆成视频检查、传感器检查和跨模态一致性检查。</p><p>用自动化规则覆盖可重复检查的问题，用抽检补足规则覆盖不到的情况。交付数据集时保留可追溯的质检结果。</p></article>
+        <article><h4>AI 基础设施</h4><p>自动标注既要处理流式视频，也要承载批量推理。我用模型版本管理和幂等执行，让同一批任务重跑时的行为可预期。</p><p>通过资源隔离和限流控制竞争。取舍在于允许多少批量任务并发，同时为流式任务留够资源。</p></article>
+        <article><h4>图流程引擎</h4><p>我从零搭建了面向机器人数据处理的图流程引擎。每个处理步骤都是一个节点，显式声明哪些步骤完成后自己才能运行。</p><p>节点划得细，处理逻辑更容易复用和定位，编排层要维护的依赖也更多。节点粒度是这里的设计取舍。</p></article>
+        <article><h4>广告平台</h4><p>我用 Go 开发预算与订单相关的后端服务，用 gRPC 定义服务接口，在 MySQL 中建模业务状态。</p><p>我参与了实时状态跟踪和同步失败后的重试。重试有助于补齐状态更新，重复处理时仍要保持订单状态一致。</p></article>
       </div>
     </section>
     <section class="section tool-section" aria-labelledby="tools-title">

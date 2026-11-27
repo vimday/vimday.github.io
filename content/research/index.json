@@ -59,6 +59,16 @@
     "id": "lighter-key-incident",
     "featured": true,
     "date": "2026-11-17",
+    "timeline": {
+      "date": "2026-11-16",
+      "title": {"en": "Incident timeline", "zh": "事件时间线"},
+      "events": [
+        {"time": "10:11", "en": "Settlement outflow", "zh": "链上结算资金流出"},
+        {"time": "11:02", "en": "Pause announced", "zh": "公告暂停服务"},
+        {"time": "12:49", "en": "Investigation update", "zh": "发布调查进展"},
+        {"time": "18:21", "en": "Restoration announced", "zh": "公告恢复充提"}
+      ]
+    },
     "redirect": {
       "from": "perp-venue-permissions",
       "section": "venue-comparison"
