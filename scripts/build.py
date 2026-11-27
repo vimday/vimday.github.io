@@ -3,24 +3,27 @@
 import json
 import re
 from datetime import date
-from decimal import Decimal
 from hashlib import sha256
 from html import escape
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urljoin, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 WORDMARK = (ROOT / "assets" / "brand.svg").read_text(encoding="utf-8").strip()
 REPORT_CONTENT = ROOT / "content" / "research"
+LEGAL_CONTENT = ROOT / "content" / "legal"
+SITE_URL = "https://alphawink.com"
 CONTACT = "hi@alphawink.com"
 GITHUB = "https://github.com/vimday"
 ROUTES = ("", "products/", "about/")
 NAV_ROUTES = ("", "research/", "products/", "about/")
+LEGAL_ROUTES = ("privacy", "terms")
+LEGAL_UPDATED = "2026-11-27"
 PROJECTS = (
     ("aleph", "aleph-tx", "AlephTX", "https://github.com/AlephTX/aleph-tx",
-     "blob/main/docs/QUICKSTART.md", "commit/5fe4251ce09341c6a6148571ab5b8606065db928", "blob/main/docs/CROSS_VENUE.md"),
+     "raw/refs/heads/main/docs/QUICKSTART.md", "commit/5fe4251ce09341c6a6148571ab5b8606065db928", "tree/main/docs"),
     ("oasis", "oasis-agent", "Oasis Agent", "https://github.com/vimday/oasis-agent",
-     "#quickstart", "commit/13acce072dfdfeb98e0cb2b0ad5af55308df997d", "blob/main/docs/CURRENT_IMPLEMENTATION.md"),
+     "#quickstart", "commit/13acce072dfdfeb98e0cb2b0ad5af55308df997d", "tree/main/docs"),
 )
 ASSETS = {
     path: f"{path}?v={sha256((ROOT / path).read_bytes()).hexdigest()[:10]}"
@@ -40,6 +43,19 @@ COPY = {
         "nav": ("Home", "Research", "Products", "About"),
         "skip": "Skip to content",
         "nav_label": "Site navigation",
+        "footer": {
+            "summary": "Research and software for on-chain markets.",
+            "contact": "Contact",
+            "address_label": "Hong Kong address",
+            "address": "Hong Kong Industrial Building, 444-452 Des Voeux Road West, Sai Wan, Hong Kong",
+            "copyright": "© 2026 AlphaWink. All rights reserved.",
+            "links": "Site information",
+        },
+        "legal": {
+            "updated": "Last updated",
+            "privacy": ("Privacy Policy", "How AlphaWink handles information from site visits and email inquiries."),
+            "terms": ("Terms of Service", "The terms for using AlphaWink’s website, research and project materials."),
+        },
         "research": {
             "archive": "Research archive",
             "archive_intro": "Investigations into trading, market structure and risk.",
@@ -50,23 +66,18 @@ COPY = {
             "moved": "This report is now part of the full investigation.",
         },
         "alpha": {
-            "title": "Market research <span>you can retrace</span>",
-            "intro": "AlphaWink studies market opportunities and risk. We follow a claim through quotes, trades and settlement, then show the evidence behind our conclusions.",
-            "browse": "Explore research",
+            "label": "Web3 infrastructure · Early stage",
+            "title": "Infrastructure for <span>on-chain markets</span>",
+            "intro": "AlphaWink builds Web3 data infrastructure for quantitative research. Our tools capture activity from decentralized markets, retain the evidence and replay it to study liquidity and execution.",
+            "browse": "Explore products",
+            "contact": "Contact us",
             "featured": "Selected research",
-            "method": "How we work",
+            "method": "From data to evidence",
             "steps": (
-                ("Pose a testable question", "Turn a spread, a crowded trade or a risk event into a concrete question tied to a market and a time window."),
-                ("Reconstruct what could execute", "Use market depth, fees and receipts to see which trades could fill and what those fills would cost."),
-                ("Show the limits", "Link the source data, state the assumptions and explain what evidence would change the conclusion."),
+                ("Capture market events", "Stream order books and trades. Record on-chain state and transaction receipts."),
+                ("Preserve the evidence", "Archive timestamped events and tie chain observations to a block hash."),
+                ("Replay and simulate", "Reconstruct liquidity and test execution assumptions from retained inputs."),
             ),
-            "receipt": {
-                "block": "Ethereum block",
-                "net": "Wallet net increase",
-                "builder": "Builder payment",
-                "gas": "Gas",
-                "trace": "Read the transaction analysis",
-            },
             "feed": "Research notes",
             "filters": {"all": "All", "markets": "Market mechanics", "data": "Robotics data", "tools": "Research methods"},
             "empty": "No notes in this category yet.",
@@ -74,18 +85,26 @@ COPY = {
             "risk": "What to watch",
         },
         "products": {
-            "title": "Systems for market research",
-            "intro": "AlephTX records and replays how perpetual markets trade. Oasis Agent reconstructs on-chain decisions from evidence and applies independent risk checks before execution.",
+            "title": "Systems for <span>on-chain research</span>",
+            "intro": "AlephTX records and replays how perpetual markets trade. Oasis Agent reconstructs on-chain decisions and checks risk independently before execution.",
             "source": "View on GitHub",
             "start": "Quickstart",
             "changes": "Recent work",
             "commit": "View change",
+            "docs": "Technical documentation",
+            "roadmap": "Infrastructure roadmap",
+            "directions": (
+                ("Market data infrastructure", "We plan to use cloud object storage for reproducible event archives and compute workers for parallel replay and simulation."),
+                ("Multimodal data R&D", "We’re exploring versioned data pipelines for AI that retain source provenance and validation results. GPU batch processing is a future research direction."),
+            ),
+            "access_title": "Work with AlphaWink",
+            "access_intro": "Developing research workflows for on-chain markets? Tell us which data sources or replay tools you need.",
+            "access": "Request early access",
             "aleph": {
                 "topic": "Perpetual futures",
                 "summary": "Multi-venue order books, causal replay and supervised execution in Rust and Go.",
                 "detail": "AlephTX links three workflows. Its Go feeder and Rust strategy engine share a versioned market-data interface. A separate capture pipeline retains the data for replay, so research can evaluate a decision using the information available at the time.",
                 "status": "MIT licensed",
-                "docs": "Venue and replay guide",
                 "capabilities": (
                     ("Record", "Capture depth, public trades and funding, with independent reference prices and sealed archive segments."),
                     ("Replay", "Compile events in arrival order, model the fills on each leg and attribute fees, funding and post-fill markouts."),
@@ -99,7 +118,6 @@ COPY = {
                 "summary": "Block-pinned research, deterministic replay and execution with independently enforced limits.",
                 "detail": "Oasis Agent retains raw observations and ties them to a chain, block hash and input configuration. It reconciles strategy decisions with balances and receipts. Loss, exposure and transaction-scope checks run independently of the strategy.",
                 "status": "Public repository",
-                "docs": "Verified capabilities",
                 "capabilities": (
                     ("Reconstruct evidence", "Retain the provider response and replay from pinned state, including the exact pre-transaction state when available."),
                     ("Run in shadow", "Review Uniswap v4 liquidity provision, Base spot paper positions and multihop swap research on retained inputs."),
@@ -110,8 +128,12 @@ COPY = {
             },
         },
         "about": {
-            "title": "Robotics data and AI infrastructure",
-            "intro": "I build data platforms for embodied AI, including the workflows that turn multimodal robot data into datasets that teams can validate and reuse.",
+            "title": "About AlphaWink",
+            "intro": "AlphaWink is an early-stage technology and infrastructure R&D project. We develop data pipelines, low-latency analysis software and reproducible research tools for decentralized markets.",
+            "founder": "Founder · Neo",
+            "founder_intro": "My engineering work spans embodied AI data platforms and AI infrastructure, including workflows that turn multimodal robot data into datasets teams can validate and reuse.",
+            "scope": "AlphaWink builds research software and publishes technical analysis. Visitors use the tools in their own environments. AlphaWink does not operate an exchange, hold customer assets or manage funds on behalf of others.",
+            "contact": "Contact AlphaWink",
             "github": "GitHub profile",
             "work": "Engineering work",
             "notes": "Engineering notes",
@@ -133,6 +155,19 @@ COPY = {
         "nav": ("首页", "研究", "产品", "关于"),
         "skip": "跳到正文",
         "nav_label": "网站导航",
+        "footer": {
+            "summary": "面向链上市场的研究与软件。",
+            "contact": "联系邮箱",
+            "address_label": "香港地址",
+            "address": "香港西环德辅道西444-452号香港工业大厦",
+            "copyright": "© 2026 AlphaWink. 保留所有权利。",
+            "links": "站点信息",
+        },
+        "legal": {
+            "updated": "最后更新",
+            "privacy": ("隐私政策", "AlphaWink 如何处理网站访问和邮件联系涉及的信息。"),
+            "terms": ("服务条款", "适用于 AlphaWink 网站、研究与项目资料的使用条款。"),
+        },
         "research": {
             "archive": "研究归档",
             "archive_intro": "关于交易、市场结构和风险的深度研究。",
@@ -143,23 +178,18 @@ COPY = {
             "moved": "这篇报告已并入完整研究。",
         },
         "alpha": {
-            "title": "让市场判断<span>经得起复核</span>",
-            "intro": "AlphaWink 研究市场机会与风险。我们沿着报价、成交和结算追查一个判断，并公开支撑结论的证据。",
-            "browse": "浏览研究",
+            "label": "Web3 基础设施 · 早期研发",
+            "title": "为链上市场<span>构建数据基础设施</span>",
+            "intro": "AlphaWink 为 Web3 量化研究开发数据基础设施。我们的工具采集去中心化市场数据，保留原始证据，再通过回放研究流动性与执行。",
+            "browse": "查看产品",
+            "contact": "联系我们",
             "featured": "研究选读",
-            "method": "我们如何研究",
+            "method": "从数据到证据",
             "steps": (
-                ("先问一个能检验的问题", "从价差、拥挤交易或风险事件出发，确定要观察的市场与时间窗口。"),
-                ("还原能成交的条件", "用盘口、费率和回执还原执行路径，算清能成交多少、成本是多少。"),
-                ("写清结论的边界", "给出原始来源和关键假设，说明什么证据会改变结论。"),
+                ("实时采集", "持续采集订单簿与公开成交，记录链上状态和交易回执。"),
+                ("保留证据", "归档带时间戳的事件，用区块哈希锚定链上观测。"),
+                ("回放与模拟", "基于留存数据还原流动性，检验执行假设。"),
             ),
-            "receipt": {
-                "block": "以太坊区块",
-                "net": "发起钱包净增",
-                "builder": "构建者付款",
-                "gas": "Gas",
-                "trace": "阅读交易复盘",
-            },
             "feed": "研究笔记",
             "filters": {"all": "全部", "markets": "市场机制", "data": "机器人数据", "tools": "研究方法"},
             "empty": "这个分类还没有笔记。",
@@ -167,18 +197,26 @@ COPY = {
             "risk": "需要留意",
         },
         "products": {
-            "title": "为市场研究构建的系统",
+            "title": "为链上研究<span>构建的系统</span>",
             "intro": "AlephTX 记录并回放永续合约市场。Oasis Agent 用原始证据复盘链上决策，在执行前独立校验风险。",
             "source": "GitHub 源码",
             "start": "快速开始",
             "changes": "近期更新",
             "commit": "查看提交",
+            "docs": "技术文档",
+            "roadmap": "基础设施路线图",
+            "directions": (
+                ("市场数据基础设施", "计划用云对象存储保存可复现的事件归档，并以计算集群并行运行回放和模拟。"),
+                ("多模态数据研发", "探索面向 AI 的数据流水线，保留数据来源、版本和校验结果。GPU 批处理是后续的研发方向。"),
+            ),
+            "access_title": "与 AlphaWink 联系",
+            "access_intro": "如果你在搭建链上市场的研究流程，欢迎告诉我们你需要哪些数据源或回放能力。",
+            "access": "申请提前体验",
             "aleph": {
                 "topic": "永续合约",
                 "summary": "跨平台订单簿、因果回放与受监督执行，核心由 Rust 和 Go 实现。",
                 "detail": "AlephTX 将采集、研究与执行连起来。Go 行情进程和 Rust 策略引擎通过版本化的共享内存接口交换数据，独立采集链路保存回放材料，让研究能按决策当时可见的信息检验策略。",
                 "status": "MIT 许可",
-                "docs": "平台与回放文档",
                 "capabilities": (
                     ("采集", "连续采集盘口深度、公开成交与资金费率，保留独立参考价，为归档分段做校验。"),
                     ("回放", "按数据实际到达顺序重放，建模两腿成交，再核算手续费、资金费与成交后的价格偏移。"),
@@ -192,7 +230,6 @@ COPY = {
                 "summary": "固定区块状态的研究、可复现回放，以及由独立风控限制的执行。",
                 "detail": "Oasis Agent 保留原始观测，将它与链、区块哈希和输入配置绑定，再用余额和回执核对策略决策。亏损、敞口和交易权限由策略之外的风控层校验。",
                 "status": "公开仓库",
-                "docs": "已验证的能力",
                 "capabilities": (
                     ("还原证据", "保留数据源的原始响应，按固定状态回放。有条件时精确恢复交易前状态。"),
                     ("影子验证", "用留存输入研究 Uniswap v4 流动性、Base 现货纸面仓位与多跳兑换。"),
@@ -203,8 +240,12 @@ COPY = {
             },
         },
         "about": {
-            "title": '机器人数据与 <span class="phrase">AI 基础设施</span>',
-            "intro": "我做具身智能数据平台和 AI 基础设施，把多模态机器人数据处理成可校验、可复用的数据集。",
+            "title": "关于 AlphaWink",
+            "intro": "AlphaWink 是一个处于早期阶段的技术与基础设施研发项目。我们面向去中心化市场开发数据管线、低延迟分析软件和可复现的研究工具。",
+            "founder": "创始人 · Neo",
+            "founder_intro": "我的工程工作涵盖具身智能数据平台与 AI 基础设施，包括将多模态机器人数据处理成可校验、可复用的数据集。",
+            "scope": "AlphaWink 开发研究软件并发布技术分析，使用者在自己的环境中运行工具。AlphaWink 不运营交易所，不托管客户资产，也不提供代客资金管理。",
+            "contact": "联系 AlphaWink",
             "github": "GitHub 主页",
             "work": "工程经历",
             "notes": "工程笔记",
@@ -277,33 +318,6 @@ def report_path(report):
     return f'research/{report["id"]}/'
 
 
-def featured_receipt(report, copy, here):
-    receipt = report["receipt"]
-    amounts = {key: Decimal(receipt[key]) for key in ("net", "builder", "gas")}
-    if any(not value.is_finite() or value < 0 for value in amounts.values()) or not (total := sum(amounts.values())):
-        raise ValueError(f'Invalid receipt amounts for {report["id"]}')
-    asset = escape(receipt["asset"])
-    widths = "".join(f'<span style="flex-grow:{value / total:.7f}"></span>' for value in amounts.values())
-    costs = "".join(f'<div><dt>{copy[key]}</dt><dd>{amounts[key]:f} {asset}</dd></div>'
-                    for key in ("builder", "gas"))
-    return f"""
-      <figure class="hero-receipt">
-        <figcaption>
-          <strong>{escape(receipt["market"])}</strong>
-          <span>{copy["block"]} {receipt["block"]:,}</span>
-        </figcaption>
-        <dl class="receipt-data">
-          <div class="receipt-net">
-            <dt>{copy["net"]}</dt>
-            <dd>{amounts["net"]:f} <span>{asset}</span></dd>
-          </div>
-          {costs}
-        </dl>
-        <div class="receipt-bar" aria-hidden="true">{widths}</div>
-        <a class="receipt-link" href="{here}{report_path(report)}#cost">{copy["trace"]} <span aria-hidden="true">↗</span></a>
-      </figure>"""
-
-
 def report_meta(report, locale):
     topic = escape(report[locale]["topic"])
     day = report["date"]
@@ -317,31 +331,40 @@ def home(locale, root, here, notes, reports):
     feature = ""
     if lead:
         fields = lead[locale]
-        receipt = featured_receipt(lead, copy["receipt"], here) if "receipt" in lead else ""
         feature = f"""
-    <section class="section home-feature{' home-feature-receipt' if receipt else ''}" id="reports" aria-labelledby="reports-title">
-        <div class="home-feature-copy">
-          <p class="kicker">{copy["featured"]}</p>
-          <h2 id="reports-title">{escape(fields["title"])}</h2>
-          <p>{escape(fields["summary"])}</p>
-          <a class="text-link" href="{here}{report_path(lead)}">{read} <span aria-hidden="true">→</span></a>
-        </div>
-        {receipt}
+    <section class="section home-feature" id="reports" aria-labelledby="reports-title">
+      <h2 class="kicker" id="reports-title">{copy["featured"]}</h2>
+      <div class="home-feature-copy">
+        {report_meta(lead, locale)}
+        <h3><a href="{here}{report_path(lead)}">{escape(fields["title"])}</a></h3>
+        <p>{escape(fields["summary"])}</p>
+        <a class="text-link" href="{here}{report_path(lead)}">{read} <span aria-hidden="true">→</span></a>
+      </div>
     </section>"""
-    steps = "".join(f"<li><h3>{escape(title)}</h3><p>{escape(detail)}</p></li>" for title, detail in copy["steps"])
+    steps = "\n".join(
+        f"        <li><h3>{title}</h3><p>{detail}</p></li>" for title, detail in copy["steps"]
+    )
     note_ids = " ".join(note["id"] for note in notes)
     return f"""
     <section class="home-hero" aria-labelledby="title">
-      <h1 id="title">{copy["title"]}</h1>
-      <div class="home-deck">
-        <p>{copy["intro"]}</p>
-        <a class="hero-link" href="{here}research/">{copy["browse"]} <span aria-hidden="true">→</span></a>
+      <div class="home-intro">
+        <p class="kicker">{copy["label"]}</p>
+        <h1 id="title">{copy["title"]}</h1>
+        <div class="home-deck">
+          <p>{copy["intro"]}</p>
+          <div class="home-actions">
+            <a class="hero-link" href="{here}products/">{copy["browse"]} <span aria-hidden="true">→</span></a>
+            <a class="text-link" href="mailto:{CONTACT}">{copy["contact"]} <span aria-hidden="true">↗</span></a>
+          </div>
+        </div>
       </div>
+      <section class="system-flow" aria-labelledby="method-title">
+        <h2 id="method-title">{copy["method"]}</h2>
+        <ol role="list">
+{steps}
+        </ol>
+      </section>
     </section>{feature}
-    <section class="section home-method" aria-labelledby="method-title">
-      <h2 id="method-title">{copy["method"]}</h2>
-      <ul class="home-steps" role="list">{steps}</ul>
-    </section>
     <script src="{root}{ASSETS["feed.js"]}" data-home-notes="{escape(note_ids, quote=True)}" defer></script>"""
 
 
@@ -484,17 +507,33 @@ def products(copy):
             <p>{escape(fields["recent"])}</p>
             <div class="product-docs">
               <a class="text-link" href="{repo}/{recent}">{copy["commit"]} <span aria-hidden="true">↗</span></a>
-              <a class="text-link" href="{repo}/{docs}">{fields["docs"]} <span aria-hidden="true">↗</span></a>
+              <a class="text-link" href="{repo}/{docs}">{copy["docs"]} <span aria-hidden="true">↗</span></a>
             </div>
           </div>
         </div>
       </article>""")
     names = "".join(f'<a class="text-link" href="#{slug}">{name} <span aria-hidden="true">↓</span></a>'
                     for _, slug, name, *_ in PROJECTS)
+    directions = "\n".join(
+        f"      <div><h3>{title}</h3><p>{detail}</p></div>" for title, detail in copy["directions"]
+    )
     return page_intro(copy["title"], copy["intro"], masthead=True) + f"""
     <div class="product-jump">{names}</div>
     <div class="product-list" id="research-walkthrough">{"".join(cards)}
-    </div>"""
+    </div>
+    <section class="section editorial-split" aria-labelledby="roadmap-title">
+      <h2 id="roadmap-title">{copy["roadmap"]}</h2>
+      <div class="roadmap-entries">
+{directions}
+      </div>
+    </section>
+    <section class="section editorial-split access-section" aria-labelledby="access-title">
+      <h2 id="access-title">{copy["access_title"]}</h2>
+      <div>
+        <p>{copy["access_intro"]}</p>
+        <a class="hero-link" href="mailto:{CONTACT}">{copy["access"]} <span aria-hidden="true">↗</span></a>
+      </div>
+    </section>"""
 
 
 def about(locale, notes, copy, notes_copy):
@@ -512,7 +551,15 @@ def about(locale, notes, copy, notes_copy):
       <div class="archive-grid">{render_notes(notes, locale, notes_copy)}
       </div>
     </section>"""
-    return page_intro(copy["title"], copy["intro"], "@VIMDAY", github) + f"""
+    contact = f'<a class="text-link" href="mailto:{CONTACT}">{copy["contact"]} <span aria-hidden="true">↗</span></a>'
+    return page_intro(copy["title"], copy["intro"], extra=contact) + f"""
+    <section class="section editorial-split founder-section" aria-labelledby="founder-title">
+      <h2 id="founder-title">{copy["founder"]}</h2>
+      <div>
+        <p>{copy["founder_intro"]}</p>
+        {github}
+      </div>
+    </section>
     <section class="section work-section" aria-labelledby="work-title">
       <h2 id="work-title">{copy["work"]}</h2>
       <div class="grid work-grid">
@@ -522,7 +569,8 @@ def about(locale, notes, copy, notes_copy):
     <section class="section tool-section" aria-labelledby="tools-title">
       <h2 id="tools-title">{copy["tools"]}</h2>
       <dl class="tool-grid">{stack}</dl>
-    </section>{archive}"""
+    </section>{archive}
+    <p class="site-scope">{copy["scope"]}</p>"""
 
 
 def render(locale, page, notes, reports):
@@ -544,6 +592,19 @@ def render(locale, page, notes, reports):
     write_page(locale, path, name, description, body)
 
 
+def write_legal_pages(locale):
+    copy = COPY[locale]["legal"]
+    updated = f'<p class="legal-date">{copy["updated"]} <time datetime="{LEGAL_UPDATED}">{LEGAL_UPDATED}</time></p>'
+    for page in LEGAL_ROUTES:
+        title, description = copy[page]
+        sections = (LEGAL_CONTENT / f"{page}.{locale}.html").read_text(encoding="utf-8").strip()
+        body = page_intro(title, description, extra=updated) + f"""
+    <article class="legal-prose" aria-labelledby="title">
+      {sections}
+    </article>"""
+        write_page(locale, f"{page}/", title, description, body)
+
+
 def write_page(locale, path, name, description, body, *, redirect=None):
     copy = COPY[locale]
     lang = "zh-Hans" if locale == "zh" else "en"
@@ -561,10 +622,17 @@ def write_page(locale, path, name, description, body, *, redirect=None):
     ]
     nav_start = "\n".join(nav[:2])
     nav_end = "\n".join(nav[2:])
+    footer = copy["footer"]
+    legal_links = "\n".join(
+        f'        <a href="{here}{page}/"{current.get(page + "/", "")}>{copy["legal"][page][0]}</a>'
+        for page in LEGAL_ROUTES
+    )
+    canonical = f"{SITE_URL}/{route}"
     redirect_head = ""
     if redirect:
         target = escape(redirect, quote=True)
-        redirect_head = f'\n  <meta http-equiv="refresh" content="0; url={target}">\n  <link rel="canonical" href="{target.split("#", 1)[0]}">'
+        redirect_head = f'\n  <meta http-equiv="refresh" content="0; url={target}">'
+        canonical = urljoin(canonical, redirect.split("#", 1)[0])
     html = f"""<!-- Copyright 2025 vimday; SPDX-License-Identifier: Apache-2.0 -->
 <!doctype html>
 <html lang="{lang}">
@@ -579,6 +647,7 @@ def write_page(locale, path, name, description, body, *, redirect=None):
   <link rel="icon" href="{root}{ASSETS["favicon-96x96.png"]}" sizes="96x96" type="image/png">
   <link rel="apple-touch-icon" href="{root}{ASSETS["apple-touch-icon.png"]}" sizes="180x180">
   <link rel="stylesheet" href="{root}{ASSETS["assets/site.css"]}">
+  <link rel="canonical" href="{canonical}">
   <link rel="alternate" hreflang="{other_lang}" href="{other}">{redirect_head}
 </head>
 <body>
@@ -601,10 +670,26 @@ def write_page(locale, path, name, description, body, *, redirect=None):
   <main class="wrap" id="main">{body}
   </main>
   <footer class="wrap footer">
-    <span>AlphaWink</span>
-    <div class="footer-links">
-      <a href="mailto:{CONTACT}">{CONTACT}</a>
-      <a href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
+    <div class="footer-main">
+      <div class="footer-identity">
+        <a href="{here}">AlphaWink</a>
+        <p>{footer["summary"]}</p>
+      </div>
+      <div>
+        <p class="footer-label">{footer["contact"]}</p>
+        <a href="mailto:{CONTACT}">{CONTACT}</a>
+      </div>
+      <div>
+        <p class="footer-label">{footer["address_label"]}</p>
+        <address>{footer["address"]}</address>
+      </div>
+    </div>
+    <div class="footer-base">
+      <p>{footer["copyright"]}</p>
+      <nav class="footer-links" aria-label="{footer["links"]}">
+{legal_links}
+        <a href="{other}" lang="{other_lang}" hreflang="{other_lang}">{other_label}</a>
+      </nav>
     </div>
   </footer>
   <script src="{root}{ASSETS["assets/brand.js"]}" defer></script>
@@ -623,6 +708,7 @@ if __name__ == "__main__":
     for locale in COPY:
         for page in range(len(ROUTES)):
             render(locale, page, notes, reports)
+        write_legal_pages(locale)
         archive = COPY[locale]["research"]
         write_page(locale, "research/", archive["archive"], archive["archive_intro"], research_archive(reports, market_notes, locale))
         for report in reports:

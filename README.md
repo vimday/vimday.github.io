@@ -16,10 +16,8 @@ Page copy lives in `scripts/build.py`. After updating the copy or notes, run
 Long-form reports use metadata in `content/research/index.json` and HTML
 fragments in `content/research/<id>/en.html` and `zh.html`. Give each report
 a stable ID and optionally an `updated` date for a substantive revision.
-Set `featured: true` on one report to select it for the homepage. Optionally add a
-`receipt` to that report for the homepage chart. Its fields record the
-market, block, asset, and net increase, builder payment, and gas in the asset's
-units. The chart links to that report's `cost` section.
+Set `featured: true` on one report to select it for the homepage.
+The Privacy Policy and Terms of Service live in `content/legal/`.
 The research archive lists every report. When it absorbs an older report, set `redirect.from` to the old ID
 and `redirect.section` to its new heading ID. The build uses article headings of
 the form `<h2 id="section-id">Heading</h2>` for the table of contents.

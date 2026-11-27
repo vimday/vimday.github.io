@@ -2,15 +2,6 @@
   {
     "id": "stusds-redemption-window",
     "date": "2026-11-23",
-    "featured": true,
-    "receipt": {
-      "market": "stUSDS",
-      "block": 26449062,
-      "asset": "ETH",
-      "net": "1.602951",
-      "builder": "0.282854",
-      "gas": "0.000671"
-    },
     "en": {
       "title": "How a flash loan turned one repayment into 1.6 ETH",
       "summary": "The November 19 Sky repayment reopened stUSDS redemptions. The receipt shows what a flash loan funded and how much the searcher kept after ordering and gas.",
@@ -66,6 +57,7 @@
   },
   {
     "id": "lighter-key-incident",
+    "featured": true,
     "date": "2026-11-17",
     "redirect": {
       "from": "perp-venue-permissions",
